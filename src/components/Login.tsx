@@ -14,14 +14,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeClosed, Info, LockIcon, User } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import Image from "next/image";
 import * as z from "zod";
 
 const formSchema = z.object({
-  username: z.string().email({
-    message: "Please enter a valid email address.",
-  }),
+  username: z.string().min(1, "Please enter username"),
   password: z.string().min(1, {
-    message: "Please enter a password.",
+    message: "Please enter password.",
   }),
 });
 
@@ -59,7 +58,7 @@ export default function Login() {
           height={70}
           className="object-contain pr-3"
         /> */}
-        <h2 className="flex text-2xl font-bold text-[#D75C3C] mb-1">
+        <h2 className="flex text-2xl font-semibold text-[#D75C3C] mb-2">
           Login
         </h2>
         <h2 className="flex text-sm text-[#9E9E9E] text-bold mb-6">
@@ -75,7 +74,7 @@ export default function Login() {
             render={({ field, fieldState }) => (
               <FormItem>
                 <FormLabel
-                  className={`text-sm ${fieldState.error ? "text-red-600" : "text-[#424242]"
+                  className={`text-sm ${fieldState.error ? "text-red-500" : "text-[#424242]"
                     }`}
                 >
                   Username
@@ -90,21 +89,14 @@ export default function Login() {
                       type="text"
                       placeholder="Enter username"
                       {...field}
-                      className={`h-10 text-sm pl-10 pr-3 focus-visible:ring-gray-200 focus-visible:border-gray-300 rounded-xl ${fieldState.error
-                          ? "border-red-500 ring-red-500 focus-visible:ring-red-200 focus-visible:border-red-500"
-                          : ""
+                      className={`h-10 text-sm pl-10 pr-3 focus-visible:ring-gray-200 focus-visible:border-gray-300 ${fieldState.error
+                        ? "border-red-500 ring-red-500 focus-visible:ring-red-200 focus-visible:border-red-500"
+                        : ""
                         }`}
                     />
                   </div>
                 </FormControl>
-
-                {fieldState.error && (
-                  <div className="text-xs flex items-center gap-1">
-                    <Info className="w-4 h-4 text-red-500" />
-                    <span className="ml-1 text-red-500">{fieldState.error.message}</span>
-                  </div>
-                )}
-
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -116,7 +108,7 @@ export default function Login() {
             render={({ field, fieldState }) => (
               <FormItem>
                 <FormLabel
-                  className={`text-sm ${fieldState.error ? "text-red-600" : "text-[#424242]"
+                  className={`text-sm ${fieldState.error ? "text-red-500" : "text-[#424242]"
                     }`}
                 >
                   Password
@@ -131,9 +123,9 @@ export default function Login() {
                       type={showPassword ? "text" : "password"}
                       placeholder="Enter password"
                       {...field}
-                      className={`h-10 text-sm pl-10 pr-10 focus-visible:ring-gray-200 focus-visible:border-gray-300 rounded-xl ${fieldState.error
-                          ? "border-red-500 ring-red-500 focus-visible:ring-red-200 focus-visible:border-red-500"
-                          : ""
+                      className={`h-10 text-sm pl-10 pr-10 focus-visible:ring-gray-200 focus-visible:border-gray-300 ${fieldState.error
+                        ? "border-red-500 ring-red-500 focus-visible:ring-red-200 focus-visible:border-red-500"
+                        : ""
                         }`}
                     />
 
@@ -150,12 +142,7 @@ export default function Login() {
                     </button>
                   </div>
                 </FormControl>
-                {fieldState.error && (
-                  <div className="text-xs flex items-center gap-1">
-                    <Info className="w-4 h-4 text-red-500" />
-                    <span className="ml-1 text-red-500">{fieldState.error.message}</span>
-                  </div>
-                )}
+                <FormMessage />
 
                 <div className="flex justify-end mt-1">
                   <button
@@ -172,7 +159,7 @@ export default function Login() {
           {/* Submit */}
           <Button
             type="submit"
-            className="w-full rounded-xl h-10 mt-2 text-sm bg-[#D75C3C] hover:bg-[#D75C3C]/90"
+            className="w-full rounded-lg h-10 mt-1 text-sm bg-[#D75C3C] hover:bg-[#D75C3C]/90"
             disabled={isLoading}
           >
             {isLoading ? "Logging in..." : "Log in"}

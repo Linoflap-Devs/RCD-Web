@@ -10,7 +10,7 @@ export default function Home() {
           alt="RCD BG"
           fill
           className="object-cover pr-0"
-        />
+        />  
         <div className="absolute bottom-6 left-8 flex items-center gap-2 text-white font-bold z-10">
           <Image
             src="/logo-vector.png"
@@ -23,7 +23,7 @@ export default function Home() {
             <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 text-sm font-medium">
               <span>RCD</span>
             </div>
-          </div> */}
+          </div> */}  
           <div className="leading-tight text-xl">
             Realty Marketing <br />
             Corporation
@@ -31,8 +31,8 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="w-full lg:w-1/2 flex items-center justify-center">
-        <div className="w-full p-30">
+      <div className="w-full lg:w-2/2 flex items-center justify-center">
+        <div className="w-full m-60">
           <Login />
         </div>
       </div>
