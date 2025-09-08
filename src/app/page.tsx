@@ -3,37 +3,36 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <main className="bg-white flex h-screen">
-      <div className="hidden lg:block relative w-1/2">
+    <main className="bg-white h-screen flex">
+      <div className="hidden lg:flex relative w-1/2">
         <Image
           src="/rcd-bg.jpg"
           alt="RCD BG"
           fill
-          className="object-cover pr-0"
-        />  
-        <div className="absolute bottom-6 left-8 flex items-center gap-2 text-white font-bold z-10">
+          className="object-cover"
+          priority
+        />
+        <div className="absolute inset-0 bg-black/40" />
+        <div className="absolute bottom-10 left-10 flex items-center gap-3 text-white z-10">
           <Image
             src="/logo-vector.png"
             alt="RCD Logo"
-            width={80}
-            height={80}
-            className="object-contain"
-          /> 
-          {/* <div className="flex items-center space-x-3 text-justify">
-            <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 text-sm font-medium">
-              <span>RCD</span>
-            </div>
-          </div> */}  
-          <div className="leading-tight text-xl">
+            width={70}
+            height={70}
+            className="object-contain drop-shadow-lg"
+          />
+          <div className="leading-tight text-2xl font-bold drop-shadow-md">
             Realty Marketing <br />
             Corporation
           </div>
         </div>
       </div>
-
-      <div className="w-full lg:w-2/2 flex items-center justify-center">
-        <div className="w-full m-60">
+      <div className="flex w-full lg:w-1/2 items-center justify-center p-6">
+        <div className="w-full max-w-md">
           <Login />
+          <p className=" absolute bottom-12 right-60 text-xs text-gray-400 text-center">
+            © {new Date().getFullYear()} RCD Realty Marketing Corp.  All rights reserved.
+          </p>
         </div>
       </div>
     </main>

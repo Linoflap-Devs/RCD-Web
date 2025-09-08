@@ -11,10 +11,9 @@ import {
 } from "@./components/ui/form";
 import { Input } from "@./components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Eye, EyeClosed, Info, LockIcon, User } from "lucide-react";
+import { Eye, EyeClosed, LockIcon, User } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import Image from "next/image";
 import * as z from "zod";
 
 const formSchema = z.object({
@@ -51,15 +50,8 @@ export default function Login() {
   return (
     <div>
       <div className="pb-1">
-        {/* <Image
-          src="/logo-vector.png"
-          alt="RCD Logo"
-          width={70}
-          height={70}
-          className="object-contain pr-3"
-        /> */}
-        <h2 className="flex text-2xl font-semibold text-[#D75C3C] mb-2">
-          Login
+        <h2 className="flex text-2xl font-bold text-[#D75C3C] mb-1">
+          Welcome Back!
         </h2>
         <h2 className="flex text-sm text-[#9E9E9E] text-bold mb-6">
           Please log in to your account
@@ -89,7 +81,7 @@ export default function Login() {
                       type="text"
                       placeholder="Enter username"
                       {...field}
-                      className={`h-10 text-sm pl-10 pr-3 focus-visible:ring-gray-200 focus-visible:border-gray-300 ${fieldState.error
+                      className={`h-10 text-sm pl-10 pr-3 focus-visible:ring-gray-200 focus-visible:border-gray-300 rounded-xl ${fieldState.error
                         ? "border-red-500 ring-red-500 focus-visible:ring-red-200 focus-visible:border-red-500"
                         : ""
                         }`}
@@ -123,7 +115,7 @@ export default function Login() {
                       type={showPassword ? "text" : "password"}
                       placeholder="Enter password"
                       {...field}
-                      className={`h-10 text-sm pl-10 pr-10 focus-visible:ring-gray-200 focus-visible:border-gray-300 ${fieldState.error
+                      className={`h-10 text-sm pl-10 pr-10 focus-visible:ring-gray-200 focus-visible:border-gray-300 rounded-xl ${fieldState.error
                         ? "border-red-500 ring-red-500 focus-visible:ring-red-200 focus-visible:border-red-500"
                         : ""
                         }`}
@@ -159,7 +151,7 @@ export default function Login() {
           {/* Submit */}
           <Button
             type="submit"
-            className="w-full rounded-lg h-10 mt-1 text-sm bg-[#D75C3C] hover:bg-[#D75C3C]/90"
+            className="w-full rounded-xl h-10 mt-1 text-sm bg-[#D75C3C] hover:bg-[#D75C3C]/90"
             disabled={isLoading}
           >
             {isLoading ? "Logging in..." : "Log in"}
