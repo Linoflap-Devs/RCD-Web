@@ -1,4 +1,4 @@
-import Login from "@./components/Login";
+import Login from "@/components/Login";
 import Image from "next/image";
 
 export default function Home() {
@@ -30,7 +30,7 @@ export default function Home() {
       <div className="flex w-full lg:w-1/2 items-center justify-center p-6">
         <div className="w-full max-w-md">
           <Login />
-          <p className=" absolute bottom-12 right-60 text-xs text-gray-400 text-center">
+          <p className="absolute bottom-12 right-60 text-xs text-gray-400 text-center">
             © {new Date().getFullYear()} RCD Realty Marketing Corp.  All rights reserved.
           </p>
         </div>
