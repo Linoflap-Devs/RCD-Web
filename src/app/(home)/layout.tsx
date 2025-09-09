@@ -23,6 +23,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <AppSidebar
         groups={groups}
         company={{ name: "RCD", description: "System", logoUrl: "/logo-vector.png" }}
+        user={{ name: "John Doe", email: "johndoe@email.com" }}
       />
       <SidebarInset>
         <header className="flex h-13 items-center gap-1 border-b px-4">

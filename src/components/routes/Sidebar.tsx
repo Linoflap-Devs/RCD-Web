@@ -13,6 +13,11 @@ import {
 import Link from "next/link"
 import Image from "next/image"
 import { useSidebar } from "@/components/ui/sidebar"
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
+import { cn } from "@/lib/utils"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "../ui/dropdown-menu"
+import { Button } from "../ui/button"
+import { LogOut, MoreVertical, User2 } from "lucide-react"
 
 interface SubItem {
   label: string
@@ -33,6 +38,11 @@ interface SidebarGroupData {
   routes: RouteItem[]
 }
 
+interface UserDetails {
+  name: string
+  email: string
+}
+
 interface AppSidebarProps {
   groups: SidebarGroupData[]
   company?: {
@@ -40,29 +50,33 @@ interface AppSidebarProps {
     description: string
     logoUrl?: string
   }
+  user?: UserDetails
 }
 
-export function AppSidebar({ groups, company }: AppSidebarProps) {
+export function AppSidebar({ groups, company, user }: AppSidebarProps) {
   const { state } = useSidebar()
   const isCollapsed = state === "collapsed"
 
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>
+        {/* Company Logo + Info */}
         {company && (
-          <div className="px-3 pt-6">
+          <div className={(isCollapsed ? "flex h-14 items-center justify-center" : "p-4 pt-8 flex h-14 items-center")}>
             <div className="flex items-center gap-2">
               {company.logoUrl && (
-                <Image
-                  src={company.logoUrl}
-                  alt={company.name}
-                  width={40}
-                  height={40}
-                  className="rounded-md"
-                />
+                <div className={(isCollapsed ? "w-[20px] h-[20px] bg-primary rounded-md flex items-center justify-center" : "w-[35px] h-[35px] bg-primary rounded-md flex items-center justify-center")}>
+                  <Image
+                    src={company.logoUrl}
+                    alt={company.name}
+                    width={30}
+                    height={30}
+                    className={cn(isCollapsed ? "object-contain justify-center" : "object-contain")}
+                  />
+                </div>
               )}
               {!isCollapsed && (
-                <div className="flex flex-col">
+                <div className="flex flex-col gap-0">
                   <span className="text-sm font-semibold">{company.name}</span>
                   <span className="text-xs text-muted-foreground">
                     {company.description}
@@ -87,7 +101,6 @@ export function AppSidebar({ groups, company }: AppSidebarProps) {
                         <span className="text-sm">{route.label}</span>
                       </Link>
                     </SidebarMenuButton>
-
                     {/* Sub-items */}
                     {route.subItems && route.subItems.length > 0 && (
                       <div className="ml-6 mt-1 space-y-1">
@@ -96,8 +109,8 @@ export function AppSidebar({ groups, company }: AppSidebarProps) {
                             key={sub.href}
                             href={sub.href}
                             className={`block rounded-md px-2 py-1.5 text-sm transition-colors ${sub.active
-                                ? "bg-muted font-medium text-primary"
-                                : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                              ? "bg-muted font-medium text-primary"
+                              : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                               }`}
                           >
                             {sub.label}
@@ -111,6 +124,74 @@ export function AppSidebar({ groups, company }: AppSidebarProps) {
             </SidebarGroupContent>
           </SidebarGroup>
         ))}
+
+        {/* User details */}
+        {user && (
+          <div className="mt-auto p-4 pb-5">
+            <div className="flex items-center gap-2 mr-2">
+              <Avatar
+                className={cn(isCollapsed
+                  ? "h-5 w-5 flex-shrink-0 m-0"
+                  : "flex-shrink-0"
+                )}
+              >
+                <AvatarImage src="" />
+                <AvatarFallback
+                  className={cn(isCollapsed
+                    ? "bg-primary text-primary-foreground text-sm p-2"
+                    : "bg-primary text-primary-foreground text-base"
+                  )}
+                >
+                  RC
+                </AvatarFallback>
+              </Avatar>
+              {!isCollapsed && (
+                <>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium">{user.name}</span>
+                    <span className="text-xs text-muted-foreground">
+                      {user.email}
+                    </span>
+                  </div>
+
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        className="ml-1 h-7 sm:h-8 w-7 sm:w-8 p-0"
+                      >
+                        <span className="sr-only">Open menu</span>
+                        <MoreVertical className="h-4 sm:h-4 w-3.5 sm:w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                      align="end"
+                      className="text-xs sm:text-sm"
+                    >
+                      <DropdownMenuItem className="text-xs sm:text-sm">
+                        <Link
+                          href={`/home/profile`}
+                          className="flex items-center gap-2"
+                        >
+                          <User2 className="h-5 w-5 text-sidebar-foreground hover:text-sidebar-accent-foreground" />
+                          User Profile
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        className="text-destructive cursor-pointer"
+                      //onClick={onLogout}
+                      >
+                        <LogOut className="h-5 w-5 text-sidebar-foreground hover:text-sidebar-accent-foreground" />
+                        Logout
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </>
+              )}
+            </div>
+          </div>
+        )}
       </SidebarContent>
     </Sidebar>
   )
