@@ -24,9 +24,7 @@ export const getHomeBreadcrumb = (pathname: string) => {
   );
 
   // Special case
-  if (pathname.startsWith("/home/crew/details")) {
-    return match("/home/crew", "Crew List", "Crew Details");
-  }
+  if (pathname.startsWith("/home/crew/details")) {return match("/home/crew", "Crew List", "Crew Details");}
 
   // Loop through groups & items
   for (const group of routeGroups) {
@@ -40,9 +38,9 @@ export const getHomeBreadcrumb = (pathname: string) => {
         if (sub) {
           return (
             <div className="flex items-center">
-              <span className="text-muted-foreground">{item.label}</span>
-              <ChevronRightIcon className="h-3 w-3 mx-2" />
-              <span className="text-primary">{sub.label}</span>
+              <span className="text-muted">{item.label}</span>
+              <ChevronRightIcon className="h-3 w-3 mx-2 text-muted-foreground" />
+              <span className="text-muted-foreground">{sub.label}</span>
             </div>
           );
         }
@@ -50,6 +48,6 @@ export const getHomeBreadcrumb = (pathname: string) => {
     }
   }
 
-  // ✅ Fallback
+  // Fallback
   return <span className="text-primary">Home</span>;
 };

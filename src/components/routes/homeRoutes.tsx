@@ -35,7 +35,7 @@ export const getHomeRoutes = (pathname: string, userType: number): SidebarGroupD
         },
         {
           label: "Test",
-          icon: LayoutDashboard,
+          icon: TabletSmartphone,
           href: "/test",
           active: pathname.startsWith("/test"),
           allowedUserTypes: [1, 3, 4, 5],

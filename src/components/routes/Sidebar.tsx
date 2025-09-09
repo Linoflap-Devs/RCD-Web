@@ -49,7 +49,6 @@ export function AppSidebar({ groups, company }: AppSidebarProps) {
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>
-        {/* Company header */}
         {company && (
           <div className="px-3 pt-6">
             <div className="flex items-center gap-2">
@@ -96,11 +95,10 @@ export function AppSidebar({ groups, company }: AppSidebarProps) {
                           <Link
                             key={sub.href}
                             href={sub.href}
-                            className={`block rounded-md px-2 py-1.5 text-sm transition-colors ${
-                              sub.active
+                            className={`block rounded-md px-2 py-1.5 text-sm transition-colors ${sub.active
                                 ? "bg-muted font-medium text-primary"
                                 : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-                            }`}
+                              }`}
                           >
                             {sub.label}
                           </Link>

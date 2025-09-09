@@ -25,10 +25,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         company={{ name: "RCD", description: "System", logoUrl: "/logo-vector.png" }}
       />
       <SidebarInset>
-        <header className="flex h-14 items-center gap-1 border-b px-4">
+        <header className="flex h-13 items-center gap-1 border-b px-4">
           <SidebarTrigger />
           <div className="flex items-center text-base text-muted-foreground">
-            <div className="font-medium text-foreground text-sm">
+            <div className="font-medium text-foreground text-xs">
               {getHomeBreadcrumb(pathname)}
             </div>
           </div>
