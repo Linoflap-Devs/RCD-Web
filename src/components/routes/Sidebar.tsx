@@ -76,7 +76,7 @@ export function AppSidebar({ groups, company, user }: AppSidebarProps) {
                 </div>
               )}
               {!isCollapsed && (
-                <div className="flex flex-col gap-0">
+                <div className="flex flex-col leading-tight">
                   <span className="text-sm font-semibold">{company.name}</span>
                   <span className="text-xs text-muted-foreground">
                     {company.description}
@@ -127,8 +127,8 @@ export function AppSidebar({ groups, company, user }: AppSidebarProps) {
 
         {/* User details */}
         {user && (
-          <div className="mt-auto p-4 pb-5">
-            <div className="flex items-center gap-2 mr-2">
+          <div className="mt-auto p-4 pb-6">
+            <div className="flex items-center gap-3">
               <Avatar
                 className={cn(isCollapsed
                   ? "h-5 w-5 flex-shrink-0 m-0"
@@ -145,6 +145,7 @@ export function AppSidebar({ groups, company, user }: AppSidebarProps) {
                   RC
                 </AvatarFallback>
               </Avatar>
+              
               {!isCollapsed && (
                 <>
                   <div className="flex flex-col">
@@ -158,7 +159,7 @@ export function AppSidebar({ groups, company, user }: AppSidebarProps) {
                     <DropdownMenuTrigger asChild>
                       <Button
                         variant="ghost"
-                        className="ml-1 h-7 sm:h-8 w-7 sm:w-8 p-0"
+                        className="ml-7 h-7 sm:h-8 w-7 sm:w-8 p-0"
                       >
                         <span className="sr-only">Open menu</span>
                         <MoreVertical className="h-4 sm:h-4 w-3.5 sm:w-4" />

@@ -22,7 +22,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <SidebarProvider>
       <AppSidebar
         groups={groups}
-        company={{ name: "RCD", description: "System", logoUrl: "/logo-vector.png" }}
+        company={{ name: "RCD Inc", description: "System", logoUrl: "/logo-vector.png" }}
         user={{ name: "John Doe", email: "johndoe@email.com" }}
       />
       <SidebarInset>
@@ -30,7 +30,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <SidebarTrigger />
           <div className="mx-2 h-4 w-px bg-border" />
           <div className="flex items-center text-base text-muted-foreground">
-            <div className="font-medium text-xs">
+            <div className="text-sm">
               {getHomeBreadcrumb(pathname)}
             </div>
           </div>

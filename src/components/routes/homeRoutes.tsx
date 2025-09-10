@@ -1,4 +1,4 @@
-import { House, LayoutDashboard, TabletSmartphone } from "lucide-react";
+import { House, LayoutDashboard, TabletSmartphone, Users2 } from "lucide-react";
 
 interface SubItem {
   label: string
@@ -34,10 +34,10 @@ export const getHomeRoutes = (pathname: string, userType: number): SidebarGroupD
           allowedUserTypes: [1, 3, 4, 5],
         },
         {
-          label: "Test",
-          icon: TabletSmartphone,
-          href: "/test",
-          active: pathname.startsWith("/test"),
+          label: "Agents List",
+          icon: Users2,
+          href: "/agents",
+          active: pathname.startsWith("/agents"),
           allowedUserTypes: [1, 3, 4, 5],
         },
       ],
