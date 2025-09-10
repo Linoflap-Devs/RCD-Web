@@ -26,10 +26,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         user={{ name: "John Doe", email: "johndoe@email.com" }}
       />
       <SidebarInset>
-        <header className="flex h-13 items-center gap-1 border-b px-4">
+        <header className="flex h-14 items-center gap-1 border-b px-4">
           <SidebarTrigger />
+          <div className="mx-2 h-4 w-px bg-border" />
           <div className="flex items-center text-base text-muted-foreground">
-            <div className="font-medium text-foreground text-xs">
+            <div className="font-medium text-xs">
               {getHomeBreadcrumb(pathname)}
             </div>
           </div>

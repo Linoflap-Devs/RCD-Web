@@ -6,6 +6,7 @@ export const getHomeBreadcrumb = (pathname: string) => {
   const userType = 1;
   const routeGroups = getHomeRoutes(pathname, userType ?? 0);  
   const cleanPath = pathname?.split("?")[0] ?? "";
+  console.log(pathname);
 
   const match = (
     base: string,
@@ -16,8 +17,8 @@ export const getHomeBreadcrumb = (pathname: string) => {
       <Link href={base} className="hover:text-foreground">
         {baseLabel}
       </Link>
-      <ChevronRightIcon className="h-3 w-3 mx-2" />
-      <span className="text-primary">
+      <div className="mx-2 h-4 w-px bg-muted-foreground" />
+      <span className="">
         {currentLabel ?? pathname.split("/").pop()?.replace(/_/g, " ")}
       </span>
     </div>
@@ -30,7 +31,7 @@ export const getHomeBreadcrumb = (pathname: string) => {
   for (const group of routeGroups) {
     for (const item of group.routes ?? []) {
       if (item.href === cleanPath) {
-        return <span className="text-primary">{item.label}</span>;
+        return <span className="text-[#121212]">{item.label}</span>;
       }
 
       if (item.subItems) {
