@@ -95,7 +95,7 @@ export function DataTable<TData, TValue>({
                       return (
                         <TableHead
                           key={header.id}
-                          className="bg-muted font-semibold text-xs sm:text-sm py-3 sm:py-1 text-center whitespace-nowrap"
+                          className="bg-[#f7f7f7] font-normal text-xs sm:text-sm py-3 sm:py-1 text-center whitespace-nowrap"
                         >
                           {header.isPlaceholder
                             ? null

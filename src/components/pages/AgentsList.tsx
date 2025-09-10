@@ -143,9 +143,9 @@ export default function AgentsList() {
               <h1 className="text-2xl font-semibold mb-0">Agents List</h1>
             </div>
 
-            <div className="flex flex-col space-y-4 sm:space-y-5 min-h-full">
+            <div className="flex flex-col space-y-5 sm:space-y-4 min-h-full">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 sm:gap-4">
-                <div className="relative w-full md:flex-1">
+                <div className="bg-muted relative w-full md:flex-1 rounded-lg">
                   <Search className="absolute left-2.5 sm:left-3 top-2.5 sm:top-3 h-4 sm:h-4.5 w-4 sm:w-4.5 text-muted-foreground" />
                   <Input
                     placeholder="Search agents...."
