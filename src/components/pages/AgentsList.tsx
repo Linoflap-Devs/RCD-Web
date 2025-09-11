@@ -3,7 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/ui/data-table";
 import { Button } from "../ui/button";
-import { ArrowUpDown, Filter, MoreHorizontal, Search } from "lucide-react";
+import { ArrowUpDown, ChevronsUpDown, Filter, MoreHorizontal, Search } from "lucide-react";
 import { useState } from "react";
 import { Input } from "../ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
@@ -28,7 +28,7 @@ const columns: ColumnDef<Agents>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           ID
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ChevronsUpDown className="ml-1 h-4 w-4" />
         </Button>
       );
     },
@@ -48,7 +48,7 @@ const columns: ColumnDef<Agents>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Agent Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ChevronsUpDown className="ml-1 h-4 w-4" />
         </Button>
       );
     },
@@ -68,7 +68,7 @@ const columns: ColumnDef<Agents>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Division
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ChevronsUpDown className="ml-1 h-4 w-4" />
         </Button>
       );
     },
@@ -177,7 +177,7 @@ export default function AgentsList() {
         <div className="h-full overflow-hidden">
           <div className="p-2 sm:py-3 flex flex-col space-y-4 sm:space-y-5 h-full">
             {/* Header */}
-            <div className="flex flex-col">
+            <div className="flex flex-col mb-4">
               <h1 className="text-2xl font-bold text-primary mb-0">Agents List</h1>
               <div className="font-xs mb-0 text-muted-foreground">Here is the list of approved agents!</div>
             </div>
