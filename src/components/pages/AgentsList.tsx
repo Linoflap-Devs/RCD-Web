@@ -3,10 +3,11 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/ui/data-table";
 import { Button } from "../ui/button";
-import { ArrowUpDown, Filter, Search } from "lucide-react";
+import { ArrowUpDown, Filter, MoreHorizontal, Search } from "lucide-react";
 import { useState } from "react";
 import { Input } from "../ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 
 type Agents = {
   id: string;
@@ -23,6 +24,7 @@ const columns: ColumnDef<Agents>[] = [
       return (
         <Button
           variant="ghost"
+          className="text-xs font-regular"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           ID
@@ -42,6 +44,7 @@ const columns: ColumnDef<Agents>[] = [
       return (
         <Button
           variant="ghost"
+          className="text-xs font-regular"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Agent Name
@@ -61,6 +64,7 @@ const columns: ColumnDef<Agents>[] = [
       return (
         <Button
           variant="ghost"
+          className="text-xs text-[#020817]"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Division
@@ -69,7 +73,7 @@ const columns: ColumnDef<Agents>[] = [
       );
     },
     cell: ({ row }) => (
-      <div className="text-xs sm:text-sm text-center">
+      <div className="text-xs sm:text-sm">
         {row.getValue("division")}
       </div>
     ),
@@ -83,6 +87,39 @@ const columns: ColumnDef<Agents>[] = [
     accessorKey: "divisions",
     header: "Divisions Assigned",
     cell: ({ row }) => row.getValue("divisions") ?? "N/A",
+  },
+  {
+    id: "actions",
+    header: () => (
+      <div className="text-center w-full">Actions</div>
+    ),
+    cell: ({ row }) => {
+      //const crew = row.original;
+
+      return (
+        <div className="text-center">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-7 sm:h-8 w-7 sm:w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-3.5 sm:h-4 w-3.5 sm:w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="text-xs sm:text-sm">
+              <DropdownMenuItem asChild className="text-xs sm:text-sm">
+                {/* <Link
+                  href={`/home/crew/details?id=${crew.CrewCode}&tab=allottee`}
+                >
+                  <Users className="mr-1.5 sm:mr-2 h-3.5 sm:h-4 w-3.5 sm:w-4" />
+                  View
+                </Link> */}
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      );
+    },
   },
 ];
 
@@ -107,6 +144,7 @@ const data: Agents[] = [
 
 export default function AgentsList() {
   const [searchTerm, setSearchTerm] = useState("");
+
   return (
     <>
       <div className="h-full w-full overflow-hidden">
@@ -137,32 +175,31 @@ export default function AgentsList() {
         }
       `}</style>
         <div className="h-full overflow-hidden">
-          <div className="p-2 sm:py-4 flex flex-col space-y-4 sm:space-y-5 h-full">
+          <div className="p-2 sm:py-3 flex flex-col space-y-4 sm:space-y-5 h-full">
             {/* Header */}
-            <div className="flex justify-between items-center">
-              <h1 className="text-2xl font-semibold mb-0">Agents List</h1>
+            <div className="flex flex-col">
+              <h1 className="text-2xl font-bold text-primary mb-0">Agents List</h1>
+              <div className="font-xs mb-0 text-muted-foreground">Here is the list of approved agents!</div>
             </div>
-
             <div className="flex flex-col space-y-5 sm:space-y-4 min-h-full">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 sm:gap-4">
-                <div className="bg-muted relative w-full md:flex-1 rounded-lg">
-                  <Search className="absolute left-2.5 sm:left-3 top-2.5 sm:top-3 h-4 sm:h-4.5 w-4 sm:w-4.5 text-muted-foreground" />
+                {/* Search Input */}
+                <div className="relative w-full md:flex-1 rounded-lg">
+                  <Search className="absolute left-2 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
                   <Input
-                    placeholder="Search agents...."
-                    className="pl-8 sm:pl-9 py-4 sm:py-4 text-xs sm:text-sm h-9 sm:h-10"
+                    placeholder="Search agents..."
+                    className="pl-7 text-xs sm:text-sm h-9"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </div>
 
+                {/* Filter Select */}
                 <div className="flex gap-3">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 w-full">
-                    <Select
-                    //value={inactiveFilter}
-                    //onValueChange={setInactiveFilter}
-                    >
-                      <SelectTrigger className="h-9 sm:h-10 px-3 sm:px-4 py-4 sm:py-5 text-xs sm:text-sm flex items-center gap-1.5 sm:gap-2 w-full flex-1">
-                        <Filter className="h-4 sm:h-4.5 w-4 text-bold text-primary sm:w-4.5" />
+                    <Select>
+                      <SelectTrigger className="h-9 px-3 sm:px-4 text-xs sm:text-sm flex items-center gap-2 w-full flex-1">
+                        <Filter className="h-4 w-4 text-primary" />
                         <SelectValue placeholder="Filter by inactive" />
                       </SelectTrigger>
                       <SelectContent>

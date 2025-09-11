@@ -1,8 +1,8 @@
 "use client"
 
-import { getHomeBreadcrumb } from "@/components/routes/getHomeBreadcrumb";
-import { getHomeRoutes } from "@/components/routes/homeRoutes";
-import { AppSidebar } from "@/components/routes/Sidebar";
+import { getHomeBreadcrumb } from "@/routes/getHomeBreadcrumb";
+import { getHomeRoutes } from "@/routes/homeRoutes";
+import { AppSidebar } from "@/routes/Sidebar";
 import {
   SidebarProvider,
   SidebarInset,

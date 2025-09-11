@@ -42,7 +42,7 @@ export function DataTable<TData, TValue>({
   pageSize = 10,
   hideHeader = false,
   onRowSelectionChange,
-  selectedRowIds = {},
+  selectedRowIds = {}, // for checkbox
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -84,7 +84,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <>
-      <div className="rounded-md border pb-3">
+      <div className="rounded-lg border">
         <div className="scrollbar-hide">
           <Table>
             {!hideHeader && (
@@ -95,7 +95,7 @@ export function DataTable<TData, TValue>({
                       return (
                         <TableHead
                           key={header.id}
-                          className="bg-[#f7f7f7] font-normal text-xs sm:text-sm py-3 sm:py-1 text-center whitespace-nowrap"
+                          className="bg-[#f7f7f7] font-semibold text-xs sm:text-xs py-2 sm:py-1 text-justify whitespace-nowrap"
                         >
                           {header.isPlaceholder
                             ? null
@@ -121,7 +121,7 @@ export function DataTable<TData, TValue>({
                     {row.getVisibleCells().map((cell) => (
                       <TableCell
                         key={cell.id}
-                        className="py-2 sm:py-3 text-center"
+                        className="py-2 sm:py-1 text-justify"
                       >
                         {flexRender(
                           cell.column.columnDef.cell,
@@ -144,7 +144,6 @@ export function DataTable<TData, TValue>({
             </TableBody>
           </Table>
         </div>
-       
       </div>
       {pagination && data.length > 0 && <DataTablePagination table={table} />}
     </>
