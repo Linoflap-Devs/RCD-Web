@@ -179,7 +179,7 @@ export default function AgentsList() {
             {/* Header */}
             <div className="flex flex-col mb-4">
               <h1 className="text-2xl font-bold text-primary mb-0">Agents List</h1>
-              <div className="font-xs mb-0 text-muted-foreground">Here is the list of approved agents!</div>
+              <div className="font-xs mb-0 text-muted-foreground">Here is the list of approved agents.</div>
             </div>
             <div className="flex flex-col space-y-5 sm:space-y-4 min-h-full">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 sm:gap-4">
