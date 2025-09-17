@@ -177,14 +177,17 @@ export default function AgentsList() {
         <div className="h-full overflow-hidden">
           <div className="p-2 sm:py-0 flex flex-col space-y-4 sm:space-y-5 h-full">
             {/* Header */}
+            {/* <div className="flex flex-col mb-4">
+              <h1 className="text-2xl font-bold text-primary mb-0">Agent management</h1>
+              <div className="font-xs mb-0 text-muted-foreground">Here is the list of approved agents.</div>
+            </div> */}
             <div className="flex flex-col space-y-5 sm:space-y-4 min-h-full">
 
               <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
-                {/* Left side: title + count */}
-              <div className="flex flex-row items-center gap-2">
-                <span className="text-xl font-semibold">All Agents</span>
-                <span className="text-lg text-muted-foreground">78</span>
-              </div>
+                <div className="flex flex-row items-center gap-2">
+                  <span className="text-xl font-semibold">All Agents</span>
+                  <span className="text-lg text-muted-foreground">78</span>
+                </div>
 
                 {/* Right side: search + filter */}
                 <div className="flex flex-col md:flex-row items-center gap-3">
