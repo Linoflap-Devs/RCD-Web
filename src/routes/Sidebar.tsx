@@ -58,7 +58,7 @@ export function AppSidebar({ groups, company, user }: AppSidebarProps) {
   const isCollapsed = state === "collapsed"
 
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar collapsible="icon" className="border-r-0">
       <SidebarContent>
         {/* Company Logo + Info */}
         {company && (

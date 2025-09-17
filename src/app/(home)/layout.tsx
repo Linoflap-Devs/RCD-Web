@@ -25,17 +25,20 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         company={{ name: "RCD Inc", description: "System", logoUrl: "/logo-vector.png" }}
         user={{ name: "John Doe", email: "johndoe@email.com" }}
       />
-      <SidebarInset>
-        <header className="flex h-14 items-center gap-1 px-4">
-          <SidebarTrigger />
-          <div className="mx-2 h-4 w-px bg-border" />
-          <div className="flex items-center text-base text-muted-foreground">
-            <div className="text-sm">
-              {getHomeBreadcrumb(pathname)}
+      <SidebarInset className="bg-muted/40 p-2">
+        <div className="flex flex-col h-full rounded-xl border bg-background">
+          {/* Header */}
+          <header className="flex h-12 items-center gap-1 px-4">
+            <SidebarTrigger />
+            <div className="mx-2 h-4 w-px bg-border" />
+            <div className="flex items-center text-base text-muted-foreground">
+              <div className="text-sm">{getHomeBreadcrumb(pathname)}</div>
             </div>
-          </div>
-        </header>
-        <main className="flex-1 px-4 pt-2">{children}</main>
+          </header>
+
+          {/* Page content */}
+          <main className="flex-1 px-4 pt-2">{children}</main>
+        </div>
       </SidebarInset>
     </SidebarProvider>
   )
