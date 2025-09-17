@@ -3,7 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/ui/data-table";
 import { Button } from "../ui/button";
-import { ArrowUpDown, ChevronsUpDown, Filter, MoreHorizontal, Search } from "lucide-react";
+import { ChevronsUpDown, Filter, MoreHorizontal, Search } from "lucide-react";
 import { useState } from "react";
 import { Input } from "../ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
@@ -175,42 +175,49 @@ export default function AgentsList() {
         }
       `}</style>
         <div className="h-full overflow-hidden">
-          <div className="p-2 sm:py-3 flex flex-col space-y-4 sm:space-y-5 h-full">
+          <div className="p-2 sm:py-0 flex flex-col space-y-4 sm:space-y-5 h-full">
             {/* Header */}
             <div className="flex flex-col mb-4">
-              <h1 className="text-2xl font-bold text-primary mb-0">Agents List</h1>
+              <h1 className="text-2xl font-bold text-primary mb-0">Agent management</h1>
               <div className="font-xs mb-0 text-muted-foreground">Here is the list of approved agents.</div>
             </div>
             <div className="flex flex-col space-y-5 sm:space-y-4 min-h-full">
-              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 sm:gap-4">
-                {/* Search Input */}
-                <div className="relative w-full md:flex-1 rounded-lg">
-                  <Search className="absolute left-2 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
-                  <Input
-                    placeholder="Search agents..."
-                    className="pl-7 text-xs sm:text-sm h-9"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </div>
 
-                {/* Filter Select */}
-                <div className="flex gap-3">
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 w-full">
-                    <Select>
-                      <SelectTrigger className="h-9 px-3 sm:px-4 text-xs sm:text-sm flex items-center gap-2 w-full flex-1">
-                        <Filter className="h-4 w-4 text-primary" />
-                        <SelectValue placeholder="Filter by inactive" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All agents</SelectItem>
-                        <SelectItem value="verified">Active</SelectItem>
-                        <SelectItem value="pending">Inactive</SelectItem>
-                      </SelectContent>
-                    </Select>
+              <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
+                {/* Left side: title + count */}
+              <div className="flex flex-row items-center gap-2">
+                <span className="text-xl font-semibold">All Agents</span>
+                <span className="text-lg text-muted-foreground">78</span>
+              </div>
+
+                {/* Right side: search + filter */}
+                <div className="flex flex-col md:flex-row items-center gap-3">
+                  {/* Search Input */}
+                  <div className="relative rounded-lg">
+                    <Search className="absolute left-2 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
+                    <Input
+                      placeholder="Search..."
+                      className="pl-7 text-xs sm:text-sm h-8 w-70" // fixed width
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
                   </div>
+
+                  {/* Filter Select */}
+                  <Select>
+                    <SelectTrigger className="h-8 px-3 sm:px-4 text-xs sm:text-sm flex items-center gap-2">
+                      <Filter className="h-4 w-4 text-primary" />
+                      <SelectValue placeholder="Filter" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All agents</SelectItem>
+                      <SelectItem value="verified">Active</SelectItem>
+                      <SelectItem value="pending">Inactive</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
+
               {/* DataTable */}
               <div>
                 <DataTable columns={columns} data={data} pageSize={5} />

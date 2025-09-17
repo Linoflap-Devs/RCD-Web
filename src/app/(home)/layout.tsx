@@ -26,7 +26,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         user={{ name: "John Doe", email: "johndoe@email.com" }}
       />
       <SidebarInset>
-        <header className="flex h-14 items-center gap-1 border-b px-4">
+        <header className="flex h-14 items-center gap-1 px-4">
           <SidebarTrigger />
           <div className="mx-2 h-4 w-px bg-border" />
           <div className="flex items-center text-base text-muted-foreground">
@@ -35,7 +35,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </div>
           </div>
         </header>
-        <main className="flex-1 p-4">{children}</main>
+        <main className="flex-1 px-4 pt-2">{children}</main>
       </SidebarInset>
     </SidebarProvider>
   )
