@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import DivisionDashboard from "./DivisionDashboard";
 import { ArrowRight } from "lucide-react";
 import TeamDashboard from "./TeamDashboard";
+import CollectionForecastDashboard from "./CollectionForecast";
 
 export default function Dashboard() {
   const searchParams = useSearchParams();
@@ -37,9 +38,9 @@ export default function Dashboard() {
           <div className="border-t border-gray-200">
             <div className="flex justify-end items-center h-8 px-4">
               <span className="text-xs mr-2">View More</span>
-              <Badge className="bg-primary text-white p-1 px-3 rounded-full hover:bg-primary-600 cursor-pointer">
+              {/* <Badge className="bg-primary text-white p-1 px-3 rounded-full hover:bg-primary-600 cursor-pointer">
                 <ArrowRight className="w-3 h-3" />
-              </Badge>
+              </Badge> */}
             </div>
           </div>
         </Card>
@@ -56,9 +57,9 @@ export default function Dashboard() {
           <div className="border-t border-gray-200">
             <div className="flex justify-end items-center h-8 px-4">
               <span className="text-xs mr-2">View More</span>
-              <Badge className="bg-primary text-white p-1 px-3 rounded-full hover:bg-primary-600 cursor-pointer">
+              {/* <Badge className="bg-primary text-white p-1 px-3 rounded-full hover:bg-primary-600 cursor-pointer">
                 <ArrowRight className="w-3 h-3" />
-              </Badge>
+              </Badge> */}
             </div>
           </div>
         </Card>
@@ -75,9 +76,9 @@ export default function Dashboard() {
           <div className="border-t border-gray-200">
             <div className="flex justify-end items-center h-8 px-4">
               <span className="text-xs mr-2">View More</span>
-              <Badge className="bg-primary text-white p-1 px-3 rounded-full hover:bg-primary-600 cursor-pointer">
+              {/* <Badge className="bg-primary text-white p-1 px-3 rounded-full hover:bg-primary-600 cursor-pointer">
                 <ArrowRight className="w-3 h-3" />
-              </Badge>
+              </Badge> */}
             </div>
           </div>
         </Card>
@@ -138,7 +139,7 @@ export default function Dashboard() {
             <TeamDashboard />
           </TabsContent>
           <TabsContent value="forecast">
-            <div className="p-4 rounded-lg border">📊 Sales Chart here</div>
+            <CollectionForecastDashboard />
           </TabsContent>
         </Tabs>
       </div>

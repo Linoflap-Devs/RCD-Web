@@ -6,9 +6,6 @@ import {
   CardTitle,
 } from "../ui/card";
 import {
-  PieChart,
-  Pie,
-  Cell,
   Tooltip,
   BarChart,
   XAxis,
@@ -18,7 +15,12 @@ import {
   LabelList,
   ResponsiveContainer,
 } from "recharts";
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "../ui/chart";
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "../ui/chart";
 import {
   Select,
   SelectContent,
@@ -42,7 +44,6 @@ const topDivisions = [
   { name: "England", sales: 480, fill: "#C6AC8F" }, // earthy beige/tan
   { name: "Via Domus", sales: 420, fill: "#8D99AE" }, // neutral gray-blue accent
 ];
-
 
 const divisionsData = Array.from({ length: 30 }, (_, i) => {
   const monthTarget = Math.floor(Math.random() * 5000) + 2000; // Target between 2000-7000
@@ -84,7 +85,7 @@ export default function DivisionDashboard() {
     <div className="space-y-5">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 items-stretch">
         <Card className="col-span-2 rounded-lg border shadow-none bg-white">
-          <CardHeader className="mb-3 flex items-center justify-between gap-2">
+          <CardHeader className="flex items-center justify-between gap-1 border-b">
             <div className="flex flex-col gap-1">
               <CardTitle className="text-primary">
                 Top 10 Division Sales
@@ -112,7 +113,10 @@ export default function DivisionDashboard() {
                       style={{ width: `${progressWidth}%` }}
                     ></div> */}
 
-                    <div style={{ backgroundColor: division.fill }} className="relative z-10 flex items-center justify-center w-6 h-6 rounded-full text-white text-xs font-medium flex-shrink-0">
+                    <div
+                      style={{ backgroundColor: division.fill }}
+                      className="relative z-10 flex items-center justify-center w-6 h-6 rounded-full text-white text-xs font-medium flex-shrink-0"
+                    >
                       {index + 1}
                     </div>
 
@@ -143,7 +147,10 @@ export default function DivisionDashboard() {
                       style={{ width: `${progressWidth}%` }}
                     ></div> */}
 
-                    <div style={{ backgroundColor: division.fill }} className="relative z-10 flex items-center justify-center w-6 h-6 rounded-full text-white text-xs font-medium flex-shrink-0">
+                    <div
+                      style={{ backgroundColor: division.fill }}
+                      className="relative z-10 flex items-center justify-center w-6 h-6 rounded-full text-white text-xs font-medium flex-shrink-0"
+                    >
                       {index + 6}
                     </div>
 
@@ -189,12 +196,7 @@ export default function DivisionDashboard() {
                     cursor={false}
                     content={<ChartTooltipContent indicator="line" />}
                   />
-                  <Bar
-                    dataKey="sales"
-                    layout="vertical"
-                    fill="#fff"
-                    radius={4}
-                  >
+                  <Bar dataKey="sales" layout="vertical" fill="#fff" radius={4}>
                     <LabelList
                       dataKey="name"
                       position="insideLeft"
@@ -207,14 +209,43 @@ export default function DivisionDashboard() {
               </ResponsiveContainer>
             </ChartContainer>
           </CardContent>
-        </Card> 
+        </Card>
       </div>
 
-      <Card className="overflow-x-auto rounded-lg shadow-none">
-        <CardHeader className="gap-1 mb-3">
-          <CardTitle className="text-primary">Sales Target Division</CardTitle>
-          <CardDescription>Monthly Target - Actual Sales</CardDescription>
+      <Card className="overflow-x-auto rounded-lg shadow-none pt-0">
+        <CardHeader className="flex flex-col items-stretch border-b !p-0 sm:flex-row">
+          <div className="flex flex-1 flex-col justify-center gap-1 px-6 pt-4 pb-3 sm:!py-0">
+            <CardTitle className="text-primary">
+              Sales Target Division
+            </CardTitle>
+            <CardDescription>Monthly Target - Actual Sales</CardDescription>
+          </div>
+          <div className="flex">
+            <button
+              //key={chart}
+              //data-active={activeChart === chart}
+              className="data-[active=true]:bg-muted/50 relative z-30 flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l sm:border-t-0 sm:border-l sm:px-8 sm:py-6"
+              //onClick={() => setActiveChart(chart)}
+            >
+              <span className="text-muted-foreground text-xs">Title</span>
+              <span className="text-lg leading-none font-bold sm:text-3xl">
+                78
+              </span>
+            </button>
+            <button
+              //key={chart}
+              //data-active={activeChart === chart}
+              className="data-[active=true]:bg-muted/50 relative z-30 flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l sm:border-t-0 sm:border-l sm:px-8 sm:py-6"
+              //onClick={() => setActiveChart(chart)}
+            >
+              <span className="text-muted-foreground text-xs">Title</span>
+              <span className="text-lg leading-none font-bold sm:text-3xl">
+                78
+              </span>
+            </button>
+          </div>
         </CardHeader>
+
         <CardContent className="h-64 min-w-[800px]">
           <ChartContainer
             className="h-full w-full"
@@ -302,7 +333,7 @@ export default function DivisionDashboard() {
       </Card>
 
       <Card className="overflow-x-auto rounded-lg shadow-none">
-        <CardHeader className="mb-3 flex items-center justify-between gap-2">
+        <CardHeader className="mb-3 flex items-center justify-between gap-2 border-b">
           <div className="flex flex-col gap-1">
             <CardTitle className="text-primary">
               Division Sales <span className="text-muted-foreground">(30)</span>
