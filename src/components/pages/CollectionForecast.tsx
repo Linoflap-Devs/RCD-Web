@@ -1,12 +1,15 @@
 import {
+  Bar,
+  BarChart,
+  CartesianGrid,
   Label,
-  PolarGrid,
   PolarRadiusAxis,
   RadialBar,
   RadialBarChart,
   ResponsiveContainer,
+  XAxis,
+  YAxis,
 } from "recharts";
-
 import {
   Card,
   CardContent,
@@ -17,7 +20,10 @@ import {
 import {
   ChartConfig,
   ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
 } from "../ui/chart";
+import DatePickerMonthYear from "../ui/datepicker";
 
 // Chart config
 const chartConfig = {
@@ -40,6 +46,55 @@ const chartDataDP = [
   },
 ];
 
+interface BuyerData {
+  buyer: string;
+  value: number;
+}
+
+// Mock data
+const chartData: BuyerData[] = [
+  { buyer: "Buyer A", value: 120000 },
+  { buyer: "Buyer B", value: 95000 },
+  { buyer: "Buyer C", value: 150000 },
+  { buyer: "Buyer D", value: 80000 },
+  { buyer: "Buyer E", value: 120000 },
+  { buyer: "Buyer F", value: 95000 },
+  { buyer: "Buyer G", value: 150000 },
+  { buyer: "Buyer H", value: 80000 },
+  { buyer: "Buyer A", value: 120000 },
+  { buyer: "Buyer B", value: 95000 },
+  { buyer: "Buyer C", value: 150000 },
+  { buyer: "Buyer D", value: 80000 },
+  { buyer: "Buyer E", value: 120000 },
+  { buyer: "Buyer F", value: 95000 },
+  { buyer: "Buyer G", value: 150000 },
+  { buyer: "Buyer H", value: 80000 },
+  { buyer: "Buyer A", value: 120000 },
+  { buyer: "Buyer B", value: 95000 },
+  { buyer: "Buyer C", value: 150000 },
+  { buyer: "Buyer D", value: 80000 },
+  { buyer: "Buyer E", value: 120000 },
+  { buyer: "Buyer F", value: 95000 },
+  { buyer: "Buyer G", value: 150000 },
+  { buyer: "Buyer H", value: 80000 },
+  { buyer: "Buyer A", value: 120000 },
+  { buyer: "Buyer B", value: 95000 },
+  { buyer: "Buyer C", value: 150000 },
+  { buyer: "Buyer D", value: 80000 },
+  { buyer: "Buyer E", value: 120000 },
+  { buyer: "Buyer F", value: 95000 },
+  { buyer: "Buyer G", value: 150000 },
+  { buyer: "Buyer H", value: 80000 },
+];
+
+const activeChart = "value"; // key in chartData for bar height
+const chartConfigForecast = {
+  buyerContribution: {
+    label: "Buyer Contribution",
+    color: "var(--chart-2)",
+  },
+} satisfies ChartConfig;
+
 export default function CollectionForecastDashboard() {
   return (
     <div className="space-y-5">
@@ -51,15 +106,14 @@ export default function CollectionForecastDashboard() {
               <CardTitle className="text-primary">
                 DP (%) Paid Progress
               </CardTitle>
-              <CardDescription>Monthly</CardDescription>
+              <CardDescription>
+                Average forecasted DP paid.
+              </CardDescription>
             </div>
           </CardHeader>
-          <CardContent className="flex justify-center items-center h-30">
-            <ChartContainer
-              config={chartConfig}
-              className="aspect-square h-45 mt-14"
-            >
-              <ResponsiveContainer height="90%" width="100%">
+          <CardContent className="flex justify-center items-center">
+            <ChartContainer config={chartConfig} className="aspect-square h-40">
+              <ResponsiveContainer height="100%" width="100%" className="mt-15">
                 <RadialBarChart
                   data={chartDataDP}
                   startAngle={180}
@@ -128,11 +182,61 @@ export default function CollectionForecastDashboard() {
               <CardTitle className="text-primary">
                 Buyer Contribution / Forecast
               </CardTitle>
-              <CardDescription>Monthly</CardDescription>
+              <CardDescription>
+                Top buyers by forecasted net contracts.
+              </CardDescription>
             </div>
           </CardHeader>
-          <CardContent className="grid grid-cols-2 gap-8">
-            {/* a Bar Chart - Interactive wherein - it is to Show which buyers contribute most to the forecasted net contracts. */}
+          <CardContent className="px-2 sm:p-6 sm:pb-0">
+            <ChartContainer
+              config={chartConfigForecast}
+              className="aspect-auto h-50 w-full"
+            >
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={chartData}
+                  margin={{
+                    top: 16,
+                    right: 16,
+                    bottom: 16,
+                    left: 0,
+                  }}
+                >
+                  <CartesianGrid vertical={false} stroke="#f1f1f1" />
+                  <XAxis
+                    dataKey="buyer"
+                    tickLine={false}
+                    axisLine={false}
+                    tickMargin={8}
+                    minTickGap={2}
+                  />
+                  <YAxis
+                    tickLine={false}
+                    axisLine={false}
+                    tickFormatter={(value) =>
+                      new Intl.NumberFormat("en-US", {
+                        notation: "compact",
+                        compactDisplay: "short",
+                      }).format(value)
+                    }
+                  />
+                  <ChartTooltip
+                    content={
+                      <ChartTooltipContent
+                        nameKey={activeChart}
+                        labelFormatter={(value) => value} // buyer name
+                        className="w-[160px]"
+                      />
+                    }
+                  />
+                  <Bar
+                    dataKey={activeChart}
+                    fill="var(--chart-4)"
+                    radius={[2, 0, 0, 0]} // rounded top corners
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </ChartContainer>
           </CardContent>
         </Card>
       </div>
@@ -142,23 +246,28 @@ export default function CollectionForecastDashboard() {
             <CardTitle className="text-primary">
               Reservation Date vs Net Contract Price
             </CardTitle>
-            <CardDescription>Monthly</CardDescription>
+            <CardDescription>
+              Forecasted net contracts across reservation dates.
+            </CardDescription>
           </div>
         </CardHeader>
-        <CardContent className="grid grid-cols-2 gap-8">
-          {/* a (Line / Area Chart) - Visualize pipeline over time, how net contract prices are expected to flow across reservation dates. */}
-        </CardContent>
+        <CardContent className="grid grid-cols-2 gap-8"> </CardContent>
       </Card>
 
       <Card className="rounded-lg border shadow-none bg-white">
-        <CardHeader className="flex items-center gap-2 border-b">
+        <CardHeader className="mb-3 flex items-center justify-between gap-2 border-b">
           <div className="flex flex-col gap-1">
-            <CardTitle className="text-primary">Table Overview</CardTitle>
-            <CardDescription>Monthly</CardDescription>
+            <CardTitle className="text-primary">Data Overview</CardTitle>
+            <CardDescription>
+              Tabular history of all collection forecasts.
+            </CardDescription>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <DatePickerMonthYear />
           </div>
         </CardHeader>
-
-        <CardContent className="grid grid-cols-2 gap-8"></CardContent>
+        <CardContent className="grid grid-cols-2 gap-8"> </CardContent>
       </Card>
     </div>
   );
