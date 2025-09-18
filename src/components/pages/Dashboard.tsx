@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { useRouter, useSearchParams } from "next/navigation";
 import DivisionDashboard from "./DivisionDashboard";
 import { ArrowRight } from "lucide-react";
-import TeamSalesDashboard from "./TeamSalesDashboard";
+import TeamDashboard from "./TeamDashboard";
 
 export default function Dashboard() {
   const searchParams = useSearchParams();
@@ -37,9 +37,9 @@ export default function Dashboard() {
           <div className="border-t border-gray-200">
             <div className="flex justify-end items-center h-8 px-4">
               <span className="text-xs mr-2">View More</span>
-              <Badge className="bg-primary text-white p-1 px-3 rounded-full hover:bg-primary-600 cursor-pointer">
+              {/* <Badge className="bg-primary text-white p-1 px-3 rounded-full hover:bg-primary-600 cursor-pointer">
                 <ArrowRight className="w-3 h-3" />
-              </Badge>
+              </Badge> */}
             </div>
           </div>
         </Card>
@@ -56,9 +56,9 @@ export default function Dashboard() {
           <div className="border-t border-gray-200">
             <div className="flex justify-end items-center h-8 px-4">
               <span className="text-xs mr-2">View More</span>
-              <Badge className="bg-primary text-white p-1 px-3 rounded-full hover:bg-primary-600 cursor-pointer">
+              {/* <Badge className="bg-primary text-white p-1 px-3 rounded-full hover:bg-primary-600 cursor-pointer">
                 <ArrowRight className="w-3 h-3" />
-              </Badge>
+              </Badge> */}
             </div>
           </div>
         </Card>
@@ -122,7 +122,7 @@ export default function Dashboard() {
           onValueChange={handleTabChange}
           className="w-full"
         >
-          <div className="flex items-center justify-start mb-4 pt-5">
+          <div className="flex items-center justify-start mb-4 pt-6">
             <h1 className="text-xl font-bold mr-4">Division Sales Overview</h1>
             <TabsList className="w-auto">
               <TabsTrigger value="divisions">Division Sales</TabsTrigger>
@@ -135,7 +135,7 @@ export default function Dashboard() {
             <DivisionDashboard />
           </TabsContent>
           <TabsContent value="team">
-            <TeamSalesDashboard />
+            <TeamDashboard />
           </TabsContent>
           <TabsContent value="forecast">
             <div className="p-4 rounded-lg border">📊 Sales Chart here</div>

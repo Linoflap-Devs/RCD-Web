@@ -1,6 +1,8 @@
 import {
   Area,
   AreaChart,
+  Bar,
+  BarChart,
   CartesianGrid,
   Cell,
   LabelList,
@@ -9,6 +11,9 @@ import {
   RadialBar,
   RadialBarChart,
   ResponsiveContainer,
+  Sector,
+  SectorProps,
+  Tooltip,
   XAxis,
   YAxis,
 } from "recharts";
@@ -35,16 +40,16 @@ const chartData = Array.from({ length: 26 }, (_, i) => ({
 }));
 
 const chartDataDevelopers = [
-  { name: "Alice", value: 1200, fill: "#1f77b4" },
-  { name: "Bob", value: 980, fill: "#ff7f0e" },
-  { name: "Charlie", value: 870, fill: "#2ca02c" },
-  { name: "Diana", value: 760, fill: "#d62728" },
-  { name: "Ethan", value: 690, fill: "#9467bd" },
-  { name: "Fiona", value: 640, fill: "#8c564b" },
-  { name: "George", value: 590, fill: "#e377c2" },
-  { name: "Hannah", value: 530, fill: "#7f7f7f" },
-  { name: "Ian", value: 480, fill: "#bcbd22" },
-  { name: "Jane", value: 420, fill: "#17becf" },
+  { name: "Alice", value: 1200, fill: "#D75C3C" }, // deep burnt orange
+  { name: "Bob", value: 980, fill: "#F28E2B" }, // rich orange
+  { name: "Charlie", value: 870, fill: "#FFBE0B" }, // golden yellow-orange
+  { name: "Diana", value: 760, fill: "#E15759" }, // red-orange
+  { name: "Ethan", value: 690, fill: "#FF9F1C" }, // bright orange
+  { name: "Fiona", value: 640, fill: "#76B041" }, // warm green (for contrast)
+  { name: "George", value: 590, fill: "#FAA43A" }, // lighter orange
+  { name: "Hannah", value: 530, fill: "#F4D35E" }, // muted yellow
+  { name: "Ian", value: 480, fill: "#C6AC8F" }, // earthy beige/tan
+  { name: "Jane", value: 420, fill: "#8D99AE" }, // neutral gray-blue accent
 ];
 
 const chartConfig = {
@@ -55,13 +60,18 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export default function TeamSalesDashboard() {
+export default function TeamDashboard() {
   const [view, setView] = useState("chart");
+  const maxIndex = chartDataDevelopers.reduce(
+    (maxIdx, curr, idx, arr) => (curr.value > arr[maxIdx].value ? idx : maxIdx),
+    0
+  );
+  const [activeIndex, setActiveIndex] = useState<number | null>(maxIndex);
 
   return (
     <div className="space-y-5">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 gap-4 items-stretch">
-        <Card className="rounded-lg border shadow-none bg-white gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4 items-stretch">
+        <Card className="rounded-lg border shadow-none bg-white gap-3">
           <CardHeader className="mb-3 flex items-center justify-between gap-2">
             <div className="flex flex-col gap-1">
               <CardTitle className="text-primary">
@@ -74,9 +84,8 @@ export default function TeamSalesDashboard() {
             </div>
           </CardHeader>
 
-          <CardContent className="grid grid-cols-2 gap-8">
-            {/* Pie Chart */}
-            <div className="flex items-center justify-center">
+          <CardContent className="flex flex-col gap-6">
+            <div className="flex justify-center">
               <ChartContainer
                 config={{
                   value: {
@@ -84,15 +93,27 @@ export default function TeamSalesDashboard() {
                     color: "hsl(var(--chart-1))",
                   },
                 }}
-                className="h-full w-full flex items-center justify-center"
+                className="h-[250px] w-full max-w-sm"
               >
-                <PieChart>
+                <PieChart width={320} height={320}>
                   <Pie
                     data={chartDataDevelopers}
                     dataKey="value"
                     nameKey="name"
+                    innerRadius={60}
                     outerRadius={90}
+                    paddingAngle={2}
                     labelLine={false}
+                    label
+                    activeIndex={activeIndex ?? undefined}
+                    activeShape={(props: SectorProps) => (
+                      <Sector
+                        {...props}
+                        outerRadius={(props.outerRadius ?? 0) + 10}
+                      />
+                    )}
+                    onMouseEnter={(_, index) => setActiveIndex(index)}
+                    onMouseLeave={() => setActiveIndex(maxIndex)} // reset to highest
                   >
                     {chartDataDevelopers.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.fill} />
@@ -103,27 +124,27 @@ export default function TeamSalesDashboard() {
               </ChartContainer>
             </div>
 
-            {/* List of Top 10 Developers */}
-            <div className="flex flex-col gap-3">
+            {/* List Below */}
+            <div className="grid grid-cols-2 gap-3">
               {chartDataDevelopers.slice(0, 10).map((dev, index) => (
                 <div
                   key={dev.name}
-                  className="flex items-center justify-between border-b pb-1 text-sm"
+                  className="flex items-center justify-between pb-1 border-b text-sm"
                 >
                   <span className="flex items-center gap-2 font-medium text-gray-700">
-                    {/* color dot to match pie slice */}
                     <span
                       className="h-3 w-3 rounded-full"
                       style={{ backgroundColor: dev.fill }}
                     />
                     {index + 1}. {dev.name}
                   </span>
-                  <span className="text-gray-600">{dev.value.toLocaleString()}</span>
+                  <span className="text-gray-600">
+                    {dev.value.toLocaleString()}
+                  </span>
                 </div>
               ))}
             </div>
           </CardContent>
-
         </Card>
 
         <Card className="rounded-lg border shadow-none bg-white">
@@ -144,15 +165,16 @@ export default function TeamSalesDashboard() {
         </Card>
       </div>
 
-      <Card className="rounded-lg shadow-none">
+      <Card className="overflow-x-auto rounded-lg shadow-none">
         <CardHeader className="mb-3 flex items-center justify-between gap-2">
           <div className="flex flex-col gap-1">
             <CardTitle className="text-primary">
-              Developer Sales{" "}
-              <span className="text-muted-foreground">(30 out of 60)</span>
+              Division Sales{" "}
+              <span className="text-muted-foreground">(30 out of 40)</span>
             </CardTitle>
-            <CardDescription>Monthly Sales by Developer</CardDescription>
+            <CardDescription>Monthly Sales Comparison</CardDescription>
           </div>
+
           <div className="flex items-center gap-2">
             <div className="inline-flex bg-white border rounded-xl p-[3px] h-9">
               <button
@@ -179,52 +201,46 @@ export default function TeamSalesDashboard() {
           </div>
         </CardHeader>
 
-        {view === "chart" ? (
-          <CardContent className="h-[280px] w-full">
-            <div className="w-full h-full overflow-x-auto">
-              <ChartContainer
-                config={chartConfig}
-                className="aspect-auto h-full"
-              >
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart
-                    data={chartData}
-                    margin={{ top: 20, right: 20, left: 20, bottom: 20 }}
-                  >
-                    <CartesianGrid vertical={false} />
-                    <XAxis
-                      dataKey="developer"
-                      interval={0}
-                      tickLine={false}
-                      axisLine={false}
-                      tickMargin={10}
-                      angle={-45}
-                      textAnchor="end"
-                      tick={{ fontSize: 12 }}
-                    />
-                    <YAxis tickLine={false} axisLine={false} />
-                    <ChartTooltip
-                      cursor={false}
-                      content={<ChartTooltipContent />}
-                    />
-                    <Area
-                      type="step"
-                      dataKey="sales"
-                      stroke={chartConfig.sales.color}
-                      fill={chartConfig.sales.color}
-                      fillOpacity={0.3}
-                      strokeWidth={2}
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </ChartContainer>
-            </div>
-          </CardContent>
-        ) : (
-          <CardContent className="overflow-x-auto">
-            {/* Table component */}
-          </CardContent>
-        )}
+        <CardContent className="h-64 max-w-[1180px]">
+          {view === "chart" ? (
+            <ChartContainer config={chartConfig} className="aspect-auto h-full">
+              <ResponsiveContainer height="100%" width="100%" className="mt-2">
+                <AreaChart
+                  data={chartData}
+                  margin={{ top: 20, right: 20, left: 20, bottom: 20 }}
+                >
+                  <CartesianGrid vertical={false} />
+                  <XAxis
+                    dataKey="developer"
+                    interval={0}
+                    tickLine={false}
+                    axisLine={false}
+                    tickMargin={10}
+                    angle={-45}
+                    textAnchor="end"
+                  />
+                  <YAxis tickLine={false} axisLine={false} />
+                  <ChartTooltip
+                    cursor={false}
+                    content={<ChartTooltipContent />}
+                  />
+                  <Area
+                    type="natural"
+                    dataKey="sales"
+                    stroke={chartConfig.sales.color}
+                    fill={chartConfig.sales.color}
+                    fillOpacity={0.3}
+                    strokeWidth={2}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </ChartContainer>
+          ) : (
+            <CardContent className="overflow-x-auto">
+              {/* Table component */}
+            </CardContent>
+          )}
+        </CardContent>
       </Card>
     </div>
   );

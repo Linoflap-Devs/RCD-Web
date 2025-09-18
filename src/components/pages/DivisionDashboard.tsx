@@ -10,7 +10,6 @@ import {
   Pie,
   Cell,
   Tooltip,
-  ResponsiveContainer,
   BarChart,
   XAxis,
   YAxis,
@@ -30,29 +29,16 @@ import { ChartBar, Table } from "lucide-react";
 import DatePickerMonthYear from "../ui/datepicker";
 
 const topDivisions = [
-  { name: "Division A", sales: 4682 },
-  { name: "Division B", sales: 4123 },
-  { name: "Division C", sales: 3987 },
-  { name: "Division D", sales: 3750 },
-  { name: "Division E", sales: 3620 },
-  { name: "Division F", sales: 3485 },
-  { name: "Division G", sales: 3350 },
-  { name: "Division H", sales: 3210 },
-  { name: "Division I", sales: 3105 },
-  { name: "Division J", sales: 2980 },
-];
-
-const chartData = [
-  { name: "Division A", value: 4682, fill: "#FFE5B4" }, // light peach
-  { name: "Division B", value: 4123, fill: "#FFD89B" }, // soft apricot
-  { name: "Division C", value: 3987, fill: "#FFC97B" }, // warm orange
-  { name: "Division D", value: 3750, fill: "#FFB84D" }, // mango orange
-  { name: "Division E", value: 3620, fill: "#FFA733" }, // pumpkin
-  { name: "Division F", value: 3485, fill: "#FF8C1A" }, // tangerine
-  { name: "Division G", value: 3350, fill: "#FF751A" }, // burnt orange
-  { name: "Division H", value: 3210, fill: "#FF5C1A" }, // sunset orange
-  { name: "Division I", value: 3105, fill: "#FF471A" }, // reddish-orange
-  { name: "Division J", value: 2980, fill: "#E63900" }, // deep vermilion
+  { name: "Division A", sales: 4682, fill: "#FF6B35" }, // strong orange
+  { name: "Division B", sales: 4123, fill: "#FFA41B" }, // warm amber
+  { name: "Division C", sales: 3987, fill: "#FFC300" }, // golden yellow
+  { name: "Division D", sales: 3750, fill: "#FF8C42" }, // soft orange
+  { name: "Division E", sales: 3620, fill: "#FFD166" }, // light yellow
+  { name: "Division F", sales: 3485, fill: "#FFB347" }, // peachy orange
+  { name: "Division G", sales: 3350, fill: "#FF7F50" }, // coral
+  { name: "Division H", sales: 3210, fill: "#E9C46A" }, // muted gold
+  { name: "Division I", sales: 3105, fill: "#90BE6D" }, // fresh green accent
+  { name: "Division J", sales: 2980, fill: "#43AA8B" }, // teal-green accent
 ];
 
 const divisionsData = Array.from({ length: 30 }, (_, i) => {
@@ -169,7 +155,7 @@ export default function DivisionDashboard() {
             <ChartContainer
               config={{
                 value: {
-                  label: "Sales",
+                  label: "Name",
                   color: "hsl(var(--chart-1))",
                 },
               }}
@@ -177,14 +163,14 @@ export default function DivisionDashboard() {
             >
               <PieChart>
                 <Pie
-                  data={chartData}
-                  dataKey="value"
+                  data={topDivisions}
+                  dataKey="sales"
                   nameKey="name"
                   labelLine={false}
                   label
                   outerRadius={80}
                 >
-                  {chartData.map((entry, index) => (
+                  {topDivisions.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.fill} />
                   ))}
                 </Pie>
