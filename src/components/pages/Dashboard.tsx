@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { useRouter, useSearchParams } from "next/navigation";
 import DivisionDashboard from "./DivisionDashboard";
 import { ArrowRight } from "lucide-react";
+import TeamSalesDashboard from "./TeamSalesDashboard";
 
 export default function Dashboard() {
   const searchParams = useSearchParams();
@@ -125,7 +126,7 @@ export default function Dashboard() {
             <h1 className="text-xl font-bold mr-4">Division Sales Overview</h1>
             <TabsList className="w-auto">
               <TabsTrigger value="divisions">Division Sales</TabsTrigger>
-              <TabsTrigger value="people">Developers</TabsTrigger>
+              <TabsTrigger value="team">Team Sales</TabsTrigger>
               <TabsTrigger value="forecast">Collection Forecast</TabsTrigger>
             </TabsList>
           </div>
@@ -133,8 +134,8 @@ export default function Dashboard() {
           <TabsContent value="divisions">
             <DivisionDashboard />
           </TabsContent>
-          <TabsContent value="people">
-            <div className="p-4 rounded-lg border">📊 Sales Chart here</div>
+          <TabsContent value="team">
+            <TeamSalesDashboard />
           </TabsContent>
           <TabsContent value="forecast">
             <div className="p-4 rounded-lg border">📊 Sales Chart here</div>
