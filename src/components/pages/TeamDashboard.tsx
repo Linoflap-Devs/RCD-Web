@@ -210,7 +210,7 @@ export default function TeamDashboard() {
         <CardHeader className="mb-3 flex items-center justify-between gap-2">
           <div className="flex flex-col gap-1">
             <CardTitle className="text-primary">
-              Division Sales{" "}
+              Developer Sales{" "}
               <span className="text-muted-foreground">(26 out of 40)</span>
             </CardTitle>
             <CardDescription>Monthly Sales Comparison</CardDescription>
@@ -248,7 +248,7 @@ export default function TeamDashboard() {
               <ResponsiveContainer height="100%" width="100%">
                 <AreaChart
                   data={chartData}
-                  margin={{ top: 20, right: 20, left: 20, bottom: 20 }}
+                  margin={{ top: 20, right: 10, left: 20, bottom: 20 }}
                 >
                   <CartesianGrid vertical={false} />
                   <XAxis

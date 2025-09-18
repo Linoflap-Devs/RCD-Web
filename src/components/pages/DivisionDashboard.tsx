@@ -15,8 +15,10 @@ import {
   YAxis,
   Bar,
   CartesianGrid,
+  LabelList,
+  ResponsiveContainer,
 } from "recharts";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "../ui/chart";
+import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "../ui/chart";
 import {
   Select,
   SelectContent,
@@ -29,17 +31,18 @@ import { ChartBar, Table } from "lucide-react";
 import DatePickerMonthYear from "../ui/datepicker";
 
 const topDivisions = [
-  { name: "Division A", sales: 4682, fill: "#FF6B35" }, // strong orange
-  { name: "Division B", sales: 4123, fill: "#FFA41B" }, // warm amber
-  { name: "Division C", sales: 3987, fill: "#FFC300" }, // golden yellow
-  { name: "Division D", sales: 3750, fill: "#FF8C42" }, // soft orange
-  { name: "Division E", sales: 3620, fill: "#FFD166" }, // light yellow
-  { name: "Division F", sales: 3485, fill: "#FFB347" }, // peachy orange
-  { name: "Division G", sales: 3350, fill: "#FF7F50" }, // coral
-  { name: "Division H", sales: 3210, fill: "#E9C46A" }, // muted gold
-  { name: "Division I", sales: 3105, fill: "#90BE6D" }, // fresh green accent
-  { name: "Division J", sales: 2980, fill: "#43AA8B" }, // teal-green accent
+  { name: "Black Diamond", sales: 1200, fill: "#D75C3C" }, // deep burnt orange
+  { name: "Golden Heart", sales: 980, fill: "#F28E2B" }, // rich orange
+  { name: "Jade", sales: 870, fill: "#FFBE0B" }, // golden yellow-orange
+  { name: "Dream Builder", sales: 760, fill: "#E15759" }, // red-orange
+  { name: "Alpha", sales: 690, fill: "#FF9F1C" }, // bright orange
+  { name: "Summit", sales: 640, fill: "#76B041" }, // warm green (for contrast)
+  { name: "Rose", sales: 590, fill: "#FAA43A" }, // lighter orange
+  { name: "Alexanderite", sales: 530, fill: "#F4D35E" }, // muted yellow
+  { name: "England", sales: 480, fill: "#C6AC8F" }, // earthy beige/tan
+  { name: "Via Domus", sales: 420, fill: "#8D99AE" }, // neutral gray-blue accent
 ];
+
 
 const divisionsData = Array.from({ length: 30 }, (_, i) => {
   const monthTarget = Math.floor(Math.random() * 5000) + 2000; // Target between 2000-7000
@@ -66,13 +69,21 @@ const divisionsSalesData = Array.from({ length: 30 }, (_, i) => {
   };
 });
 
+// chartConfig.ts
+export const chartConfig = {
+  sales: {
+    label: "Sales",
+    color: "var(--chart-1)", // primary color for the bar
+  },
+} satisfies ChartConfig;
+
 export default function DivisionDashboard() {
   const [view, setView] = useState("chart");
 
   return (
     <div className="space-y-5">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 items-stretch">
-        <Card className="col-span-3 rounded-lg border shadow-none bg-white">
+        <Card className="col-span-2 rounded-lg border shadow-none bg-white">
           <CardHeader className="mb-3 flex items-center justify-between gap-2">
             <div className="flex flex-col gap-1">
               <CardTitle className="text-primary">
@@ -86,7 +97,7 @@ export default function DivisionDashboard() {
           </CardHeader>
 
           <CardContent className="grid grid-cols-2 gap-8">
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-1">
               {topDivisions.slice(0, 5).map((division, index) => {
                 const maxSales = topDivisions[0].sales;
                 const progressWidth = (division.sales / maxSales) * 100;
@@ -101,7 +112,7 @@ export default function DivisionDashboard() {
                       style={{ width: `${progressWidth}%` }}
                     ></div> */}
 
-                    <div className="relative z-10 flex items-center justify-center w-6 h-6 rounded-full bg-primary text-white text-xs font-medium flex-shrink-0">
+                    <div style={{ backgroundColor: division.fill }} className="relative z-10 flex items-center justify-center w-6 h-6 rounded-full text-white text-xs font-medium flex-shrink-0">
                       {index + 1}
                     </div>
 
@@ -117,7 +128,7 @@ export default function DivisionDashboard() {
               })}
             </div>
 
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-1">
               {topDivisions.slice(5, 10).map((division, index) => {
                 const maxSales = topDivisions[0].sales;
                 const progressWidth = (division.sales / maxSales) * 100;
@@ -132,7 +143,7 @@ export default function DivisionDashboard() {
                       style={{ width: `${progressWidth}%` }}
                     ></div> */}
 
-                    <div className="relative z-10 flex items-center justify-center w-6 h-6 rounded-full bg-primary text-white text-xs font-medium flex-shrink-0">
+                    <div style={{ backgroundColor: division.fill }} className="relative z-10 flex items-center justify-center w-6 h-6 rounded-full text-white text-xs font-medium flex-shrink-0">
                       {index + 6}
                     </div>
 
@@ -150,35 +161,53 @@ export default function DivisionDashboard() {
           </CardContent>
         </Card>
 
-        {/* <Card className="rounded-lg border-none shadow-none bg-white">
-          <CardContent className="h-[250px] w-full pb-0 flex items-center justify-center">
-            <ChartContainer
-              config={{
-                value: {
-                  label: "Name",
-                  color: "hsl(var(--chart-1))",
-                },
-              }}
-              className="flex items-center justify-center h-full w-full"
-            >
-              <PieChart>
-                <Pie
+        <Card className="rounded-lg border-none shadow-none bg-white">
+          <CardContent className="pl-2">
+            <ChartContainer config={chartConfig} className="w-full h-64">
+              <ResponsiveContainer height="100%" width="100%">
+                <BarChart
+                  accessibilityLayer
                   data={topDivisions}
-                  dataKey="sales"
-                  nameKey="name"
-                  labelLine={false}
-                  label
-                  outerRadius={80}
+                  layout="vertical"
+                  margin={{
+                    right: 2,
+                  }}
+                  barCategoryGap="10%"
                 >
-                  {topDivisions.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.fill} />
-                  ))}
-                </Pie>
-                <ChartTooltip content={<ChartTooltipContent />} />
-              </PieChart>
+                  <CartesianGrid horizontal={false} />
+                  <YAxis
+                    dataKey="month"
+                    type="category"
+                    tickLine={true}
+                    tickMargin={10}
+                    axisLine={false}
+                    tickFormatter={(value) => value.slice(0, 3)}
+                    hide
+                  />
+                  <XAxis dataKey="sales" type="number" hide />
+                  <ChartTooltip
+                    cursor={false}
+                    content={<ChartTooltipContent indicator="line" />}
+                  />
+                  <Bar
+                    dataKey="sales"
+                    layout="vertical"
+                    fill="#fff"
+                    radius={4}
+                  >
+                    <LabelList
+                      dataKey="name"
+                      position="insideLeft"
+                      offset={8}
+                      className="fill-(--color-label)"
+                      fontSize={12}
+                    />
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
             </ChartContainer>
           </CardContent>
-        </Card> */}
+        </Card> 
       </div>
 
       <Card className="overflow-x-auto rounded-lg shadow-none">
