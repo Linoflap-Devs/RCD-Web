@@ -75,9 +75,9 @@ export default function Dashboard() {
           <div className="border-t border-gray-200">
             <div className="flex justify-end items-center h-8 px-4">
               <span className="text-xs mr-2">View More</span>
-              <Badge className="bg-primary text-white p-1 px-3 rounded-full hover:bg-primary-600 cursor-pointer">
+              {/* <Badge className="bg-primary text-white p-1 px-3 rounded-full hover:bg-primary-600 cursor-pointer">
                 <ArrowRight className="w-3 h-3" />
-              </Badge>
+              </Badge> */}
             </div>
           </div>
         </Card>

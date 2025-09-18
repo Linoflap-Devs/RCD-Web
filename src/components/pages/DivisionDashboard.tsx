@@ -17,7 +17,7 @@ import {
   Bar,
   CartesianGrid,
 } from "recharts";
-import { ChartContainer, ChartTooltipContent } from "../ui/chart";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "../ui/chart";
 import {
   Select,
   SelectContent,
@@ -164,36 +164,33 @@ export default function DivisionDashboard() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-lg border-none shadow-none flex flex-col justify-center bg-white">
-          <CardContent className="flex-1 pb-0 h-21">
-            <ResponsiveContainer width="100%" height="100%">
+        <Card className="rounded-lg border-none shadow-none bg-white">
+          <CardContent className="h-[250px] w-full pb-0 flex items-center justify-center">
+            <ChartContainer
+              config={{
+                value: {
+                  label: "Sales",
+                  color: "hsl(var(--chart-1))",
+                },
+              }}
+              className="flex items-center justify-center h-full w-full"
+            >
               <PieChart>
                 <Pie
                   data={chartData}
                   dataKey="value"
                   nameKey="name"
+                  labelLine={false}
                   label
-                  //labelLine={false}
                   outerRadius={80}
-                  //innerRadius={40}
                 >
                   {chartData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.fill} />
                   ))}
                 </Pie>
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "white",
-                    border: "1px solid #E5E7EB",
-                    borderRadius: "0.5rem",
-                    padding: "0.1rem",
-                    color: "#1C5D85",
-                    fontWeight: 500,
-                  }}
-                  formatter={(value: number) => value.toLocaleString()}
-                />
+                <ChartTooltip content={<ChartTooltipContent />} />
               </PieChart>
-            </ResponsiveContainer>
+            </ChartContainer>
           </CardContent>
         </Card>
       </div>
