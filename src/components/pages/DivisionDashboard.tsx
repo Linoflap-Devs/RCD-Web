@@ -72,7 +72,7 @@ export default function DivisionDashboard() {
   return (
     <div className="space-y-5">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 items-stretch">
-        <Card className="col-span-2 rounded-lg border shadow-none bg-white">
+        <Card className="col-span-3 rounded-lg border shadow-none bg-white">
           <CardHeader className="mb-3 flex items-center justify-between gap-2">
             <div className="flex flex-col gap-1">
               <CardTitle className="text-primary">
@@ -150,7 +150,7 @@ export default function DivisionDashboard() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-lg border-none shadow-none bg-white">
+        {/* <Card className="rounded-lg border-none shadow-none bg-white">
           <CardContent className="h-[250px] w-full pb-0 flex items-center justify-center">
             <ChartContainer
               config={{
@@ -178,7 +178,7 @@ export default function DivisionDashboard() {
               </PieChart>
             </ChartContainer>
           </CardContent>
-        </Card>
+        </Card> */}
       </div>
 
       <Card className="overflow-x-auto rounded-lg shadow-none">

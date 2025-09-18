@@ -1,19 +1,13 @@
 import {
   Area,
   AreaChart,
-  Bar,
-  BarChart,
   CartesianGrid,
   Cell,
-  LabelList,
   Pie,
   PieChart,
-  RadialBar,
-  RadialBarChart,
   ResponsiveContainer,
   Sector,
   SectorProps,
-  Tooltip,
   XAxis,
   YAxis,
 } from "recharts";
@@ -52,6 +46,19 @@ const chartDataDevelopers = [
   { name: "Jane", value: 420, fill: "#8D99AE" }, // neutral gray-blue accent
 ];
 
+const topManagers = [
+  { name: "Alice", sales: 1200 },
+  { name: "Bob", sales: 1100 },
+  { name: "Charlie", sales: 980 },
+  { name: "Diana", sales: 950 },
+  { name: "Ethan", sales: 900 },
+  { name: "Fiona", sales: 870 },
+  { name: "George", sales: 850 },
+  { name: "Hannah", sales: 800 },
+  { name: "Ian", sales: 780 },
+  { name: "Jane", sales: 750 },
+];
+
 const chartConfig = {
   sales: {
     label: "Monthly Sales",
@@ -74,17 +81,15 @@ export default function TeamDashboard() {
         <Card className="rounded-lg border shadow-none bg-white gap-3">
           <CardHeader className="mb-3 flex items-center justify-between gap-2">
             <div className="flex flex-col gap-1">
-              <CardTitle className="text-primary">
-                Top 10 Developers Sales
-              </CardTitle>
-              <CardDescription>Monthly</CardDescription>
+              <CardTitle className="text-primary">Top 10 Developers</CardTitle>
+              <CardDescription>Monthly Sales</CardDescription>
             </div>
             <div className="flex items-center gap-2">
               <DatePickerMonthYear />
             </div>
           </CardHeader>
 
-          <CardContent className="flex flex-col gap-6">
+          <CardContent className="flex flex-col gap-3">
             <div className="flex justify-center">
               <ChartContainer
                 config={{
@@ -153,14 +158,50 @@ export default function TeamDashboard() {
               <CardTitle className="text-primary">
                 Top 10 Unit Managers
               </CardTitle>
-              <CardDescription>Monthly</CardDescription>
+              <CardDescription>Monthly Sales</CardDescription>
             </div>
             <div className="flex items-center gap-2">
               <DatePickerMonthYear />
             </div>
           </CardHeader>
-          <CardContent className="grid grid-cols-2 gap-8">
-            <div className="flex flex-col gap-2"></div>
+
+          <CardContent className="grid grid-cols-1 gap-4">
+            <div className="flex flex-col gap-3">
+              {topManagers.map((manager, index) => (
+                <div
+                  key={manager.name}
+                  className="flex items-center justify-between"
+                >
+                  <div className="flex items-center gap-4">
+                    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-gray-200 text-xs font-semibold">
+                      {index + 1}
+                    </span>
+                    <div className="flex flex-col gap-1">
+                      <span className="font-medium text-sm text-gray-700">
+                        {manager.name}
+                      </span>
+                      <div className="h-1 w-64 bg-gray-200 rounded-full mt-1">
+                        <div
+                          className="h-1 rounded-full bg-primary"
+                          style={{
+                            width: `${
+                              (manager.sales /
+                                Math.max(...topManagers.map((m) => m.sales))) *
+                              100
+                            }%`,
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right: Sales */}
+                  <span className="text-gray-600 font-medium">
+                    {manager.sales.toLocaleString()}
+                  </span>
+                </div>
+              ))}
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -170,7 +211,7 @@ export default function TeamDashboard() {
           <div className="flex flex-col gap-1">
             <CardTitle className="text-primary">
               Division Sales{" "}
-              <span className="text-muted-foreground">(30 out of 40)</span>
+              <span className="text-muted-foreground">(26 out of 40)</span>
             </CardTitle>
             <CardDescription>Monthly Sales Comparison</CardDescription>
           </div>
@@ -204,7 +245,7 @@ export default function TeamDashboard() {
         <CardContent className="h-64 max-w-[1180px]">
           {view === "chart" ? (
             <ChartContainer config={chartConfig} className="aspect-auto h-full">
-              <ResponsiveContainer height="100%" width="100%" className="mt-2">
+              <ResponsiveContainer height="100%" width="100%">
                 <AreaChart
                   data={chartData}
                   margin={{ top: 20, right: 20, left: 20, bottom: 20 }}
@@ -222,10 +263,25 @@ export default function TeamDashboard() {
                   <YAxis tickLine={false} axisLine={false} />
                   <ChartTooltip
                     cursor={false}
-                    content={<ChartTooltipContent />}
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length) {
+                        const data = payload[0].payload;
+                        return (
+                          <div className="rounded-md bg-white p-3 shadow-md">
+                            <p className="flex items-center justify-between gap-8 text-sm font-medium text-gray-800">
+                              <span>{data.developer}</span>
+                              <span className="ml-6">
+                                {data.sales.toLocaleString()}
+                              </span>
+                            </p>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
                   />
                   <Area
-                    type="natural"
+                    type="monotone"
                     dataKey="sales"
                     stroke={chartConfig.sales.color}
                     fill={chartConfig.sales.color}
