@@ -6,6 +6,8 @@ import {
   CartesianGrid,
   Label,
   Legend,
+  Line,
+  LineChart,
   PolarRadiusAxis,
   RadialBar,
   RadialBarChart,
@@ -18,6 +20,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "../ui/card";
@@ -28,6 +31,7 @@ import {
   ChartTooltipContent,
 } from "../ui/chart";
 import DatePickerMonthYear from "../ui/datepicker";
+import { TrendingUp } from "lucide-react";
 
 // Chart config
 const chartConfig = {
@@ -91,7 +95,8 @@ const chartData: BuyerData[] = [
   { buyer: "Buyer H", value: 80000 },
 ];
 
-const activeChart = "value"; // key in chartData for bar height
+const activeChart = "value";
+
 const chartConfigForecast = {
   buyerContribution: {
     label: "Buyer Contribution",
@@ -132,14 +137,12 @@ export default function CollectionForecastDashboard() {
               <CardTitle className="text-primary">
                 DP (%) Paid Progress
               </CardTitle>
-              <CardDescription>
-                Average forecasted DP paid.
-              </CardDescription>
+              <CardDescription>Average forecasted DP paid.</CardDescription>
             </div>
           </CardHeader>
           <CardContent className="flex justify-center items-center">
             <ChartContainer config={chartConfig} className="aspect-square h-40">
-              <ResponsiveContainer height="100%" width="100%" className="mt-15">
+              <ResponsiveContainer height="100%" width="100%" className="mt-10">
                 <RadialBarChart
                   data={chartDataDP}
                   startAngle={180}
@@ -200,67 +203,81 @@ export default function CollectionForecastDashboard() {
               </ResponsiveContainer>
             </ChartContainer>
           </CardContent>
+          <CardFooter className="flex-col items-start gap-2 text-sm pt-6">
+            <div className="flex gap-2 leading-none font-medium">
+              Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+            </div>
+            <div className="text-muted-foreground leading-none">
+              Showing total visitors for the last 6 months
+            </div>
+          </CardFooter>
         </Card>
 
         <Card className="col-span-2 rounded-lg border shadow-none bg-white">
           <CardHeader className="flex items-center gap-2 border-b">
             <div className="flex flex-col gap-1">
               <CardTitle className="text-primary">
-                Buyer Contribution / Forecast
+                Reservation Date vs Net Contract Price
               </CardTitle>
               <CardDescription>
-                Top buyers by forecasted net contracts.
+                Forecasted net contracts across reservation dates.
               </CardDescription>
             </div>
           </CardHeader>
-          <CardContent className="px-2 sm:p-6 sm:pb-0">
+          <CardContent className="pt-6 pb-0">
             <ChartContainer
-              config={chartConfigForecast}
-              className="aspect-auto h-50 w-full"
+              config={chartConfigNetForecast}
+              className="aspect-auto h-54 w-full"
             >
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={chartData}
-                  margin={{
-                    top: 16,
-                    right: 16,
-                    bottom: 16,
-                    left: 0,
-                  }}
-                >
-                  <CartesianGrid vertical={false} stroke="#f1f1f1" />
+                <LineChart data={forecastMonthlyData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+
+                  {/* X-axis uses month */}
                   <XAxis
-                    dataKey="buyer"
-                    tickLine={false}
-                    axisLine={false}
-                    tickMargin={8}
-                    minTickGap={2}
-                  />
-                  <YAxis
-                    tickLine={false}
-                    axisLine={false}
-                    tickFormatter={(value) =>
-                      new Intl.NumberFormat("en-US", {
-                        notation: "compact",
-                        compactDisplay: "short",
-                      }).format(value)
+                    dataKey="month"
+                    tickFormatter={(date) =>
+                      new Date(date + "-01").toLocaleDateString("en-US", {
+                        month: "short",
+                        year: "numeric",
+                      })
                     }
                   />
+
+                  {/* Y-axis formats into millions */}
+                  <YAxis
+                    tickFormatter={(value) =>
+                      `₱${(value / 1_000_000).toFixed(1)}M`
+                    }
+                  />
+
                   <ChartTooltip
                     content={
                       <ChartTooltipContent
-                        nameKey={activeChart}
-                        labelFormatter={(value) => value} // buyer name
-                        className="w-[160px]"
+                        nameKey="netContractPrice"
+                        labelFormatter={(value) =>
+                          new Date(value + "-01").toLocaleDateString("en-US", {
+                            month: "long",
+                            year: "numeric",
+                          })
+                        }
                       />
                     }
                   />
-                  <Bar
-                    dataKey={activeChart}
-                    fill="var(--chart-4)"
-                    radius={[2, 0, 0, 0]} // rounded top corners
+
+                  <Legend />
+
+                  {/* Line instead of Area */}
+                  <Line
+                    type="monotone"
+                    dataKey="netContractPrice"
+                    stroke="var(--chart-2)"
+                    strokeWidth={2}
+                    dot={{ r: 4 }} // visible dots
+                    activeDot={{ r: 6 }} // bigger dot on hover
+                    name="Net Contract Price"
                   />
-                </BarChart>
+                </LineChart>
               </ResponsiveContainer>
             </ChartContainer>
           </CardContent>
@@ -271,69 +288,67 @@ export default function CollectionForecastDashboard() {
         <CardHeader className="flex items-center gap-2 border-b">
           <div className="flex flex-col gap-1">
             <CardTitle className="text-primary">
-              Reservation Date vs Net Contract Price
+              Buyer Contribution / Forecast
             </CardTitle>
             <CardDescription>
-              Forecasted net contracts across reservation dates.
+              Top buyers by forecasted net contracts.
             </CardDescription>
           </div>
         </CardHeader>
 
-        <CardContent className="pt-6 pb-0">
+        <CardContent className="px-2 sm:p-6 sm:pb-0">
           <ChartContainer
-            config={chartConfigNetForecast}
-            className="aspect-auto h-70 w-full"
+            config={chartConfigForecast}
+            className="aspect-auto h-50 w-full"
           >
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={forecastMonthlyData}>
-                <CartesianGrid strokeDasharray="3 3" />
-
-                {/* use "month" instead of "reservationDate" */}
-                <XAxis 
-                  dataKey="month"
-                  tickFormatter={(date) =>
-                    new Date(date + "-01").toLocaleDateString("en-US", {
-                      month: "short",
-                      year: "numeric",
-                    })
-                  }
+              <BarChart
+                data={chartData}
+                margin={{
+                  top: 16,
+                  right: 16,
+                  bottom: 16,
+                  left: 0,
+                }}
+              >
+                <CartesianGrid vertical={false} stroke="#f1f1f1" />
+                <XAxis
+                  dataKey="buyer"
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={8}
+                  minTickGap={2}
                 />
-
-                <YAxis 
+                <YAxis
+                  tickLine={false}
+                  axisLine={false}
                   tickFormatter={(value) =>
-                    `₱${(value / 1_000_000).toFixed(1)}M`
+                    new Intl.NumberFormat("en-US", {
+                      notation: "compact",
+                      compactDisplay: "short",
+                    }).format(value)
                   }
                 />
-
                 <ChartTooltip
                   content={
                     <ChartTooltipContent
-                      nameKey="netContractPrice"
-                      labelFormatter={(value) =>
-                        new Date(value + "-01").toLocaleDateString("en-US", {
-                          month: "long",
-                          year: "numeric",
-                        })
-                      }
+                      nameKey={activeChart}
+                      labelFormatter={(value) => value} // buyer name
+                      className="w-[160px]"
                     />
                   }
                 />
-                <Legend />
-
-                <Area
-                  type="monotone"
-                  dataKey="netContractPrice"
-                  stroke="var(--chart-2)"
-                  fill="var(--chart-2)"
-                  fillOpacity={0.8}
-                  name="Net Contract Price"
+                <Bar
+                  dataKey={activeChart}
+                  fill="var(--chart-4)"
+                  radius={[2, 0, 0, 0]} // rounded top corners
                 />
-              </AreaChart>
+              </BarChart>
             </ResponsiveContainer>
           </ChartContainer>
         </CardContent>
       </Card>
-      
+
       <Card className="rounded-lg border shadow-none bg-white">
         <CardHeader className="mb-3 flex items-center justify-between gap-2 border-b">
           <div className="flex flex-col gap-1">
