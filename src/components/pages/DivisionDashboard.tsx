@@ -82,15 +82,13 @@ export default function DivisionDashboard() {
   const [view, setView] = useState("chart");
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 items-stretch">
-        <Card className="col-span-2 rounded-lg border shadow-none bg-white">
+        <Card className="col-span-3 rounded-lg border shadow-none bg-white">
           <CardHeader className="flex items-center justify-between gap-1 border-b">
             <div className="flex flex-col gap-1">
-              <CardTitle className="text-primary">
-                Top 10 Division Sales
-              </CardTitle>
-              <CardDescription>Monthly</CardDescription>
+              <CardTitle className="text-primary">Top 10 Division</CardTitle>
+              <CardDescription>Monthly Sales</CardDescription>
             </div>
             <div className="flex items-center gap-2">
               <DatePickerMonthYear />
@@ -98,7 +96,7 @@ export default function DivisionDashboard() {
           </CardHeader>
 
           <CardContent className="grid grid-cols-2 gap-8">
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-0.5">
               {topDivisions.slice(0, 5).map((division, index) => {
                 const maxSales = topDivisions[0].sales;
                 const progressWidth = (division.sales / maxSales) * 100;
@@ -132,7 +130,7 @@ export default function DivisionDashboard() {
               })}
             </div>
 
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-0.5">
               {topDivisions.slice(5, 10).map((division, index) => {
                 const maxSales = topDivisions[0].sales;
                 const progressWidth = (division.sales / maxSales) * 100;
@@ -168,7 +166,7 @@ export default function DivisionDashboard() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-lg border-none shadow-none bg-white">
+        {/* <Card className="rounded-lg border-none shadow-none bg-white">
           <CardContent className="pl-2">
             <ChartContainer config={chartConfig} className="w-full h-64">
               <ResponsiveContainer height="100%" width="100%">
@@ -209,7 +207,7 @@ export default function DivisionDashboard() {
               </ResponsiveContainer>
             </ChartContainer>
           </CardContent>
-        </Card>
+        </Card> */}
       </div>
 
       <Card className="overflow-x-auto rounded-lg shadow-none pt-0">
@@ -378,8 +376,8 @@ export default function DivisionDashboard() {
           </div>
         </CardHeader>
 
-        <CardContent className="h-64 min-w-[800px]">
-          {view === "chart" ? (
+        {view === "chart" ? (
+          <CardContent className="h-64 min-w-[800px]">
             <ChartContainer
               className="h-full w-full"
               config={{
@@ -417,12 +415,12 @@ export default function DivisionDashboard() {
                 />
               </BarChart>
             </ChartContainer>
-          ) : (
-            <CardContent className="overflow-x-auto">
-              {/* Table component */}
-            </CardContent>
-          )}
-        </CardContent>
+          </CardContent>
+        ) : (
+          <CardContent className="overflow-x-auto">
+            {/* Table component */}
+          </CardContent>
+        )}
       </Card>
     </div>
   );

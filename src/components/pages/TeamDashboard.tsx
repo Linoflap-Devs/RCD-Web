@@ -28,7 +28,7 @@ import { ChartBar, Table, User } from "lucide-react";
 import { useState } from "react";
 import DatePickerMonthYear from "../ui/datepicker";
 
-const chartData = Array.from({ length: 26 }, (_, i) => ({
+const chartData = Array.from({ length: 20 }, (_, i) => ({
   developer: `Dev ${i + 1}`,
   sales: Math.floor(Math.random() * 2000 + 500), // random sales for demo
 }));
@@ -76,7 +76,7 @@ export default function TeamDashboard() {
   const [activeIndex, setActiveIndex] = useState<number | null>(maxIndex);
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4 items-stretch">
         <Card className="rounded-lg border shadow-none bg-white gap-3">
           <CardHeader className="flex items-center justify-between gap-2 border-b">
@@ -182,7 +182,7 @@ export default function TeamDashboard() {
                       </span>
                       <div className="h-1 w-64 bg-gray-200 rounded-full mt-1">
                         <div
-                          className="h-1 rounded-full bg-primary"
+                          className="h-1.5 rounded-full bg-primary"
                           style={{
                             width: `${
                               (manager.sales /
@@ -242,61 +242,48 @@ export default function TeamDashboard() {
           </div>
         </CardHeader>
 
-        <CardContent className="h-64 max-w-[1180px]">
-          {view === "chart" ? (
-            <ChartContainer config={chartConfig} className="aspect-auto h-full">
-              <ResponsiveContainer height="100%" width="100%">
-                <AreaChart
-                  data={chartData}
-                  margin={{ top: 20, right: 10, left: 20, bottom: 20 }}
-                >
-                  <CartesianGrid vertical={false} />
-                  <XAxis
-                    dataKey="developer"
-                    interval={0}
-                    tickLine={false}
-                    axisLine={false}
-                    tickMargin={10}
-                    angle={-45}
-                    textAnchor="end"
-                  />
-                  <YAxis tickLine={false} axisLine={false} />
+        {view === "chart" ? (
+          <CardContent className="pt-6 pb-0">
+            <ChartContainer
+              config={chartConfig}
+              className="aspect-auto h-70 w-full"
+            >
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+
+                  {/* X-axis is developer names */}
+                  <XAxis dataKey="developer" />
+
+                  {/* Y-axis is sales */}
+                  <YAxis />
+
                   <ChartTooltip
-                    cursor={false}
-                    content={({ active, payload }) => {
-                      if (active && payload && payload.length) {
-                        const data = payload[0].payload;
-                        return (
-                          <div className="rounded-md bg-white p-3 shadow-md">
-                            <p className="flex items-center justify-between gap-8 text-sm font-medium text-gray-800">
-                              <span>{data.developer}</span>
-                              <span className="ml-6">
-                                {data.sales.toLocaleString()}
-                              </span>
-                            </p>
-                          </div>
-                        );
-                      }
-                      return null;
-                    }}
+                    content={
+                      <ChartTooltipContent
+                        nameKey="sales"
+                        labelFormatter={(value) => `Developer: ${value}`}
+                      />
+                    }
                   />
+
                   <Area
-                    type="monotone"
+                    type="step"
                     dataKey="sales"
-                    stroke={chartConfig.sales.color}
-                    fill={chartConfig.sales.color}
-                    fillOpacity={0.3}
-                    strokeWidth={2}
+                    stroke="var(--chart-2)"
+                    fill="var(--chart-2)"
+                    fillOpacity={0.8}
+                    name="Sales"
                   />
                 </AreaChart>
               </ResponsiveContainer>
             </ChartContainer>
-          ) : (
-            <CardContent className="overflow-x-auto">
-              {/* Table component */}
-            </CardContent>
-          )}
-        </CardContent>
+          </CardContent>
+        ) : (
+          <CardContent className="overflow-x-auto">
+            {/* Table component */}
+          </CardContent>
+        )}
       </Card>
     </div>
   );

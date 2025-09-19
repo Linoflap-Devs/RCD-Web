@@ -1,12 +1,16 @@
 import {
+  Area,
+  AreaChart,
   Bar,
   BarChart,
   CartesianGrid,
   Label,
+  Legend,
   PolarRadiusAxis,
   RadialBar,
   RadialBarChart,
   ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
 } from "recharts";
@@ -95,9 +99,31 @@ const chartConfigForecast = {
   },
 } satisfies ChartConfig;
 
+const forecastMonthlyData = [
+  { month: "2025-01", netContractPrice: 10_800_000 }, // Jan
+  { month: "2025-02", netContractPrice: 10_520_000 }, // Feb
+  { month: "2025-03", netContractPrice: 11_200_000 }, // Mar
+  { month: "2025-04", netContractPrice: 12_000_000 }, // Apr
+  { month: "2025-05", netContractPrice: 12_800_000 }, // May
+  { month: "2025-06", netContractPrice: 13_500_000 }, // Jun
+  { month: "2025-07", netContractPrice: 14_200_000 }, // Jul
+  { month: "2025-08", netContractPrice: 13_900_000 }, // Aug
+  { month: "2025-09", netContractPrice: 14_800_000 }, // Sep
+  { month: "2025-10", netContractPrice: 15_600_000 }, // Oct
+  { month: "2025-11", netContractPrice: 16_200_000 }, // Nov
+  { month: "2025-12", netContractPrice: 17_000_000 }, // Dec
+];
+
+export const chartConfigNetForecast = {
+  netContractPrice: {
+    label: "Net Contract Price",
+    color: "#2563eb",
+  },
+};
+
 export default function CollectionForecastDashboard() {
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 items-stretch">
         {/* Downpayment Summary Card */}
         <Card className="rounded-lg border shadow-none bg-white">
@@ -240,6 +266,7 @@ export default function CollectionForecastDashboard() {
           </CardContent>
         </Card>
       </div>
+
       <Card className="rounded-lg border shadow-none bg-white">
         <CardHeader className="flex items-center gap-2 border-b">
           <div className="flex flex-col gap-1">
@@ -251,9 +278,62 @@ export default function CollectionForecastDashboard() {
             </CardDescription>
           </div>
         </CardHeader>
-        <CardContent className="grid grid-cols-2 gap-8"> </CardContent>
-      </Card>
 
+        <CardContent className="pt-6 pb-0">
+          <ChartContainer
+            config={chartConfigNetForecast}
+            className="aspect-auto h-70 w-full"
+          >
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={forecastMonthlyData}>
+                <CartesianGrid strokeDasharray="3 3" />
+
+                {/* use "month" instead of "reservationDate" */}
+                <XAxis 
+                  dataKey="month"
+                  tickFormatter={(date) =>
+                    new Date(date + "-01").toLocaleDateString("en-US", {
+                      month: "short",
+                      year: "numeric",
+                    })
+                  }
+                />
+
+                <YAxis 
+                  tickFormatter={(value) =>
+                    `₱${(value / 1_000_000).toFixed(1)}M`
+                  }
+                />
+
+                <ChartTooltip
+                  content={
+                    <ChartTooltipContent
+                      nameKey="netContractPrice"
+                      labelFormatter={(value) =>
+                        new Date(value + "-01").toLocaleDateString("en-US", {
+                          month: "long",
+                          year: "numeric",
+                        })
+                      }
+                    />
+                  }
+                />
+                <Legend />
+
+                <Area
+                  type="monotone"
+                  dataKey="netContractPrice"
+                  stroke="var(--chart-2)"
+                  fill="var(--chart-2)"
+                  fillOpacity={0.8}
+                  name="Net Contract Price"
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </ChartContainer>
+        </CardContent>
+      </Card>
+      
       <Card className="rounded-lg border shadow-none bg-white">
         <CardHeader className="mb-3 flex items-center justify-between gap-2 border-b">
           <div className="flex flex-col gap-1">
