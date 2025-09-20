@@ -316,13 +316,13 @@ export default function DivisionDashboard() {
               <Bar
                 dataKey="monthTarget"
                 stackId="a"
-                fill="var(--chart-1)"
+                fill="var(--chart-2)"
                 radius={[4, 4, 4, 4]}
               />
               <Bar
                 dataKey="monthActual"
                 stackId="a"
-                fill="var(--chart-2)"
+                fill="var(--chart-1)"
                 radius={[4, 4, 4, 4]}
               />
             </BarChart>
@@ -404,13 +404,13 @@ export default function DivisionDashboard() {
                 <Bar
                   dataKey="Current"
                   stackId="a"
-                  fill="var(--chart-1)"
+                  fill="var(--chart-2)"
                   radius={[4, 4, 4, 4]}
                 />
                 <Bar
                   dataKey="Last"
                   stackId="a"
-                  fill="var(--chart-2)"
+                  fill="var(--chart-1)"
                   radius={[4, 4, 4, 4]}
                 />
               </BarChart>

@@ -123,8 +123,8 @@ export default function Dashboard() {
           onValueChange={handleTabChange}
           className="w-full"
         >
-          <div className="flex items-center justify-start mb-4 pt-6">
-            <h1 className="text-xl font-bold mr-4">Division Sales Overview</h1>
+          <div className="flex items-center justify-start mb-4 pt-8">
+            <h1 className="text-xl font-bold mr-4">Sales Overview</h1>
             <TabsList className="w-auto">
               <TabsTrigger value="divisions">Division Sales</TabsTrigger>
               <TabsTrigger value="team">Team Sales</TabsTrigger>

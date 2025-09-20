@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Eye, EyeClosed, LockIcon, User } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -48,116 +47,94 @@ export default function Login() {
   }
 
   return (
-    <div>
-      <div className="pb-1">
-        <h2 className="flex text-2xl font-bold text-[#D75C3C] mb-1">
-          Welcome Back!
-        </h2>
-        <h2 className="flex text-sm text-[#9E9E9E] text-bold mb-6">
-          Please log in to your account
-        </h2>
-      </div>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
+        <div className="flex flex-col items-center gap-2 text-center">
+          <h1 className="text-2xl font-bold">Login to your account</h1>
+          <p className="text-muted-foreground text-sm text-wrap">
+            Enter your username below to login to your account
+          </p>
+        </div>
+        <div className="grid gap-6">
+          <div className="grid gap-3">
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field, fieldState }) => (
+                <FormItem>
+                  <FormLabel
+                    className={`${fieldState.error ? "text-red-500" : ""
+                      }`}
+                  >
+                    Username
+                  </FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <Input
+                        type="text"
+                        placeholder="m@example.com"
+                        {...field}
+                        className={` ${fieldState.error
+                          ? "border-red-500 ring-red-500 focus-visible:ring-red-200 focus-visible:border-red-500"
+                          : ""
+                          }`}
+                      />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="grid gap-3">
 
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <FormField
-            control={form.control}
-            name="username"
-            render={({ field, fieldState }) => (
-              <FormItem>
-                <FormLabel
-                  className={`text-sm ${fieldState.error ? "text-red-500" : "text-[#424242]"
-                    }`}
-                >
-                  Username
-                </FormLabel>
-                <FormControl>
-                  <div className="relative">
-                    <User
-                      className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                      size={14}
-                    />
-                    <Input
-                      type="text"
-                      placeholder="Enter username"
-                      {...field}
-                      className={`h-10 text-sm pl-10 pr-3 focus-visible:ring-gray-200 focus-visible:border-gray-300 rounded-xl ${fieldState.error
-                        ? "border-red-500 ring-red-500 focus-visible:ring-red-200 focus-visible:border-red-500"
-                        : ""
-                        }`}
-                    />
+            {/* Password */}
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field, fieldState }) => (
+                <FormItem>
+                  <div className="flex items-center justify-between">
+                    <FormLabel
+                      className={`${fieldState.error ? "text-red-500" : ""}`}
+                    >
+                      Password
+                    </FormLabel>
+                    <a
+                      href="#"
+                      className="text-sm underline-offset-4 hover:underline"
+                    >
+                      Forgot your password?
+                    </a>
                   </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* Password */}
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field, fieldState }) => (
-              <FormItem>
-                <FormLabel
-                  className={`text-sm ${fieldState.error ? "text-red-500" : "text-[#424242]"
-                    }`}
-                >
-                  Password
-                </FormLabel>
-                <FormControl>
-                  <div className="relative">
-                    <LockIcon
-                      className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                      size={14}
-                    />
+                  <FormControl>
                     <Input
                       type={showPassword ? "text" : "password"}
                       placeholder="Enter password"
                       {...field}
-                      className={`h-10 text-sm pl-10 pr-10 focus-visible:ring-gray-200 focus-visible:border-gray-300 rounded-xl ${fieldState.error
-                        ? "border-red-500 ring-red-500 focus-visible:ring-red-200 focus-visible:border-red-500"
-                        : ""
+                      className={`${fieldState.error
+                          ? "border-red-500 ring-red-500 focus-visible:ring-red-200 focus-visible:border-red-500"
+                          : ""
                         }`}
                     />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
 
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-400 focus:outline-none"
-                    >
-                      {showPassword ? (
-                        <EyeClosed size={20} />
-                      ) : (
-                        <Eye size={20} />
-                      )}
-                    </button>
-                  </div>
-                </FormControl>
-                <FormMessage />
-
-                <div className="flex justify-end mt-1">
-                  <button
-                    type="button"
-                    className="text-xs font-medium text-[#D75C3C] hover:underline"
-                  >
-                    Forgot Password?
-                  </button>
-                </div>
-              </FormItem>
-            )}
-          />
-
-          {/* Submit */}
-          <Button
-            type="submit"
-            className="w-full rounded-xl h-10 mt-1 text-sm bg-[#D75C3C] hover:bg-[#D75C3C]/90"
-            disabled={isLoading}
-          >
+              )}
+            />
+          </div>
+          <Button type="submit" className="w-full" >
             {isLoading ? "Logging in..." : "Log in"}
           </Button>
-        </form>
-      </Form>
-    </div>
+        </div>
+        <div className="text-center text-sm">
+          Don&apos;t have an account?{" "}
+          <a href="#" className="underline underline-offset-4">
+            Sign up
+          </a>
+        </div>
+      </form>
+    </Form>
   );
 }
