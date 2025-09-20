@@ -301,50 +301,48 @@ export default function CollectionForecastDashboard() {
             config={chartConfigForecast}
             className="aspect-auto h-50 w-full"
           >
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={chartData}
-                margin={{
-                  top: 16,
-                  right: 16,
-                  bottom: 16,
-                  left: 0,
-                }}
-              >
-                <CartesianGrid vertical={false} stroke="#f1f1f1" />
-                <XAxis
-                  dataKey="buyer"
-                  tickLine={false}
-                  axisLine={false}
-                  tickMargin={8}
-                  minTickGap={2}
-                />
-                <YAxis
-                  tickLine={false}
-                  axisLine={false}
-                  tickFormatter={(value) =>
-                    new Intl.NumberFormat("en-US", {
-                      notation: "compact",
-                      compactDisplay: "short",
-                    }).format(value)
-                  }
-                />
-                <ChartTooltip
-                  content={
-                    <ChartTooltipContent
-                      nameKey={activeChart}
-                      labelFormatter={(value) => value} // buyer name
-                      className="w-[160px]"
-                    />
-                  }
-                />
-                <Bar
-                  dataKey={activeChart}
-                  fill="var(--chart-4)"
-                  radius={[2, 0, 0, 0]} // rounded top corners
-                />
-              </BarChart>
-            </ResponsiveContainer>
+            <BarChart
+              data={chartData}
+              margin={{
+                top: 16,
+                right: 16,
+                bottom: 16,
+                left: 0,
+              }}
+            >
+              <CartesianGrid vertical={false} stroke="#f1f1f1" />
+              <XAxis
+                dataKey="buyer"
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                minTickGap={2}
+              />
+              <YAxis
+                tickLine={false}
+                axisLine={false}
+                tickFormatter={(value) =>
+                  new Intl.NumberFormat("en-US", {
+                    notation: "compact",
+                    compactDisplay: "short",
+                  }).format(value)
+                }
+              />
+              <ChartTooltip
+                content={
+                  <ChartTooltipContent
+                    nameKey={activeChart}
+                    labelFormatter={(value) => value} // buyer name
+                    className="w-[160px]"
+                  />
+                }
+              />
+              <Bar
+                dataKey={activeChart}
+                fill="var(--chart-4)"
+                radius={[2, 0, 0, 0]} // rounded top corners
+              />
+            </BarChart>
           </ChartContainer>
         </CardContent>
       </Card>

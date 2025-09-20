@@ -26,7 +26,7 @@ export default function Dashboard() {
   return (
     <div className="h-full w-full p-2 space-y-3">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 items-stretch">
-        <Card className="rounded-lg border shadow-none flex flex-col justify-center pb-0">
+        <Card className="rounded-lg border shadow-none flex flex-col justify-center">
           <CardContent className="flex flex-col gap-2">
             <div className="space-y-1">
               <div className="text-sm text-muted-foreground">Total Active Salesforce</div>
@@ -35,17 +35,17 @@ export default function Dashboard() {
               </div>
             </div>
           </CardContent>
-          <div className="border-t border-gray-200">
+          {/* <div className="border-t border-gray-200">
             <div className="flex justify-end items-center h-8 px-4">
               <span className="text-xs mr-2">View More</span>
               <Badge className="bg-primary text-white p-1 px-3 rounded-full hover:bg-primary-600 cursor-pointer">
                 <ArrowRight className="w-3 h-3" />
               </Badge>
             </div>
-          </div> 
+          </div>  */}
         </Card>
 
-        <Card className="rounded-lg border shadow-none flex flex-col justify-center pb-0">
+        <Card className="rounded-lg border shadow-none flex flex-col justify-center">
           <CardContent className="flex flex-col gap-2">
             <div className="space-y-1">
               <div className="text-sm text-muted-foreground">Total Active Divisions</div>
@@ -54,17 +54,17 @@ export default function Dashboard() {
               </div>
             </div>
           </CardContent>
-           <div className="border-t border-gray-200">
+           {/* <div className="border-t border-gray-200">
             <div className="flex justify-end items-center h-8 px-4">
               <span className="text-xs mr-2">View More</span>
               <Badge className="bg-primary text-white p-1 px-3 rounded-full hover:bg-primary-600 cursor-pointer">
                 <ArrowRight className="w-3 h-3" />
               </Badge>
             </div>
-          </div>
+          </div> */}
         </Card>
 
-        <Card className="rounded-lg border shadow-none flex flex-col justify-center pb-0">
+        <Card className="rounded-lg border shadow-none flex flex-col justify-center">
           <CardContent className="flex flex-col gap-2">
             <div className="space-y-1">
               <div className="text-sm text-muted-foreground">Total Sales Previous Year</div>
@@ -73,14 +73,14 @@ export default function Dashboard() {
               </div>
             </div>
           </CardContent>
-          <div className="border-t border-gray-200">
+          {/* <div className="border-t border-gray-200">
             <div className="flex justify-end items-center h-8 px-4">
               <span className="text-xs mr-2">View More</span>
               <Badge className="bg-primary text-white p-1 px-3 rounded-full hover:bg-primary-600 cursor-pointer">
                 <ArrowRight className="w-3 h-3" />
               </Badge>
             </div>
-          </div>
+          </div> */}
         </Card>
 
         <Card className="bg-primary flex flex-col col-span-2 rounded-lg shadow-none gap-4 relative overflow-hidden text-white">

@@ -105,7 +105,7 @@ export default function TeamDashboard() {
                     data={chartDataDevelopers}
                     dataKey="value"
                     nameKey="name"
-                    innerRadius={60}
+                    innerRadius={40}
                     outerRadius={90}
                     paddingAngle={2}
                     labelLine={false}
@@ -130,7 +130,7 @@ export default function TeamDashboard() {
             </div>
 
             {/* List Below */}
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-4">
               {chartDataDevelopers.slice(0, 10).map((dev, index) => (
                 <div
                   key={dev.name}
@@ -243,40 +243,38 @@ export default function TeamDashboard() {
         </CardHeader>
 
         {view === "chart" ? (
-          <CardContent className="pt-6 pb-0">
+          <CardContent className="pt-6 pb-0 min-w-[800px]">
             <ChartContainer
               config={chartConfig}
               className="aspect-auto h-70 w-full"
             >
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={chartData}>
-                  <CartesianGrid strokeDasharray="3 3" />
+              <AreaChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" />
 
-                  {/* X-axis is developer names */}
-                  <XAxis dataKey="developer" />
+                {/* X-axis is developer names */}
+                <XAxis dataKey="developer" />
 
-                  {/* Y-axis is sales */}
-                  <YAxis />
+                {/* Y-axis is sales */}
+                <YAxis />
 
-                  <ChartTooltip
-                    content={
-                      <ChartTooltipContent
-                        nameKey="sales"
-                        labelFormatter={(value) => `Developer: ${value}`}
-                      />
-                    }
-                  />
+                <ChartTooltip
+                  content={
+                    <ChartTooltipContent
+                      nameKey="sales"
+                      labelFormatter={(value) => `Developer: ${value}`}
+                    />
+                  }
+                />
 
-                  <Area
-                    type="monotone"
-                    dataKey="sales"
-                    stroke="var(--chart-2)"
-                    fill="var(--chart-2)"
-                    fillOpacity={0.8}
-                    name="Sales"
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
+                <Area
+                  type="monotone"
+                  dataKey="sales"
+                  stroke="var(--chart-2)"
+                  fill="var(--chart-2)"
+                  fillOpacity={0.8}
+                  name="Sales"
+                />
+              </AreaChart>
             </ChartContainer>
           </CardContent>
         ) : (
