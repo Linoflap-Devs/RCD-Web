@@ -13,7 +13,8 @@ import {
   Bar,
   CartesianGrid,
   LabelList,
-  ResponsiveContainer,
+  AreaChart,
+  Area,
 } from "recharts";
 import {
   ChartConfig,
@@ -74,7 +75,7 @@ const divisionsSalesData = Array.from({ length: 30 }, (_, i) => {
 export const chartConfig = {
   sales: {
     label: "Sales",
-    color: "var(--chart-1)", // primary color for the bar
+    color: "var(--chart-1)",
   },
 } satisfies ChartConfig;
 
@@ -83,8 +84,8 @@ export default function DivisionDashboard() {
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 items-stretch">
-        <Card className="col-span-2 rounded-lg border shadow-none bg-white">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 items-stretch">
+        <Card className="col-span-3 rounded-lg border shadow-none bg-white">
           <CardHeader className="flex items-center justify-between gap-1 border-b">
             <div className="flex flex-col gap-1">
               <CardTitle className="text-primary">Top 10 Division</CardTitle>
@@ -169,42 +170,40 @@ export default function DivisionDashboard() {
         <Card className="rounded-lg border-none shadow-none bg-white">
           <CardContent className="pl-2">
             <ChartContainer config={chartConfig} className="w-full h-64">
-              <ResponsiveContainer height="100%" width="100%">
-                <BarChart
-                  accessibilityLayer
-                  data={topDivisions}
-                  layout="vertical"
-                  margin={{
-                    right: 2,
-                  }}
-                  barCategoryGap="10%"
-                >
-                  <CartesianGrid horizontal={false} />
-                  <YAxis
-                    dataKey="month"
-                    type="category"
-                    tickLine={true}
-                    tickMargin={10}
-                    axisLine={false}
-                    tickFormatter={(value) => value.slice(0, 3)}
-                    hide
+              <BarChart
+                accessibilityLayer
+                data={topDivisions}
+                layout="vertical"
+                margin={{
+                  right: 2,
+                }}
+                barCategoryGap="10%"
+              >
+                <CartesianGrid horizontal={false} />
+                <YAxis
+                  dataKey="month"
+                  type="category"
+                  tickLine={true}
+                  tickMargin={10}
+                  axisLine={false}
+                  tickFormatter={(value) => value.slice(0, 3)}
+                  hide
+                />
+                <XAxis dataKey="sales" type="number" hide />
+                <ChartTooltip
+                  cursor={false}
+                  content={<ChartTooltipContent indicator="line" />}
+                />
+                <Bar dataKey="sales" layout="vertical" fill="#fff" radius={4}>
+                  <LabelList
+                    dataKey="name"
+                    position="insideLeft"
+                    offset={8}
+                    className="fill-(--color-label)"
+                    fontSize={12}
                   />
-                  <XAxis dataKey="sales" type="number" hide />
-                  <ChartTooltip
-                    cursor={false}
-                    content={<ChartTooltipContent indicator="line" />}
-                  />
-                  <Bar dataKey="sales" layout="vertical" fill="#fff" radius={4}>
-                    <LabelList
-                      dataKey="name"
-                      position="insideLeft"
-                      offset={8}
-                      className="fill-(--color-label)"
-                      fontSize={12}
-                    />
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
+                </Bar>
+              </BarChart>
             </ChartContainer>
           </CardContent>
         </Card>
@@ -218,29 +217,23 @@ export default function DivisionDashboard() {
             </CardTitle>
             <CardDescription>Monthly Target - Actual Sales</CardDescription>
           </div>
-          <div className="flex">
-            <button
-              //key={chart}
-              //data-active={activeChart === chart}
-              className="data-[active=true]:bg-muted/50 relative z-30 flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l sm:border-t-0 sm:border-l sm:px-8 sm:py-6"
-              //onClick={() => setActiveChart(chart)}
-            >
-              <span className="text-muted-foreground text-xs">Title</span>
-              <span className="text-lg leading-none font-bold sm:text-3xl">
-                78
-              </span>
-            </button>
-            <button
-              //key={chart}
-              //data-active={activeChart === chart}
-              className="data-[active=true]:bg-muted/50 relative z-30 flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l sm:border-t-0 sm:border-l sm:px-8 sm:py-6"
-              //onClick={() => setActiveChart(chart)}
-            >
-              <span className="text-muted-foreground text-xs">Title</span>
-              <span className="text-lg leading-none font-bold sm:text-3xl">
-                78
-              </span>
-            </button>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 px-6 py-3">
+            <div className="col-span-2 relative z-30 flex flex-col gap-1 px-6 py-4 justify-center text-left border rounded-lg">
+              <div className="flex items-center divide-x divide-gray-300">
+                <div className="flex-1 pr-4">
+                  <span className="text-muted-foreground text-xs block">Total Target</span>
+                  <span className="text-lg leading-none font-bold sm:text-3xl">78%</span>
+                </div>
+                <div className="flex-1 pl-6">
+                  <span className="text-muted-foreground text-xs block">Total Actual</span>
+                  <span className="text-lg leading-none font-bold sm:text-3xl">120%</span>
+                </div>
+              </div>
+            </div>
+            <div className="bg-primary relative z-30 flex flex-col gap-1 py-4 px-6 text-left rounded-lg">
+              <span className="text-white text-xs">Overall Reach</span>
+              <span className="text-white text-lg leading-none font-bold sm:text-3xl">95%</span>
+            </div>
           </div>
         </CardHeader>
 
@@ -306,7 +299,7 @@ export default function DivisionDashboard() {
 
                       {/* Reach */}
                       <div className="flex items-center gap-2">
-                        <span className="w-3 h-3 block rounded-sm bg-green-500"></span>
+                        <span className="w-3 h-3 block rounded-sm bg-[#76B041]"></span>
                         <span>Target Reach: {data.monthTargetReach}%</span>
                       </div>
                     </div>
@@ -353,21 +346,19 @@ export default function DivisionDashboard() {
 
             <div className="inline-flex bg-white border rounded-xl p-[3px] h-9">
               <button
-                className={`flex items-center gap-1 px-3 py-1 text-sm font-medium rounded-md transition-colors ${
-                  view === "chart"
+                className={`flex items-center gap-1 px-3 py-1 text-sm font-medium rounded-md transition-colors ${view === "chart"
                     ? "bg-primary text-white shadow-sm"
                     : "text-muted-foreground hover:bg-gray-50"
-                }`}
+                  }`}
                 onClick={() => setView("chart")}
               >
                 <ChartBar className="w-3 h-3" />
               </button>
               <button
-                className={`flex items-center gap-1 px-3 py-1 text-sm font-medium rounded-md transition-colors ${
-                  view === "table"
+                className={`flex items-center gap-1 px-3 py-1 text-sm font-medium rounded-md transition-colors ${view === "table"
                     ? "bg-primary text-white shadow-sm"
                     : "text-muted-foreground hover:bg-gray-50"
-                }`}
+                  }`}
                 onClick={() => setView("table")}
               >
                 <Table className="w-3 h-3" />
@@ -385,7 +376,7 @@ export default function DivisionDashboard() {
                 actual: { label: "Current Year", color: "var(--chart-2)" },
               }}
             >
-              <BarChart
+              <AreaChart
                 data={divisionsSalesData}
                 margin={{ top: 20, right: 20, left: 0, bottom: 20 }}
               >
@@ -401,19 +392,22 @@ export default function DivisionDashboard() {
                 <YAxis />
                 <Tooltip content={<ChartTooltipContent />} />
 
-                <Bar
+                <Area
+                  type="natural"
                   dataKey="Current"
-                  stackId="a"
+                  stroke="var(--chart-2)"
                   fill="var(--chart-2)"
-                  radius={[4, 4, 4, 4]}
+                  fillOpacity={0.7}
+                  activeDot={{ r: 5 }}
                 />
-                <Bar
+                <Area
+                  type="natural"
                   dataKey="Last"
-                  stackId="a"
+                  stroke="var(--chart-1)"
                   fill="var(--chart-1)"
-                  radius={[4, 4, 4, 4]}
+                  fillOpacity={0.7}
                 />
-              </BarChart>
+              </AreaChart>
             </ChartContainer>
           </CardContent>
         ) : (

@@ -1,6 +1,4 @@
 import {
-  Area,
-  AreaChart,
   Bar,
   BarChart,
   CartesianGrid,
@@ -12,7 +10,6 @@ import {
   RadialBar,
   RadialBarChart,
   ResponsiveContainer,
-  Tooltip,
   XAxis,
   YAxis,
 } from "recharts";
@@ -213,140 +210,141 @@ export default function CollectionForecastDashboard() {
           </CardFooter>
         </Card>
 
-        <Card className="col-span-2 rounded-lg border shadow-none bg-white">
+        <Card className="col-span-2   rounded-lg border shadow-none bg-white">
           <CardHeader className="flex items-center gap-2 border-b">
             <div className="flex flex-col gap-1">
               <CardTitle className="text-primary">
-                Reservation Date vs Net Contract Price
+                Buyer Contribution / Forecast
               </CardTitle>
               <CardDescription>
-                Forecasted net contracts across reservation dates.
+                Top buyers by forecasted net contracts.
               </CardDescription>
             </div>
           </CardHeader>
-          <CardContent className="pt-6 pb-0">
+
+          <CardContent className="px-2 sm:p-6 sm:pb-0">
             <ChartContainer
-              config={chartConfigNetForecast}
-              className="aspect-auto h-54 w-full"
+              config={chartConfigForecast}
+              className="aspect-auto h-50 w-full"
             >
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={forecastMonthlyData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-
-                  {/* X-axis uses month */}
-                  <XAxis
-                    dataKey="month"
-                    tickFormatter={(date) =>
-                      new Date(date + "-01").toLocaleDateString("en-US", {
-                        month: "short",
-                        year: "numeric",
-                      })
-                    }
-                  />
-
-                  {/* Y-axis formats into millions */}
-                  <YAxis
-                    tickFormatter={(value) =>
-                      `₱${(value / 1_000_000).toFixed(1)}M`
-                    }
-                  />
-
-                  <ChartTooltip
-                    content={
-                      <ChartTooltipContent
-                        nameKey="netContractPrice"
-                        labelFormatter={(value) =>
-                          new Date(value + "-01").toLocaleDateString("en-US", {
-                            month: "long",
-                            year: "numeric",
-                          })
-                        }
-                      />
-                    }
-                  />
-
-                  <Legend />
-
-                  {/* Line instead of Area */}
-                  <Line
-                    type="monotone"
-                    dataKey="netContractPrice"
-                    stroke="var(--chart-2)"
-                    strokeWidth={2}
-                    dot={{ r: 4 }} // visible dots
-                    activeDot={{ r: 6 }} // bigger dot on hover
-                    name="Net Contract Price"
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+              <BarChart
+                data={chartData}
+                margin={{
+                  top: 16,
+                  right: 16,
+                  bottom: 16,
+                  left: 0,
+                }}
+              >
+                <CartesianGrid vertical={false} stroke="#f1f1f1" />
+                <XAxis
+                  dataKey="buyer"
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={8}
+                  minTickGap={2}
+                />
+                <YAxis
+                  tickLine={false}
+                  axisLine={false}
+                  tickFormatter={(value) =>
+                    new Intl.NumberFormat("en-US", {
+                      notation: "compact",
+                      compactDisplay: "short",
+                    }).format(value)
+                  }
+                />
+                <ChartTooltip
+                  content={
+                    <ChartTooltipContent
+                      nameKey={activeChart}
+                      labelFormatter={(value) => value} // buyer name
+                      className="w-[160px]"
+                    />
+                  }
+                />
+                <Bar
+                  dataKey={activeChart}
+                  fill="var(--chart-4)"
+                  radius={[2, 0, 0, 0]} // rounded top corners
+                />
+              </BarChart>
             </ChartContainer>
           </CardContent>
         </Card>
+
+
       </div>
 
       <Card className="rounded-lg border shadow-none bg-white">
         <CardHeader className="flex items-center gap-2 border-b">
           <div className="flex flex-col gap-1">
             <CardTitle className="text-primary">
-              Buyer Contribution / Forecast
+              Reservation Date vs Net Contract Price
             </CardTitle>
             <CardDescription>
-              Top buyers by forecasted net contracts.
+              Forecasted net contracts across reservation dates.
             </CardDescription>
           </div>
         </CardHeader>
-
-        <CardContent className="px-2 sm:p-6 sm:pb-0">
+        <CardContent className="pt-6 pb-0">
           <ChartContainer
-            config={chartConfigForecast}
-            className="aspect-auto h-50 w-full"
+            config={chartConfigNetForecast}
+            className="aspect-auto h-54 w-full"
           >
-            <BarChart
-              data={chartData}
-              margin={{
-                top: 16,
-                right: 16,
-                bottom: 16,
-                left: 0,
-              }}
-            >
-              <CartesianGrid vertical={false} stroke="#f1f1f1" />
-              <XAxis
-                dataKey="buyer"
-                tickLine={false}
-                axisLine={false}
-                tickMargin={8}
-                minTickGap={2}
-              />
-              <YAxis
-                tickLine={false}
-                axisLine={false}
-                tickFormatter={(value) =>
-                  new Intl.NumberFormat("en-US", {
-                    notation: "compact",
-                    compactDisplay: "short",
-                  }).format(value)
-                }
-              />
-              <ChartTooltip
-                content={
-                  <ChartTooltipContent
-                    nameKey={activeChart}
-                    labelFormatter={(value) => value} // buyer name
-                    className="w-[160px]"
-                  />
-                }
-              />
-              <Bar
-                dataKey={activeChart}
-                fill="var(--chart-4)"
-                radius={[2, 0, 0, 0]} // rounded top corners
-              />
-            </BarChart>
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={forecastMonthlyData}>
+                <CartesianGrid strokeDasharray="3 3" />
+
+                {/* X-axis uses month */}
+                <XAxis
+                  dataKey="month"
+                  tickFormatter={(date) =>
+                    new Date(date + "-01").toLocaleDateString("en-US", {
+                      month: "short",
+                      year: "numeric",
+                    })
+                  }
+                />
+
+                {/* Y-axis formats into millions */}
+                <YAxis
+                  tickFormatter={(value) =>
+                    `₱${(value / 1_000_000).toFixed(1)}M`
+                  }
+                />
+
+                <ChartTooltip
+                  content={
+                    <ChartTooltipContent
+                      nameKey="netContractPrice"
+                      labelFormatter={(value) =>
+                        new Date(value + "-01").toLocaleDateString("en-US", {
+                          month: "long",
+                          year: "numeric",
+                        })
+                      }
+                    />
+                  }
+                />
+
+                <Legend />
+
+                {/* Line instead of Area */}
+                <Line
+                  type="monotone"
+                  dataKey="netContractPrice"
+                  stroke="var(--chart-2)"
+                  strokeWidth={2}
+                  dot={{ r: 4 }} // visible dots
+                  activeDot={{ r: 6 }} // bigger dot on hover
+                  name="Net Contract Price"
+                />
+              </LineChart>
+            </ResponsiveContainer>
           </ChartContainer>
         </CardContent>
       </Card>
-
       <Card className="rounded-lg border shadow-none bg-white">
         <CardHeader className="mb-3 flex items-center justify-between gap-2 border-b">
           <div className="flex flex-col gap-1">

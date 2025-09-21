@@ -5,7 +5,6 @@ import {
   Cell,
   Pie,
   PieChart,
-  ResponsiveContainer,
   Sector,
   SectorProps,
   XAxis,
@@ -267,7 +266,7 @@ export default function TeamDashboard() {
                 />
 
                 <Area
-                  type="monotone"
+                  type="step"
                   dataKey="sales"
                   stroke="var(--chart-2)"
                   fill="var(--chart-2)"
