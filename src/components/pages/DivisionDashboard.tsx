@@ -4,7 +4,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../ui/card";
+} from "../../components/ui/card";
 import {
   Tooltip,
   BarChart,
@@ -19,17 +19,17 @@ import {
   ChartConfig,
   ChartContainer,
   ChartTooltipContent,
-} from "../ui/chart";
+} from "../../components/ui/chart";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
+} from "../../components/ui/select";
 import { useState } from "react";
 import { ChartBar, Table } from "lucide-react";
-import DatePickerMonthYear from "../ui/datepicker";
+import DatePickerMonthYear from "../../components/ui/datepicker";
 import Image from "next/image";
 
 const topDivisions = [
@@ -87,15 +87,15 @@ export default function DivisionDashboard() {
       <Card className="overflow-x-auto rounded-lg shadow-none">
         <CardHeader className="mb-3 items-center gap-2 px-4">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div className="col-span-2 relative z-30 flex flex-col px-6 justify-center text-left border rounded-lg">
+            <div className="bg-sidebar col-span-2 relative z-30 flex flex-col px-6 justify-center text-left border rounded-lg">
               <div className="flex divide-x divide-gray-300">
                 <div className="flex-1 flex flex-col gap-0.3">
                   <span className="text-muted-foreground text-xs block">Total Sales Target Division</span>
-                  <span className="text-lg font-bold sm:text-2xl">89%</span>
+                  <span className="text-primary text-lg font-bold sm:text-2xl">89%</span>
                 </div>
                 <div className="flex-1 pl-4 flex flex-col gap-0.3">
                   <span className="text-muted-foreground text-xs block">Total Actual</span>
-                  <span className="text-lg font-bold sm:text-2xl">120%</span>
+                  <span className="text-primary text-lg font-bold sm:text-2xl">120%</span>
                 </div>
               </div>
             </div>

@@ -20,14 +20,14 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../ui/card";
+} from "../../components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "../ui/chart";
-import DatePickerMonthYear from "../ui/datepicker";
+} from "../../components/ui/chart";
+import DatePickerMonthYear from "../../components/ui/datepicker";
 import { TrendingUp } from "lucide-react";
 
 // Chart config

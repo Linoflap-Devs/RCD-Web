@@ -16,7 +16,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../ui/card";
+} from "../../components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/chart";
 import { ChartBar, Table, User } from "lucide-react";
 import { useState } from "react";
-import DatePickerMonthYear from "../ui/datepicker";
+import DatePickerMonthYear from "../../components/ui/datepicker";
 
 const chartData = Array.from({ length: 20 }, (_, i) => ({
   developer: `Dev ${i + 1}`,

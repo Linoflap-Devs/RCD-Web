@@ -1,8 +1,8 @@
 "use client";
 
-import { Card, CardContent } from "../ui/card";
-import { Badge } from "../ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { Card, CardContent } from "../../components/ui/card";
+import { Badge } from "../../components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs";
 import { useRouter, useSearchParams } from "next/navigation";
 import DivisionDashboard from "./DivisionDashboard";
 import { TrendingUp } from "lucide-react";

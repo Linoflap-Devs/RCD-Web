@@ -120,7 +120,7 @@ export function DataTable<TData, TValue>({
                     {row.getVisibleCells().map((cell) => (
                       <TableCell
                         key={cell.id}
-                        className="py-2 sm:py-1.5 text-justify"
+                        className="py-2 sm:py-1 text-justify"
                       >
                         {flexRender(
                           cell.column.columnDef.cell,

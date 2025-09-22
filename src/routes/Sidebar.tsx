@@ -15,7 +15,6 @@ import Image from "next/image"
 import { useSidebar } from "@/components/ui/sidebar"
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar"
 import { cn } from "@/lib/utils"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "../components/ui/dropdown-menu"
 import { Button } from "../components/ui/button"
 import { LogOut, MoreVertical, User2 } from "lucide-react"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
@@ -59,7 +58,7 @@ export function AppSidebar({ groups, company, user }: AppSidebarProps) {
   const isCollapsed = state === "collapsed"
 
   return (
-    <Sidebar collapsible="icon" variant="inset">
+    <Sidebar collapsible="icon" variant="sidebar">
       <SidebarContent>
         {company && (
           <div className={(isCollapsed ? "flex h-14 items-center justify-center" : "p-4 pt-8 flex h-14 items-center")}>

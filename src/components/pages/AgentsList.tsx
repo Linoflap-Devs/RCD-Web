@@ -2,7 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/ui/data-table";
-import { Button } from "../ui/button";
+import { Button } from "../../components/ui/button";
 import {
   ChevronsUpDown,
   Filter,
@@ -11,22 +11,22 @@ import {
   Search,
 } from "lucide-react";
 import { useState } from "react";
-import { Input } from "../ui/input";
+import { Input } from "../../components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
+} from "../../components/ui/select";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
-import { Card, CardContent } from "../ui/card";
+} from "../../components/ui/dropdown-menu";
+import { Card, CardContent } from "../../components/ui/card";
 import {
   Tooltip,
   TooltipContent,
@@ -191,35 +191,10 @@ export default function AgentsList() {
         <div className="h-full overflow-hidden">
           <div className="p-2 sm:py-0 flex flex-col space-y-4 sm:space-y-5 h-full">
             <div className="flex flex-col space-y-5 sm:space-y-3.5 min-h-full">
-              {/* <div className="items-center gap-2">
-                <span className="text-2xl font-semibold">All Agents</span>
-              </div> */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 items-stretch">
-                <Card className="bg-primary rounded-lg border shadow-none flex flex-col justify-center">
-                  <CardContent className="flex flex-col gap-2">
-                    <div className="space-y-1">
-                      <div className="text-sm text-white flex items-center justify-between">
-                        <span>Total Active Agents</span>
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <InfoIcon className="h-4 w-4 text-white/80 cursor-pointer" />
-                            </TooltipTrigger>
-                            <TooltipContent side="top" align="end">
-                              <p>
-                                This is the number of currently active agents
-                              </p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </div>
-
-                      <div className="text-2xl font-bold tracking-tight text-white flex items-center">
-                        2,400
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+              <div className="items-center gap-2">
+                <span className="text-xl font-semibold">All Agents</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 items-stretch">
                 <Card className="rounded-lg border shadow-none flex flex-col justify-center">
                   <CardContent className="flex flex-col gap-2">
                     <div className="space-y-1">
