@@ -1,3 +1,5 @@
+"use client"
+
 import {
   Card,
   CardContent,
@@ -14,10 +16,12 @@ import {
   CartesianGrid,
   AreaChart,
   Area,
+  LabelList,
 } from "recharts";
 import {
   ChartConfig,
   ChartContainer,
+  ChartTooltip,
   ChartTooltipContent,
 } from "../../components/ui/chart";
 import {
@@ -28,9 +32,12 @@ import {
   SelectValue,
 } from "../../components/ui/select";
 import { useState } from "react";
-import { ChartBar, Table } from "lucide-react";
+import { ChartBar, Search, Table } from "lucide-react";
 import DatePickerMonthYear from "../../components/ui/datepicker";
 import Image from "next/image";
+import { DataTable } from "../ui/data-table";
+import { ColumnDef } from "@tanstack/react-table";
+import { Input } from "../ui/input";
 
 const topDivisions = [
   { name: "Black Diamond", sales: 1200, fill: "#D75C3C" }, // deep burnt orange
@@ -70,6 +77,67 @@ const divisionsSalesData = Array.from({ length: 30 }, (_, i) => {
   };
 });
 
+type Agents = {
+  id: string;
+  name: string;
+  properties?: number;
+  division: string;
+  divisions?: string;
+};
+
+const columns: ColumnDef<Agents>[] = [
+  {
+    accessorKey: "id",
+    header: () => <div className="text-justify">ID</div>,
+    cell: ({ row }) => (
+      <div className="text-justify">{row.getValue("id")}</div>
+    ),
+  },
+  {
+    accessorKey: "name",
+    header: () => <div className="text-justify">Name</div>,
+    cell: ({ row }) => (
+      <div className="text-justify">{row.getValue("name")}</div>
+    ),
+  },
+  {
+    accessorKey: "division",
+    header: () => <div className="text-justify">Division</div>,
+    cell: ({ row }) => (
+      <div className="text-justify">{row.getValue("division")}</div>
+    ),
+  },
+  {
+    accessorKey: "properties",
+    header: "Properties Assigned",
+    cell: ({ row }) => row.getValue("properties") ?? 0,
+  },
+  {
+    accessorKey: "divisions",
+    header: "Divisions Assigned",
+    cell: ({ row }) => row.getValue("divisions") ?? "N/A",
+  },
+];
+
+const data: Agents[] = [
+  { id: "1", name: "Juan Dela Cruz", division: "Living Hope Division" },
+  { id: "2", name: "Carlos Santos", division: "Living Hope Division" },
+  { id: "3", name: "Juan Dela Cruz", division: "Living Hope Division" },
+  { id: "4", name: "Carlos Santos", division: "Living Hope Division" },
+  { id: "1", name: "Juan Dela Cruz", division: "Living Hope Division" },
+  { id: "2", name: "Carlos Santos", division: "Living Hope Division" },
+  { id: "3", name: "Juan Dela Cruz", division: "Living Hope Division" },
+  { id: "4", name: "Carlos Santos", division: "Living Hope Division" },
+  { id: "1", name: "Juan Dela Cruz", division: "Living Hope Division" },
+  { id: "2", name: "Carlos Santos", division: "Living Hope Division" },
+  { id: "3", name: "Juan Dela Cruz", division: "Living Hope Division" },
+  { id: "4", name: "Carlos Santos", division: "Living Hope Division" },
+  { id: "1", name: "Juan Dela Cruz", division: "Living Hope Division" },
+  { id: "2", name: "Carlos Santos", division: "Living Hope Division" },
+  { id: "3", name: "Juan Dela Cruz", division: "Living Hope Division" },
+  { id: "4", name: "Carlos Santos", division: "Living Hope Division" },
+];
+
 // chartConfig.ts
 export const chartConfig = {
   sales: {
@@ -79,15 +147,16 @@ export const chartConfig = {
 } satisfies ChartConfig;
 
 export default function DivisionDashboard() {
-  const [view, setView] = useState("chart");
+  const [view, setView] = useState("table");
   const sortedDivisions = [...topDivisions].sort((a, b) => b.sales - a.sales);
+  const [searchTerm, setSearchTerm] = useState("");
 
   return (
     <div className="space-y-4">
       <Card className="overflow-x-auto rounded-lg shadow-none">
         <CardHeader className="mb-3 items-center gap-2 px-4">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div className="bg-sidebar col-span-2 relative z-30 flex flex-col px-6 justify-center text-left border rounded-lg">
+            <div className="col-span-2 relative z-30 flex flex-col px-6 justify-center text-left border rounded-lg">
               <div className="flex divide-x divide-gray-300">
                 <div className="flex-1 flex flex-col gap-0.3">
                   <span className="text-muted-foreground text-xs block">Total Sales Target Division</span>
@@ -205,14 +274,14 @@ export default function DivisionDashboard() {
           </CardHeader>
           <CardContent className="grid grid-cols-2 gap-8">
             <div className="flex flex-col gap-0.5">
-              {sortedDivisions.slice(0, 5).map((division, index) => {                
+              {sortedDivisions.slice(0, 5).map((division, index) => {
                 return (
                   <div
                     key={division.name}
                     className="relative flex items-center justify-between px-2 py-1 rounded-lg transition-all hover:bg-primary/10"
                   >
- 
-                   <div
+
+                    <div
                       style={{ backgroundColor: division.fill }}
                       className="relative z-10 flex items-center justify-center w-6 h-6 rounded-full text-white text-xs font-medium flex-shrink-0"
                     >
@@ -231,14 +300,14 @@ export default function DivisionDashboard() {
               })}
             </div>
             <div className="flex flex-col gap-0.5">
-              {sortedDivisions.slice(5, 10).map((division, index) => {                
+              {sortedDivisions.slice(5, 10).map((division, index) => {
                 return (
                   <div
                     key={division.name}
                     className="relative flex items-center justify-between px-2 py-1 rounded-lg transition-all hover:bg-primary/10"
                   >
- 
-                   <div
+
+                    <div
                       style={{ backgroundColor: division.fill }}
                       className="relative z-10 flex items-center justify-center w-6 h-6 rounded-full text-white text-xs font-medium flex-shrink-0"
                     >
@@ -260,13 +329,13 @@ export default function DivisionDashboard() {
         </Card>
       </div>
 
-      <Card className="overflow-x-auto rounded-lg shadow-none">
-        <CardHeader className="mb-3 flex items-center justify-between gap-2 border-b">
+      <Card className="overflow-x-auto rounded-lg shadow-none gap-0">
+        <CardHeader className="mb-3 flex items-center justify-between gap-2">
           <div className="flex flex-col gap-1">
             <CardTitle className="text-primary">
               Division Sales <span className="text-muted-foreground">(30)</span>
             </CardTitle>
-            <CardDescription>Monthly Sales Comparison</CardDescription>
+            <CardDescription>Monthly Sales</CardDescription>
           </div>
 
           <div className="flex items-center gap-2">
@@ -283,15 +352,6 @@ export default function DivisionDashboard() {
 
             <div className="inline-flex bg-white border rounded-xl p-[3px] h-9">
               <button
-                className={`flex items-center gap-1 px-3 py-1 text-sm font-medium rounded-md transition-colors ${view === "chart"
-                  ? "bg-primary text-white shadow-sm"
-                  : "text-muted-foreground hover:bg-gray-50"
-                  }`}
-                onClick={() => setView("chart")}
-              >
-                <ChartBar className="w-3 h-3" />
-              </button>
-              <button
                 className={`flex items-center gap-1 px-3 py-1 text-sm font-medium rounded-md transition-colors ${view === "table"
                   ? "bg-primary text-white shadow-sm"
                   : "text-muted-foreground hover:bg-gray-50"
@@ -300,12 +360,21 @@ export default function DivisionDashboard() {
               >
                 <Table className="w-3 h-3" />
               </button>
+              <button
+                className={`flex items-center gap-1 px-3 py-1 text-sm font-medium rounded-md transition-colors ${view === "chart"
+                  ? "bg-primary text-white shadow-sm"
+                  : "text-muted-foreground hover:bg-gray-50"
+                  }`}
+                onClick={() => setView("chart")}
+              >
+                <ChartBar className="w-3 h-3" />
+              </button>
             </div>
           </div>
         </CardHeader>
 
         {view === "chart" ? (
-          <CardContent className="h-64 min-w-[800px]">
+          <CardContent className="h-64 min-w-[800px] my-4">
             <ChartContainer
               className="h-full w-full"
               config={{
@@ -349,7 +418,20 @@ export default function DivisionDashboard() {
           </CardContent>
         ) : (
           <CardContent className="overflow-x-auto">
-            {/* Table component */}
+            <div className="flex flex-col md:flex-row justify-between items-center">
+              <div className="flex flex-col md:flex-row items-center gap-3 mt-3 mb-4">
+                <div className="relative rounded-lg">
+                  <Search className="absolute left-2 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
+                  <Input
+                    placeholder="Search..."
+                    className="pl-7 text-xs sm:text-sm h-8 w-90"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
+              </div>
+            </div>
+            <DataTable data={data} columns={columns} />
           </CardContent>
         )}
       </Card>
