@@ -30,7 +30,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import { useState } from "react";
-import { ChartBar, Table } from "lucide-react";
+import { ChartBar, Table, TargetIcon } from "lucide-react";
 import DatePickerMonthYear from "../ui/datepicker";
 
 const topDivisions = [
@@ -84,156 +84,35 @@ export default function DivisionDashboard() {
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 items-stretch">
-        <Card className="col-span-3 rounded-lg border shadow-none bg-white">
-          <CardHeader className="flex items-center justify-between gap-1 border-b">
-            <div className="flex flex-col gap-1">
-              <CardTitle className="text-primary">Top 10 Division</CardTitle>
-              <CardDescription>Monthly Sales</CardDescription>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="col-span-2 relative z-30 flex flex-col px-6 justify-center text-left border rounded-lg">
+          <div className="flex divide-x divide-gray-300">
+            <div className="flex-1 pr-4 flex gap-2 items-center">
+              {/* <TargetIcon className="h-6 w-6 mt-1 text-muted-foreground" /> */}
+              <div className="flex flex-col">
+                <span className="text-muted-foreground text-xs">Total Target</span>
+                <span className="text-lg font-bold sm:text-2xl">78%</span>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <DatePickerMonthYear />
+            <div className="flex-1 pl-4 flex flex-col gap-0.3">
+              <span className="text-muted-foreground text-xs block">Total Actual</span>
+              <span className="text-lg font-bold sm:text-2xl">120%</span>
             </div>
-          </CardHeader>
-
-          <CardContent className="grid grid-cols-2 gap-8">
-            <div className="flex flex-col gap-0.5">
-              {topDivisions.slice(0, 5).map((division, index) => {
-                const maxSales = topDivisions[0].sales;
-                const progressWidth = (division.sales / maxSales) * 100;
-
-                return (
-                  <div
-                    key={division.name}
-                    className="relative flex items-center justify-between px-2 py-1 rounded-lg transition-all hover:bg-primary/10"
-                  >
-                    {/* <div
-                      className="absolute left-0 top-0 h-full bg-muted-foreground/10 rounded-l-md"
-                      style={{ width: `${progressWidth}%` }}
-                    ></div> */}
-
-                    <div
-                      style={{ backgroundColor: division.fill }}
-                      className="relative z-10 flex items-center justify-center w-6 h-6 rounded-full text-white text-xs font-medium flex-shrink-0"
-                    >
-                      {index + 1}
-                    </div>
-
-                    <div className="relative z-10 flex-1 px-2 text-sm font-medium text-foreground truncate">
-                      {division.name}
-                    </div>
-
-                    <div className="relative z-10 text-sm font-semibold text-primary">
-                      {division.sales.toLocaleString()}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="flex flex-col gap-0.5">
-              {topDivisions.slice(5, 10).map((division, index) => {
-                const maxSales = topDivisions[0].sales;
-                const progressWidth = (division.sales / maxSales) * 100;
-
-                return (
-                  <div
-                    key={division.name}
-                    className="relative flex items-center justify-between px-2 py-1 rounded-lg transition-all hover:bg-primary/10"
-                  >
-                    {/* <div
-                      className="absolute left-0 top-0 h-full bg-muted-foreground/10 rounded-l-md"
-                      style={{ width: `${progressWidth}%` }}
-                    ></div> */}
-
-                    <div
-                      style={{ backgroundColor: division.fill }}
-                      className="relative z-10 flex items-center justify-center w-6 h-6 rounded-full text-white text-xs font-medium flex-shrink-0"
-                    >
-                      {index + 6}
-                    </div>
-
-                    <div className="relative z-10 flex-1 px-2 text-sm font-medium text-foreground truncate">
-                      {division.name}
-                    </div>
-
-                    <div className="relative z-10 text-sm font-semibold text-primary">
-                      {division.sales.toLocaleString()}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="rounded-lg border-none shadow-none bg-white">
-          <CardContent className="pl-2">
-            <ChartContainer config={chartConfig} className="w-full h-64">
-              <BarChart
-                accessibilityLayer
-                data={topDivisions}
-                layout="vertical"
-                margin={{
-                  right: 2,
-                }}
-                barCategoryGap="10%"
-              >
-                <CartesianGrid horizontal={false} />
-                <YAxis
-                  dataKey="month"
-                  type="category"
-                  tickLine={true}
-                  tickMargin={10}
-                  axisLine={false}
-                  tickFormatter={(value) => value.slice(0, 3)}
-                  hide
-                />
-                <XAxis dataKey="sales" type="number" hide />
-                <ChartTooltip
-                  cursor={false}
-                  content={<ChartTooltipContent indicator="line" />}
-                />
-                <Bar dataKey="sales" layout="vertical" fill="#fff" radius={4}>
-                  <LabelList
-                    dataKey="name"
-                    position="insideLeft"
-                    offset={8}
-                    className="fill-(--color-label)"
-                    fontSize={12}
-                  />
-                </Bar>
-              </BarChart>
-            </ChartContainer>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
+        <div className="bg-primary rounded-lg p-4 flex-1 pl-4 flex flex-col gap-0.3">
+          <span className="text-white text-xs block">Total Reach</span>
+          <span className="text-white text-base font-bold sm:text-2xl">120%</span>
+        </div>
       </div>
 
-      <Card className="overflow-x-auto rounded-lg shadow-none pt-0">
-        <CardHeader className="flex flex-col items-stretch border-b !p-0 sm:flex-row">
-          <div className="flex flex-1 flex-col justify-center gap-1 px-6 pt-4 pb-3 sm:!py-0">
+      <Card className="overflow-x-auto rounded-lg shadow-none">
+        <CardHeader className="mb-3 flex items-center justify-between gap-2 border-b">
+          <div className="flex flex-col gap-1">
             <CardTitle className="text-primary">
               Sales Target Division
             </CardTitle>
             <CardDescription>Monthly Target - Actual Sales</CardDescription>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 px-6 py-3">
-            <div className="col-span-2 relative z-30 flex flex-col gap-1 px-6 py-4 justify-center text-left border rounded-lg">
-              <div className="flex items-center divide-x divide-gray-300">
-                <div className="flex-1 pr-4">
-                  <span className="text-muted-foreground text-xs block">Total Target</span>
-                  <span className="text-lg leading-none font-bold sm:text-3xl">78%</span>
-                </div>
-                <div className="flex-1 pl-6">
-                  <span className="text-muted-foreground text-xs block">Total Actual</span>
-                  <span className="text-lg leading-none font-bold sm:text-3xl">120%</span>
-                </div>
-              </div>
-            </div>
-            <div className="bg-primary relative z-30 flex flex-col gap-1 py-4 px-6 text-left rounded-lg">
-              <span className="text-white text-xs">Overall Reach</span>
-              <span className="text-white text-lg leading-none font-bold sm:text-3xl">95%</span>
-            </div>
           </div>
         </CardHeader>
 
@@ -272,7 +151,7 @@ export default function DivisionDashboard() {
                       {/* Target */}
                       <div className="flex items-center gap-2 mb-1">
                         <span
-                          className="w-3 h-3 block rounded-sm"
+                          className="w-3 h-3 block rounded-xs"
                           style={{ backgroundColor: "var(--chart-1)" }}
                         ></span>
                         <span>
@@ -286,7 +165,7 @@ export default function DivisionDashboard() {
                       {/* Actual */}
                       <div className="flex items-center gap-2 mb-1">
                         <span
-                          className="w-3 h-3 block rounded-sm"
+                          className="w-3 h-3 block rounded-xs"
                           style={{ backgroundColor: "var(--chart-2)" }}
                         ></span>
                         <span>
@@ -299,7 +178,7 @@ export default function DivisionDashboard() {
 
                       {/* Reach */}
                       <div className="flex items-center gap-2">
-                        <span className="w-3 h-3 block rounded-sm bg-[#76B041]"></span>
+                        <span className="w-3 h-3 block rounded-xs bg-[#76B041]"></span>
                         <span>Target Reach: {data.monthTargetReach}%</span>
                       </div>
                     </div>
@@ -347,8 +226,8 @@ export default function DivisionDashboard() {
             <div className="inline-flex bg-white border rounded-xl p-[3px] h-9">
               <button
                 className={`flex items-center gap-1 px-3 py-1 text-sm font-medium rounded-md transition-colors ${view === "chart"
-                    ? "bg-primary text-white shadow-sm"
-                    : "text-muted-foreground hover:bg-gray-50"
+                  ? "bg-primary text-white shadow-sm"
+                  : "text-muted-foreground hover:bg-gray-50"
                   }`}
                 onClick={() => setView("chart")}
               >
@@ -356,8 +235,8 @@ export default function DivisionDashboard() {
               </button>
               <button
                 className={`flex items-center gap-1 px-3 py-1 text-sm font-medium rounded-md transition-colors ${view === "table"
-                    ? "bg-primary text-white shadow-sm"
-                    : "text-muted-foreground hover:bg-gray-50"
+                  ? "bg-primary text-white shadow-sm"
+                  : "text-muted-foreground hover:bg-gray-50"
                   }`}
                 onClick={() => setView("table")}
               >

@@ -139,7 +139,7 @@ export default function CollectionForecastDashboard() {
           </CardHeader>
           <CardContent className="flex justify-center items-center">
             <ChartContainer config={chartConfig} className="aspect-square h-40">
-              <ResponsiveContainer height="100%" width="100%" className="mt-10">
+              <ResponsiveContainer height="100%" width="100%" className="mt-8">
                 <RadialBarChart
                   data={chartDataDP}
                   startAngle={180}
@@ -200,12 +200,16 @@ export default function CollectionForecastDashboard() {
               </ResponsiveContainer>
             </ChartContainer>
           </CardContent>
-          <CardFooter className="flex-col items-start gap-2 text-sm pt-6">
+          <CardFooter className="flex-col items-start gap-2 text-sm pt-2">
             <div className="flex gap-2 leading-none font-medium">
-              Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+              {chartDataDP[0].actualDP >= chartDataDP[0].maxDP ? (
+                <span className="text-green-600">Target reached!</span>
+              ) : (
+                <span className="text-yellow-600">Still below target</span>
+              )}
             </div>
             <div className="text-muted-foreground leading-none">
-              Showing total visitors for the last 6 months
+              Current progress is {chartDataDP[0].actualDP}% out of {chartDataDP[0].maxDP}% forecasted.
             </div>
           </CardFooter>
         </Card>
@@ -231,7 +235,7 @@ export default function CollectionForecastDashboard() {
                 data={chartData}
                 margin={{
                   top: 16,
-                  right: 16,
+                  right: 10,
                   bottom: 16,
                   left: 0,
                 }}

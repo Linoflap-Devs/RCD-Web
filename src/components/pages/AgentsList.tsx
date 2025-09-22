@@ -191,12 +191,11 @@ export default function AgentsList() {
 
                 {/* Right side: search + filter */}
                 <div className="flex flex-col md:flex-row items-center gap-3">
-                  {/* Search Input */}
                   <div className="relative rounded-lg">
                     <Search className="absolute left-2 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
                     <Input
                       placeholder="Search..."
-                      className="pl-7 text-xs sm:text-sm h-8 w-70" // fixed width
+                      className="pl-7 text-xs sm:text-sm h-8 w-70"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />

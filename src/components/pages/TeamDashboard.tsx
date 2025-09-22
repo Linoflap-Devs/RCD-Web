@@ -266,7 +266,7 @@ export default function TeamDashboard() {
                 />
 
                 <Area
-                  type="step"
+                  type="linear"
                   dataKey="sales"
                   stroke="var(--chart-2)"
                   fill="var(--chart-2)"

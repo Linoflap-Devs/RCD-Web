@@ -18,6 +18,7 @@ import { cn } from "@/lib/utils"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "../components/ui/dropdown-menu"
 import { Button } from "../components/ui/button"
 import { LogOut, MoreVertical, User2 } from "lucide-react"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
 interface SubItem {
   label: string
@@ -125,7 +126,6 @@ export function AppSidebar({ groups, company, user }: AppSidebarProps) {
           </SidebarGroup>
         ))}
 
-        {/* User details */}
         {user && (
           <div className="mt-auto p-4 pb-6">
             <div className="flex items-center gap-3">
@@ -154,9 +154,8 @@ export function AppSidebar({ groups, company, user }: AppSidebarProps) {
                       {user.email}
                     </span>
                   </div>
-
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
+                  <Popover>
+                    <PopoverTrigger asChild>
                       <Button
                         variant="ghost"
                         className="ml-7 h-7 sm:h-8 w-7 sm:w-8 p-0"
@@ -164,30 +163,34 @@ export function AppSidebar({ groups, company, user }: AppSidebarProps) {
                         <span className="sr-only">Open menu</span>
                         <MoreVertical className="h-4 sm:h-4 w-3.5 sm:w-4" />
                       </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
+                    </PopoverTrigger>
+
+                    <PopoverContent
                       align="end"
-                      className="text-xs sm:text-sm"
+                      side="right" // "top" | "right" | "bottom" | "left"
+                      className="w-40 p-2 text-xs sm:text-sm"
                     >
-                      <DropdownMenuItem className="text-xs sm:text-sm">
+                      <div className="flex flex-col gap-2 p-1">
                         <Link
                           href={`/home/profile`}
-                          className="flex items-center gap-2"
+                          className="flex items-center gap-2 hover:text-sidebar-accent-foreground"
                         >
-                          <User2 className="h-5 w-5 text-sidebar-foreground hover:text-sidebar-accent-foreground" />
+                          <User2 className="h-5 w-5 text-sidebar-foreground" />
                           User Profile
                         </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem
-                        className="text-destructive cursor-pointer"
-                      //onClick={onLogout}
-                      >
-                        <LogOut className="h-5 w-5 text-sidebar-foreground hover:text-sidebar-accent-foreground" />
-                        Logout
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+
+                        <div className="border-t my-1" />
+
+                        <button
+                          className="flex items-center gap-2 text-destructive hover:text-sidebar-accent-foreground text-left"
+                          // onClick={onLogout}
+                        >
+                          <LogOut className="h-5 w-5 text-sidebar-foreground" />
+                          Logout
+                        </button>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
                 </>
               )}
             </div>
