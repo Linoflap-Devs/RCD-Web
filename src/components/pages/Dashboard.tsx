@@ -18,7 +18,7 @@ export default function Dashboard() {
 
   const currentMonth = 15520177.74;
   const lastYearMonth = 5556277.74;
-  const percentage = (currentMonth / lastYearMonth) * 100;
+  //const percentage = (currentMonth / lastYearMonth) * 100;
 
   const handleTabChange = (value: string) => {
     router.replace(`/dashboard?tab=${value}`);

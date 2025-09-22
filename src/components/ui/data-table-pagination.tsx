@@ -7,7 +7,6 @@ import {
   ChevronsRight,
 } from "lucide-react";
 import { Table } from "@tanstack/react-table";
-
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -40,7 +39,7 @@ export function DataTablePagination<TData>({
             <SelectValue placeholder={table.getState().pagination.pageSize} />
           </SelectTrigger>
           <SelectContent>
-            {[5, 10, 20, 30, 50].map((size) => (
+            {[10, 20, 30, 50].map((size) => (
               <SelectItem key={size} value={String(size)}>
                 {size}
               </SelectItem>

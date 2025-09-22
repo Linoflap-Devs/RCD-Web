@@ -126,10 +126,10 @@ export function AppSidebar({ groups, company, user }: AppSidebarProps) {
 
         {user && (
           <div className="mt-auto p-2 pb-4">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 justify-center">
               <Avatar
                 className={cn(isCollapsed
-                  ? "h-5 w-5 flex-shrink-0 m-0"
+                  ? "flex-shrink-0 m-0 justify-center"
                   : "flex-shrink-0"
                 )}
               >

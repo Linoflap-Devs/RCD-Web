@@ -27,17 +27,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       />
       <SidebarInset className="bg-sidebar">
         <div className="flex flex-col h-full rounded-xl border bg-background">
-          {/* Header */}
-          <header className="flex h-12 items-center gap-1 px-4">
+          <header className="flex h-12 items-center gap-1 px-4  border-b">
             <SidebarTrigger />
             <div className="mx-2 h-4 w-px bg-border" />
             <div className="flex items-center text-base text-muted-foreground">
               <div className="text-sm">{getHomeBreadcrumb(pathname)}</div>
             </div>
           </header>
-
-          {/* Page content */}
-          <main className="flex-1 px-4 pt-2">{children}</main>
+          <main className="flex-1 px-2 py-5">{children}</main>
         </div>
       </SidebarInset>
     </SidebarProvider>

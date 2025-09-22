@@ -3,11 +3,36 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/ui/data-table";
 import { Button } from "../ui/button";
-import { ChevronsUpDown, Filter, MoreHorizontal, Search } from "lucide-react";
+import {
+  ChevronsUpDown,
+  Filter,
+  InfoIcon,
+  MoreHorizontal,
+  Search,
+} from "lucide-react";
 import { useState } from "react";
 import { Input } from "../ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { Card, CardContent } from "../ui/card";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 type Agents = {
   id: string;
@@ -24,7 +49,6 @@ const columns: ColumnDef<Agents>[] = [
       return (
         <Button
           variant="ghost"
-          className="text-xs font-regular"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           ID
@@ -33,9 +57,7 @@ const columns: ColumnDef<Agents>[] = [
       );
     },
     cell: ({ row }) => (
-      <div className="text-xs sm:text-sm">
-        {row.getValue("id")}
-      </div>
+      <div className="text-sm sm:text-sm">{row.getValue("id")}</div>
     ),
   },
   {
@@ -44,7 +66,6 @@ const columns: ColumnDef<Agents>[] = [
       return (
         <Button
           variant="ghost"
-          className="text-xs font-regular"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Agent Name
@@ -53,9 +74,7 @@ const columns: ColumnDef<Agents>[] = [
       );
     },
     cell: ({ row }) => (
-      <div className="text-xs sm:text-sm">
-        {row.getValue("name")}
-      </div>
+      <div className="text-sm sm:text-sm">{row.getValue("name")}</div>
     ),
   },
   {
@@ -64,7 +83,6 @@ const columns: ColumnDef<Agents>[] = [
       return (
         <Button
           variant="ghost"
-          className="text-xs text-[#020817]"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Division
@@ -73,9 +91,7 @@ const columns: ColumnDef<Agents>[] = [
       );
     },
     cell: ({ row }) => (
-      <div className="text-xs sm:text-sm">
-        {row.getValue("division")}
-      </div>
+      <div className="text-sm sm:text-sm">{row.getValue("division")}</div>
     ),
   },
   {
@@ -90,9 +106,7 @@ const columns: ColumnDef<Agents>[] = [
   },
   {
     id: "actions",
-    header: () => (
-      <div className="text-center w-full">Actions</div>
-    ),
+    header: () => <div className="text-center w-full"></div>,
     cell: ({ row }) => {
       //const crew = row.original;
 
@@ -176,32 +190,127 @@ export default function AgentsList() {
       `}</style>
         <div className="h-full overflow-hidden">
           <div className="p-2 sm:py-0 flex flex-col space-y-4 sm:space-y-5 h-full">
-            {/* Header */}
-            {/* <div className="flex flex-col mb-4">
-              <h1 className="text-2xl font-bold text-primary mb-0">Agent management</h1>
-              <div className="font-xs mb-0 text-muted-foreground">Here is the list of approved agents.</div>
-            </div> */}
-            <div className="flex flex-col space-y-5 sm:space-y-4 min-h-full">
+            <div className="flex flex-col space-y-5 sm:space-y-3.5 min-h-full">
+              {/* <div className="items-center gap-2">
+                <span className="text-2xl font-semibold">All Agents</span>
+              </div> */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 items-stretch">
+                <Card className="bg-primary rounded-lg border shadow-none flex flex-col justify-center">
+                  <CardContent className="flex flex-col gap-2">
+                    <div className="space-y-1">
+                      <div className="text-sm text-white flex items-center justify-between">
+                        <span>Total Active Agents</span>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <InfoIcon className="h-4 w-4 text-white/80 cursor-pointer" />
+                            </TooltipTrigger>
+                            <TooltipContent side="top" align="end">
+                              <p>
+                                This is the number of currently active agents
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
 
-              <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
-                <div className="flex flex-row items-center gap-2">
-                  <span className="text-xl font-semibold">All Agents</span>
-                  <span className="text-lg text-muted-foreground">78</span>
-                </div>
+                      <div className="text-2xl font-bold tracking-tight text-white flex items-center">
+                        2,400
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card className="rounded-lg border shadow-none flex flex-col justify-center">
+                  <CardContent className="flex flex-col gap-2">
+                    <div className="space-y-1">
+                      <div className="text-sm flex items-center justify-between">
+                        <span>Total Active Agents</span>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <InfoIcon className="h-4 w-4 text-primary/80 cursor-pointer" />
+                            </TooltipTrigger>
+                            <TooltipContent side="top" align="end">
+                              <p>
+                                This is the number of currently active agents
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
 
-                {/* Right side: search + filter */}
+                      <div className="text-2xl font-bold tracking-tight text-primary flex items-center">
+                        2,400
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card className="rounded-lg border shadow-none flex flex-col justify-center">
+                  <CardContent className="flex flex-col gap-2">
+                    <div className="space-y-1">
+                      <div className="text-sm flex items-center justify-between">
+                        <span>Total Active Agents</span>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <InfoIcon className="h-4 w-4 text-primary/80 cursor-pointer" />
+                            </TooltipTrigger>
+                            <TooltipContent side="top" align="end">
+                              <p>
+                                This is the number of currently active agents
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
+
+                      <div className="text-2xl font-bold tracking-tight text-primary flex items-center">
+                        2,400
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card className="rounded-lg border shadow-none flex flex-col justify-center">
+                  <CardContent className="flex flex-col gap-2">
+                    <div className="space-y-1">
+                      <div className="text-sm flex items-center justify-between">
+                        <span>Total Active Agents</span>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <InfoIcon className="h-4 w-4 text-primary/80 cursor-pointer" />
+                            </TooltipTrigger>
+                            <TooltipContent side="top" align="end">
+                              <p>
+                                This is the number of currently active agents
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
+
+                      <div className="text-2xl font-bold tracking-tight text-primary flex items-center">
+                        2,400
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <div className="flex flex-col md:flex-row justify-between items-center">
                 <div className="flex flex-col md:flex-row items-center gap-3">
                   <div className="relative rounded-lg">
                     <Search className="absolute left-2 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
                     <Input
                       placeholder="Search..."
-                      className="pl-7 text-xs sm:text-sm h-8 w-70"
+                      className="pl-7 text-xs sm:text-sm h-8 w-90"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
                   </div>
+                </div>
 
-                  {/* Filter Select */}
+                <div>
                   <Select>
                     <SelectTrigger className="h-8 px-3 sm:px-4 text-xs sm:text-sm flex items-center gap-2">
                       <Filter className="h-4 w-4 text-primary" />
@@ -215,10 +324,8 @@ export default function AgentsList() {
                   </Select>
                 </div>
               </div>
-
-              {/* DataTable */}
               <div>
-                <DataTable columns={columns} data={data} pageSize={5} />
+                <DataTable columns={columns} data={data} />
               </div>
             </div>
           </div>

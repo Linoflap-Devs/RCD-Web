@@ -12,7 +12,6 @@ import {
   getFilteredRowModel,
   VisibilityState,
 } from "@tanstack/react-table";
-
 import {
   Table,
   TableBody,
@@ -84,18 +83,18 @@ export function DataTable<TData, TValue>({
 
   return (
     <>
-      <div className="rounded-lg border">
-        <div className="scrollbar-hide">
+      <div className="rounded-md border">
+        <div className="rounded-lg scrollbar-hide">
           <Table>
             {!hideHeader && (
               <TableHeader>
                 {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow key={headerGroup.id} className="">
+                  <TableRow key={headerGroup.id}>
                     {headerGroup.headers.map((header) => {
                       return (
                         <TableHead
                           key={header.id}
-                          className="bg-[#f7f7f7] font-semibold text-xs sm:text-xs py-2 sm:py-1 text-justify whitespace-nowrap"
+                          className="bg-sidebar border-none font-semibold text-sm sm:text-sm py-2 sm:py-1 text-justify whitespace-nowrap"
                         >
                           {header.isPlaceholder
                             ? null
@@ -121,7 +120,7 @@ export function DataTable<TData, TValue>({
                     {row.getVisibleCells().map((cell) => (
                       <TableCell
                         key={cell.id}
-                        className="py-2 sm:py-1 text-justify"
+                        className="py-2 sm:py-1.5 text-justify"
                       >
                         {flexRender(
                           cell.column.columnDef.cell,
