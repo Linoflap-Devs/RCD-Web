@@ -59,9 +59,8 @@ export function AppSidebar({ groups, company, user }: AppSidebarProps) {
   const isCollapsed = state === "collapsed"
 
   return (
-    <Sidebar collapsible="icon" className="border-r-0">
+    <Sidebar collapsible="icon" variant="inset">
       <SidebarContent>
-        {/* Company Logo + Info */}
         {company && (
           <div className={(isCollapsed ? "flex h-14 items-center justify-center" : "p-4 pt-8 flex h-14 items-center")}>
             <div className="flex items-center gap-2">
@@ -88,7 +87,6 @@ export function AppSidebar({ groups, company, user }: AppSidebarProps) {
           </div>
         )}
 
-        {/* Sidebar Groups */}
         {groups.map((group) => (
           <SidebarGroup key={group.label}>
             <SidebarGroupLabel>{group.label}</SidebarGroupLabel>
@@ -127,7 +125,7 @@ export function AppSidebar({ groups, company, user }: AppSidebarProps) {
         ))}
 
         {user && (
-          <div className="mt-auto p-4 pb-6">
+          <div className="mt-auto p-2 pb-4">
             <div className="flex items-center gap-3">
               <Avatar
                 className={cn(isCollapsed

@@ -25,7 +25,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         company={{ name: "RCD Inc", description: "System", logoUrl: "/logo-vector.png" }}
         user={{ name: "John Doe", email: "johndoe@email.com" }}
       />
-      <SidebarInset className="bg-sidebar p-2">
+      <SidebarInset className="bg-sidebar">
         <div className="flex flex-col h-full rounded-xl border bg-background">
           {/* Header */}
           <header className="flex h-12 items-center gap-1 px-4">
