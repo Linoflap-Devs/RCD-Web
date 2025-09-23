@@ -22,7 +22,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { AgentsRegisItem, approveAgent, getAgentsRegistrations } from "@/services/agents/agents.api";
+import { AgentsItem, AgentsRegisItem, approveAgent, ExperienceItem, getAgents, getAgentsRegistrations } from "@/services/agents/agents.api";
 import { useDebounce } from "@/hooks/use-debounce";
 import { toast } from "@/components/ui/use-toast";
 
@@ -31,6 +31,7 @@ type ApproveButtonProps = {
   AgentID: number | null
   onApprove: (AgentRegistrationID: number, AgentID?: number) => Promise<void>
   children?: React.ReactNode
+  Experience?: ExperienceItem[]; // <- array!
 }
 
 function ApproveAgentDialog({
@@ -53,7 +54,7 @@ function ApproveAgentDialog({
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
           <AlertDialogDescription>
             Do you want to approve agent with ID{" "}
-            <span className="font-semibold">{AgentRegistrationID}</span>?
+            <span className="font-semibold">{AgentRegistrationID} , {AgentID}</span>?
             This action cannot be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
@@ -77,6 +78,7 @@ export default function AgentsRegistrations() {
   const [agentsRegis, setAgentsRegis] = useState<AgentsRegisItem[]>([]);
   const [error, setError] = useState<string | null>(null);
   const debouncedSearch = useDebounce(searchTerm, 400);
+  const [agents, setAgents] = useState<AgentsItem[]>([]); // to compare
 
   const handleApprove = async (AgentRegistrationID: number, AgentID?: number) => {
     try {
@@ -112,7 +114,24 @@ export default function AgentsRegistrations() {
     fetchAgentsRegis();
   }, []);
 
-  //console.log(agentsRegis);
+  useEffect(() => {
+    const fetchAgents = async () => {
+      try {
+        setLoading(true);
+        const res = await getAgents();
+        setAgents(res.data);
+      } catch (err: any) {
+        setError(err.message || "Failed to fetch agents");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAgents();
+  }, []);
+
+  console.log(agentsRegis);
+  console.log(agents);
 
   const regex = new RegExp(debouncedSearch, "i");
 
@@ -163,13 +182,27 @@ export default function AgentsRegistrations() {
       id: "actions",
       header: () => <div className="text-center w-full"></div>,
       cell: ({ row }) => {
-        const { AgentRegistrationID, AgentID } = row.original
+        const { AgentRegistrationID, FirstName, MiddleName, LastName } = row.original;
+
+        const normalizeName = (name: string) =>
+          name.replace(/\s+/g, " ").trim().toLowerCase();
+        
+        const fullName = normalizeName(`${FirstName} ${MiddleName ?? ""} ${LastName}`);
+
+        const matchedAgent = agents.find(agent => {
+          const agentFullName = normalizeName(`${agent.FirstName} ${agent.MiddleName ?? ""} ${agent.LastName}`);
+          return agentFullName === fullName;
+        });
+
+        const AgentID = matchedAgent?.AgentID ?? null;
+        console.log("AgentID:", AgentID);
+
         return (
           <div className="flex justify-center">
             <ApproveAgentDialog
               AgentRegistrationID={AgentRegistrationID}
-              AgentID={AgentID}
               onApprove={handleApprove}
+              AgentID={AgentID}
             >
             <span className="inline-flex items-center px-2 py-0.5 text-xs font-semibold text-green-800 bg-green-100 rounded-full shadow-sm hover:bg-green-200 hover:scale-105 transition-all duration-200 cursor-pointer">
               <CheckCircle2 className="h-3 w-3 mr-1" />
@@ -241,10 +274,10 @@ export default function AgentsRegistrations() {
                   <Loader className="h-5 w-5 animate-spin" />
                   <p className="text-sm">Loading agents data...</p>
                 </div>
-              ) : filteredAgents.length === 0 ? (
-                <div className="flex justify-center items-center h-40">
-                  <p className="text-muted-foreground">No results found.</p>
-                </div>
+              // ) : filteredAgents.length === 0 ? (
+              //   <div className="flex justify-center items-center h-40">
+              //     <p className="text-muted-foreground">No results found.</p>
+              //   </div>
               ) : (
                 <div className="bg-white rounded-md pb-3">
                   <DataTable columns={agentColumns} pageSize={10} data={filteredAgents} />

@@ -69,6 +69,35 @@ const agentColumns: ColumnDef<AgentsItem>[] = [
       return birthdate ? new Date(birthdate).toLocaleDateString() : "N/A";
     },
   },
+  {
+    id: "actions",
+    header: "",
+    cell: ({ row }) => {
+      const agent = row.original;
+
+      return (
+        <div className="text-center">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-4 w-4 p-0 sm:h-4 sm:w-4">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-2 w-2 sm:h-2 sm:w-2" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="text-xs sm:text-sm">
+              <DropdownMenuItem asChild className="text-xs sm:text-sm">
+                {/* <Link href={`/home/crew/details?id=${crew.CrewCode}`}>
+                  <IdCard className="mr-1.5 sm:mr-2 h-3.5 sm:h-4 w-3.5 sm:w-4" />
+                  View Crew Details
+                </Link> */}
+              </DropdownMenuItem>
+              {/* <DropdownMenuSeparator /> */}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      );
+    },
+  },
 ];
 
 export default function AgentsList() {
@@ -76,7 +105,7 @@ export default function AgentsList() {
   const [loading, setLoading] = useState(false);
   const [agents, setAgents] = useState<AgentsItem[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const debouncedSearch = useDebounce(searchTerm, 400); // delay before filtering
+  const debouncedSearch = useDebounce(searchTerm, 400);
 
   useEffect(() => {
     const fetchAgents = async () => {
@@ -94,7 +123,7 @@ export default function AgentsList() {
     fetchAgents();
   }, []);
 
-  //console.log(agents);
+  console.log(agents);
 
   const regex = new RegExp(debouncedSearch, "i");
 
@@ -177,10 +206,10 @@ export default function AgentsList() {
                   <Loader className="h-5 w-5 animate-spin" />
                   <p className="text-sm">Loading agents data...</p>
                 </div>
-              ) : filteredAgents.length === 0 ? (
-                <div className="flex justify-center items-center h-40">
-                  <p className="text-muted-foreground">No results found.</p>
-                </div>
+              // ) : filteredAgents.length === 0 ? (
+              //   <div className="flex justify-center items-center h-40">
+              //     <p className="text-muted-foreground">No results found.</p>
+              //   </div>
               ) : (
                 <div className="bg-white rounded-md pb-3">
                   <DataTable columns={agentColumns} pageSize={10} data={filteredAgents} />
