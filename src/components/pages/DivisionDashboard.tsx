@@ -156,15 +156,15 @@ export default function DivisionDashboard() {
       <Card className="overflow-x-auto rounded-lg shadow-none">
         <CardHeader className="mb-3 items-center gap-2 px-4">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div className="bg-primary col-span-2 relative z-30 flex flex-col px-6 justify-center text-left border rounded-lg">
+            <div className="col-span-2 relative z-30 flex flex-col px-6 justify-center text-left border border-primary rounded-lg">
               <div className="flex divide-x divide-gray-300">
                 <div className="flex-1 flex flex-col gap-0.3">
-                  <span className="text-white text-xs block">Total Sales Target Division</span>
-                  <span className="text-white text-lg font-bold sm:text-2xl">89%</span>
+                  <span className="text-primary text-xs block">Total Sales Target Division</span>
+                  <span className="text-primary text-lg font-bold sm:text-2xl">89%</span>
                 </div>
                 <div className="flex-1 pl-4 flex flex-col gap-0.3">
-                  <span className="text-white text-xs block">Total Actual</span>
-                  <span className="text-white text-lg font-bold sm:text-2xl">120%</span>
+                  <span className="text-primary text-xs block">Total Actual</span>
+                  <span className="text-primary text-lg font-bold sm:text-2xl">120%</span>
                 </div>
               </div>
             </div>

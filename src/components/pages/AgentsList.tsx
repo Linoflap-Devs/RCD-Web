@@ -7,10 +7,11 @@ import {
   ChevronsUpDown,
   Filter,
   InfoIcon,
+  Loader,
   MoreHorizontal,
   Search,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "../../components/ui/input";
 import {
   Select,
@@ -33,100 +34,84 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { AgentsItem, getAgents } from "@/services/agents/agents.api";
+import { useDebounce } from "@/hooks/use-debounce";
+import { Badge } from "../ui/badge";
 
-type Agents = {
-  id: string;
-  name: string;
-  properties?: number;
-  division: string;
-  divisions?: string;
-};
+export const agentColumns: ColumnDef<AgentsItem>[] = [
+  {
+    accessorKey: "AgentID",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        ID
+        <ChevronsUpDown className="ml-1 h-4 w-4" />
+      </Button>
+    ),
+    cell: ({ row }) => <div className="text-xs">{row.getValue("AgentID")}</div>,
+  },
+  {
+    accessorKey: "AgentCode",
+    header: "Code",
+    cell: ({ row }) => <div className="text-xs">{row.getValue("AgentCode")}</div>,
+  },
+  {
+    accessorFn: (row) => `${row.FirstName} ${row.MiddleName || ""} ${row.LastName}`,
+    id: "FullName",
+    header: "Agent Name",
+    cell: ({ row }) => <div className="text-xs">{row.getValue("FullName")}</div>,
+  },
+  {
+    accessorKey: "DivisionID",
+    header: "Division",
+    cell: ({ row }) => row.getValue("DivisionID") ?? "N/A",
+  },
+  {
+    accessorKey: "Birthdate",
+    header: "Birthdate",
+    cell: ({ row }) => {
+      const birthdate = row.getValue("Birthdate") as string;
+      return birthdate ? new Date(birthdate).toLocaleDateString() : "N/A";
+    },
+  },
+  {
+    accessorKey: "Religion",
+    header: "Religion",
+    cell: ({ row }) => row.getValue("Religion") ?? "N/A",
+  },
+  {
+    accessorKey: "IsActive",
+    header: "Status",
+    cell: ({ row }) => {
+      const isActive = row.getValue("IsActive") as number;
 
-const columns: ColumnDef<Agents>[] = [
-  {
-    accessorKey: "id",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          ID
-          <ChevronsUpDown className="ml-1 h-4 w-4" />
-        </Button>
+      return isActive === 1 ? (
+        <Badge variant="success">Active</Badge>
+      ) : (
+        <Badge variant="destructive">Inactive</Badge>
       );
     },
-    cell: ({ row }) => (
-      <div className="text-sm sm:text-sm">{row.getValue("id")}</div>
-    ),
-  },
-  {
-    accessorKey: "name",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Agent Name
-          <ChevronsUpDown className="ml-1 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => (
-      <div className="text-sm sm:text-sm">{row.getValue("name")}</div>
-    ),
-  },
-  {
-    accessorKey: "division",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Division
-          <ChevronsUpDown className="ml-1 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => (
-      <div className="text-sm sm:text-sm">{row.getValue("division")}</div>
-    ),
-  },
-  {
-    accessorKey: "properties",
-    header: "Properties Assigned",
-    cell: ({ row }) => row.getValue("properties") ?? 0,
-  },
-  {
-    accessorKey: "divisions",
-    header: "Divisions Assigned",
-    cell: ({ row }) => row.getValue("divisions") ?? "N/A",
   },
   {
     id: "actions",
-    header: () => <div className="text-center w-full"></div>,
+    header: () => <div className="text-center w-full">Actions</div>,
     cell: ({ row }) => {
-      //const crew = row.original;
+      const agent = row.original;
 
       return (
         <div className="text-center">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-7 sm:h-8 w-7 sm:w-8 p-0">
+              <Button variant="ghost" className="h-7 w-7 p-0">
                 <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-3.5 sm:h-4 w-3.5 sm:w-4" />
+                <MoreHorizontal className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="text-xs sm:text-sm">
-              <DropdownMenuItem asChild className="text-xs sm:text-sm">
-                {/* <Link
-                  href={`/home/crew/details?id=${crew.CrewCode}&tab=allottee`}
-                >
-                  <Users className="mr-1.5 sm:mr-2 h-3.5 sm:h-4 w-3.5 sm:w-4" />
-                  View
-                </Link> */}
+            <DropdownMenuContent align="end" className="text-sm">
+              <DropdownMenuItem asChild>
+                <a href={`/agents/${agent.AgentID}`}>View Details</a>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
             </DropdownMenuContent>
@@ -134,30 +119,43 @@ const columns: ColumnDef<Agents>[] = [
         </div>
       );
     },
-  },
-];
-
-const data: Agents[] = [
-  { id: "1", name: "Juan Dela Cruz", division: "Living Hope Division" },
-  { id: "2", name: "Carlos Santos", division: "Living Hope Division" },
-  { id: "3", name: "Juan Dela Cruz", division: "Living Hope Division" },
-  { id: "4", name: "Carlos Santos", division: "Living Hope Division" },
-  { id: "1", name: "Juan Dela Cruz", division: "Living Hope Division" },
-  { id: "2", name: "Carlos Santos", division: "Living Hope Division" },
-  { id: "3", name: "Juan Dela Cruz", division: "Living Hope Division" },
-  { id: "4", name: "Carlos Santos", division: "Living Hope Division" },
-  { id: "1", name: "Juan Dela Cruz", division: "Living Hope Division" },
-  { id: "2", name: "Carlos Santos", division: "Living Hope Division" },
-  { id: "3", name: "Juan Dela Cruz", division: "Living Hope Division" },
-  { id: "4", name: "Carlos Santos", division: "Living Hope Division" },
-  { id: "1", name: "Juan Dela Cruz", division: "Living Hope Division" },
-  { id: "2", name: "Carlos Santos", division: "Living Hope Division" },
-  { id: "3", name: "Juan Dela Cruz", division: "Living Hope Division" },
-  { id: "4", name: "Carlos Santos", division: "Living Hope Division" },
+  }
 ];
 
 export default function AgentsList() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [agents, setAgents] = useState<AgentsItem[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const debouncedSearch = useDebounce(searchTerm, 400); // delay before filtering
+
+  useEffect(() => {
+    const fetchAgents = async () => {
+      try {
+        setLoading(true);
+        const res = await getAgents(); // call your API helper
+        setAgents(res.data); // from AgentsResponse
+      } catch (err: any) {
+        setError(err.message || "Failed to fetch agents");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAgents();
+  }, []);
+
+  //console.log(agents);
+  
+  const filteredAgents = agents.filter((agent) => {
+    const fullName = `${agent.FirstName} ${agent.MiddleName || ""} ${agent.LastName}`.toLowerCase();
+    return (
+      fullName.includes(debouncedSearch.toLowerCase()) ||
+      agent.AgentCode.toLowerCase().includes(debouncedSearch.toLowerCase())
+    );
+  });
+
+  if (error) return <p>Error: {error}</p>
 
   return (
     <>
@@ -194,84 +192,6 @@ export default function AgentsList() {
               <div className="items-center gap-2">
                 <span className="text-xl font-semibold">All Agents</span>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 items-stretch">
-                <Card className="rounded-lg border shadow-none flex flex-col justify-center">
-                  <CardContent className="flex flex-col gap-2">
-                    <div className="space-y-1">
-                      <div className="text-sm flex items-center justify-between">
-                        <span>Total Active Agents</span>
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <InfoIcon className="h-4 w-4 text-primary/80 cursor-pointer" />
-                            </TooltipTrigger>
-                            <TooltipContent side="top" align="end">
-                              <p>
-                                This is the number of currently active agents
-                              </p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </div>
-
-                      <div className="text-2xl font-bold tracking-tight text-primary flex items-center">
-                        2,400
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-                <Card className="rounded-lg border shadow-none flex flex-col justify-center">
-                  <CardContent className="flex flex-col gap-2">
-                    <div className="space-y-1">
-                      <div className="text-sm flex items-center justify-between">
-                        <span>Total Active Agents</span>
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <InfoIcon className="h-4 w-4 text-primary/80 cursor-pointer" />
-                            </TooltipTrigger>
-                            <TooltipContent side="top" align="end">
-                              <p>
-                                This is the number of currently active agents
-                              </p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </div>
-
-                      <div className="text-2xl font-bold tracking-tight text-primary flex items-center">
-                        2,400
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-                <Card className="rounded-lg border shadow-none flex flex-col justify-center">
-                  <CardContent className="flex flex-col gap-2">
-                    <div className="space-y-1">
-                      <div className="text-sm flex items-center justify-between">
-                        <span>Total Active Agents</span>
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <InfoIcon className="h-4 w-4 text-primary/80 cursor-pointer" />
-                            </TooltipTrigger>
-                            <TooltipContent side="top" align="end">
-                              <p>
-                                This is the number of currently active agents
-                              </p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </div>
-
-                      <div className="text-2xl font-bold tracking-tight text-primary flex items-center">
-                        2,400
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-
               <div className="flex flex-col md:flex-row justify-between items-center">
                 <div className="flex flex-col md:flex-row items-center gap-3">
                   <div className="relative rounded-lg">
@@ -284,7 +204,6 @@ export default function AgentsList() {
                     />
                   </div>
                 </div>
-
                 <div>
                   <Select>
                     <SelectTrigger className="h-8 px-3 sm:px-4 text-xs sm:text-sm flex items-center gap-2">
@@ -299,9 +218,20 @@ export default function AgentsList() {
                   </Select>
                 </div>
               </div>
-              <div>
-                <DataTable columns={columns} data={data} />
-              </div>
+                {loading ? (
+                  <div className="flex justify-center items-center h-40 gap-2 text-muted-foreground">
+                    <Loader className="h-5 w-5 animate-spin" />
+                    <p className="text-sm">Loading agents data...</p>
+                  </div>
+                ) : filteredAgents.length === 0 ? (
+                  <div className="flex justify-center items-center h-40">
+                    <p className="text-muted-foreground">No results found.</p>
+                  </div>
+                ) : (
+                  <div className="bg-white rounded-md pb-3">
+                    <DataTable columns={agentColumns} pageSize={10} data={filteredAgents} />
+                  </div>
+                )}
             </div>
           </div>
         </div>
