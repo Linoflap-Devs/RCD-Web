@@ -9,12 +9,13 @@ import { TrendingUp } from "lucide-react";
 import TeamDashboard from "./TeamDashboard";
 import CollectionForecastDashboard from "./CollectionForecast";
 import Image from "next/image";
+import { useState } from "react";
 
 export default function Dashboard() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const currentTab = searchParams.get("tab") || "divisions";
+  const activeTab = searchParams.get("tab") || "divisions";
 
   const currentMonth = 15520177.74;
   const lastYearMonth = 5556277.74;
@@ -24,8 +25,14 @@ export default function Dashboard() {
     router.replace(`/dashboard?tab=${value}`);
   };
 
+  const titleMap: Record<string, string> = {
+    divisions: "Division Sales Report",
+    team: "Team Sales Report",
+    forecast: "Collection Forecast Report"
+  }
+
   return (
-    <div className="h-full w-full p-2 space-y-3">
+    <div className="h-full w-full p-2 mt-4 space-y-3">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="bg-primary md:col-span-2 rounded-lg shadow-sm relative">
           <CardContent className="flex flex-col justify-center py-4 px-6 relative z-10">
@@ -53,7 +60,7 @@ export default function Dashboard() {
         </Card>
 
         {/* Card 2 - normal width */}
-        <Card className="bg-primary rounded-lg border shadow-none flex flex-col justify-center">
+        <Card className="bg-primary rounded-lg border  flex flex-col justify-center">
           <CardContent className="flex flex-col gap-2">
             <div className="space-y-1">
               <div className="text-sm text-white">Total Active Salesforce</div>
@@ -66,7 +73,7 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 items-stretch">
-        <Card className="rounded-lg border shadow-none flex flex-col justify-center">
+        <Card className="rounded-lg border flex flex-col justify-center shadow-none">
           <CardContent className="flex flex-col gap-2">
             <div className="space-y-1">
               <div className="text-sm text-muted-foreground">Total Active Divisions</div>
@@ -77,7 +84,7 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-lg border shadow-none flex flex-col justify-center">
+        <Card className="rounded-lg border flex flex-col justify-center shadow-none">
           <CardContent className="flex flex-col gap-2">
             <div className="space-y-1">
               <div className="text-sm text-muted-foreground">Total Active Agents</div>
@@ -88,7 +95,7 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-lg border shadow-none flex flex-col justify-center">
+        <Card className="rounded-lg border flex flex-col justify-center shadow-none">
           <CardContent className="flex flex-col gap-2">
             <div className="space-y-1">
               <div className="text-sm text-muted-foreground">Total Sales Previous Year</div>
@@ -99,7 +106,7 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card className="flex flex-col col-span-2 rounded-lg shadow-none gap-4 relative overflow-hidden text-primary">
+        <Card className="flex flex-col col-span-2 rounded-lg  gap-4 relative overflow-hidden text-primary shadow-none">
           {(() => {
             // normalize bar widths (relative to highest value)
             const maxValue = Math.max(currentMonth, lastYearMonth);
@@ -152,12 +159,12 @@ export default function Dashboard() {
 
       <div>
         <Tabs
-          value={currentTab}
+          value={activeTab}
           onValueChange={handleTabChange}
           className="w-full"
         >
           <div className="flex items-center justify-start mb-4 pt-4">
-            <h1 className="text-xl font-bold mr-4">Sales Overview</h1>
+            <h1 className="text-xl font-bold mr-4">{titleMap[activeTab]}</h1>
             <TabsList className="w-auto">
               <TabsTrigger value="divisions">Division Sales</TabsTrigger>
               <TabsTrigger value="team">Team Sales</TabsTrigger>

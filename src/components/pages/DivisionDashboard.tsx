@@ -147,7 +147,7 @@ export const chartConfig = {
 } satisfies ChartConfig;
 
 export default function DivisionDashboard() {
-  const [view, setView] = useState("table");
+  const [view, setView] = useState("chart");
   const sortedDivisions = [...topDivisions].sort((a, b) => b.sales - a.sales);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -156,15 +156,15 @@ export default function DivisionDashboard() {
       <Card className="overflow-x-auto rounded-lg shadow-none">
         <CardHeader className="mb-3 items-center gap-2 px-4">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div className="col-span-2 relative z-30 flex flex-col px-6 justify-center text-left border rounded-lg">
+            <div className="bg-primary col-span-2 relative z-30 flex flex-col px-6 justify-center text-left border rounded-lg">
               <div className="flex divide-x divide-gray-300">
                 <div className="flex-1 flex flex-col gap-0.3">
-                  <span className="text-muted-foreground text-xs block">Total Sales Target Division</span>
-                  <span className="text-primary text-lg font-bold sm:text-2xl">89%</span>
+                  <span className="text-white text-xs block">Total Sales Target Division</span>
+                  <span className="text-white text-lg font-bold sm:text-2xl">89%</span>
                 </div>
                 <div className="flex-1 pl-4 flex flex-col gap-0.3">
-                  <span className="text-muted-foreground text-xs block">Total Actual</span>
-                  <span className="text-primary text-lg font-bold sm:text-2xl">120%</span>
+                  <span className="text-white text-xs block">Total Actual</span>
+                  <span className="text-white text-lg font-bold sm:text-2xl">120%</span>
                 </div>
               </div>
             </div>
@@ -255,14 +255,14 @@ export default function DivisionDashboard() {
                 stackId="a"
                 fill="var(--chart-1)"
                 radius={[4, 4, 4, 4]}
-              />
+              />  
             </BarChart>
           </ChartContainer>
         </CardContent>
       </Card>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 items-stretch">
-        <Card className="col-span-4 rounded-lg border shadow-none bg-white">
+        <Card className="col-span-4 rounded-lg border bg-white shadow-none">
           <CardHeader className="flex items-center justify-between gap-1 border-b">
             <div className="flex flex-col gap-1">
               <CardTitle className="text-primary">Top 10 Division</CardTitle>
@@ -329,7 +329,7 @@ export default function DivisionDashboard() {
         </Card>
       </div>
 
-      <Card className="overflow-x-auto rounded-lg shadow-none gap-0">
+      <Card className="overflow-x-auto rounded-lg gap-0 shadow-none">
         <CardHeader className="mb-3 flex items-center justify-between gap-2">
           <div className="flex flex-col gap-1">
             <CardTitle className="text-primary">
@@ -352,15 +352,6 @@ export default function DivisionDashboard() {
 
             <div className="inline-flex bg-white border rounded-xl p-[3px] h-9">
               <button
-                className={`flex items-center gap-1 px-3 py-1 text-sm font-medium rounded-md transition-colors ${view === "table"
-                  ? "bg-primary text-white shadow-sm"
-                  : "text-muted-foreground hover:bg-gray-50"
-                  }`}
-                onClick={() => setView("table")}
-              >
-                <Table className="w-3 h-3" />
-              </button>
-              <button
                 className={`flex items-center gap-1 px-3 py-1 text-sm font-medium rounded-md transition-colors ${view === "chart"
                   ? "bg-primary text-white shadow-sm"
                   : "text-muted-foreground hover:bg-gray-50"
@@ -368,6 +359,15 @@ export default function DivisionDashboard() {
                 onClick={() => setView("chart")}
               >
                 <ChartBar className="w-3 h-3" />
+              </button>
+              <button
+                className={`flex items-center gap-1 px-3 py-1 text-sm font-medium rounded-md transition-colors ${view === "table"
+                  ? "bg-primary text-white shadow-sm"
+                  : "text-muted-foreground hover:bg-gray-50"
+                  }`}
+                onClick={() => setView("table")}
+              >
+                <Table className="w-3 h-3" />
               </button>
             </div>
           </div>
