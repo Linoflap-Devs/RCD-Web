@@ -6,7 +6,7 @@ export const getHomeBreadcrumb = (pathname: string) => {
   const userType = 1;
   const routeGroups = getHomeRoutes(pathname, userType ?? 0);  
   const cleanPath = pathname?.split("?")[0] ?? "";
-  console.log(pathname);
+  //console.log(pathname);
 
   const match = (
     base: string,

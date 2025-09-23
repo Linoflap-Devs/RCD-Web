@@ -27,18 +27,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../../components/ui/dropdown-menu";
-import { Card, CardContent } from "../../components/ui/card";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { AgentsItem, getAgents } from "@/services/agents/agents.api";
 import { useDebounce } from "@/hooks/use-debounce";
 import { Badge } from "../ui/badge";
 
-export const agentColumns: ColumnDef<AgentsItem>[] = [
+const agentColumns: ColumnDef<AgentsItem>[] = [
   {
     accessorKey: "AgentID",
     header: ({ column }) => (
@@ -50,18 +43,18 @@ export const agentColumns: ColumnDef<AgentsItem>[] = [
         <ChevronsUpDown className="ml-1 h-4 w-4" />
       </Button>
     ),
-    cell: ({ row }) => <div className="text-xs">{row.getValue("AgentID")}</div>,
+    cell: ({ row }) => <div className="text-sm">{row.getValue("AgentID")}</div>,
   },
   {
     accessorKey: "AgentCode",
     header: "Code",
-    cell: ({ row }) => <div className="text-xs">{row.getValue("AgentCode")}</div>,
+    cell: ({ row }) => <div className="text-sm">{row.getValue("AgentCode")}</div>,
   },
   {
     accessorFn: (row) => `${row.FirstName} ${row.MiddleName || ""} ${row.LastName}`,
     id: "FullName",
     header: "Agent Name",
-    cell: ({ row }) => <div className="text-xs">{row.getValue("FullName")}</div>,
+    cell: ({ row }) => <div className="text-sm">{row.getValue("FullName")}</div>,
   },
   {
     accessorKey: "DivisionID",
@@ -76,50 +69,6 @@ export const agentColumns: ColumnDef<AgentsItem>[] = [
       return birthdate ? new Date(birthdate).toLocaleDateString() : "N/A";
     },
   },
-  {
-    accessorKey: "Religion",
-    header: "Religion",
-    cell: ({ row }) => row.getValue("Religion") ?? "N/A",
-  },
-  {
-    accessorKey: "IsActive",
-    header: "Status",
-    cell: ({ row }) => {
-      const isActive = row.getValue("IsActive") as number;
-
-      return isActive === 1 ? (
-        <Badge variant="success">Active</Badge>
-      ) : (
-        <Badge variant="destructive">Inactive</Badge>
-      );
-    },
-  },
-  {
-    id: "actions",
-    header: () => <div className="text-center w-full">Actions</div>,
-    cell: ({ row }) => {
-      const agent = row.original;
-
-      return (
-        <div className="text-center">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-7 w-7 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="text-sm">
-              <DropdownMenuItem asChild>
-                <a href={`/agents/${agent.AgentID}`}>View Details</a>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      );
-    },
-  }
 ];
 
 export default function AgentsList() {
@@ -133,8 +82,8 @@ export default function AgentsList() {
     const fetchAgents = async () => {
       try {
         setLoading(true);
-        const res = await getAgents(); // call your API helper
-        setAgents(res.data); // from AgentsResponse
+        const res = await getAgents();
+        setAgents(res.data);
       } catch (err: any) {
         setError(err.message || "Failed to fetch agents");
       } finally {
@@ -146,12 +95,14 @@ export default function AgentsList() {
   }, []);
 
   //console.log(agents);
-  
+
+  const regex = new RegExp(debouncedSearch, "i");
+
   const filteredAgents = agents.filter((agent) => {
-    const fullName = `${agent.FirstName} ${agent.MiddleName || ""} ${agent.LastName}`.toLowerCase();
+    const fullName = `${agent.FirstName} ${agent.MiddleName || ""} ${agent.LastName}`;
     return (
-      fullName.includes(debouncedSearch.toLowerCase()) ||
-      agent.AgentCode.toLowerCase().includes(debouncedSearch.toLowerCase())
+      regex.test(fullName) ||
+      regex.test(agent.AgentCode.toString())
     );
   });
 
@@ -187,10 +138,13 @@ export default function AgentsList() {
         }
       `}</style>
         <div className="h-full overflow-hidden">
-          <div className="p-2 sm:py-0 flex flex-col space-y-4 sm:space-y-5 h-full">
+          <div className="p-2 sm:py-0 flex flex-col space-y-4 sm:space-y-6 h-full">
             <div className="flex flex-col space-y-5 sm:space-y-3.5 min-h-full">
-              <div className="items-center gap-2">
-                <span className="text-xl font-semibold">All Agents</span>
+              <div className="space-y-0.5">
+                <h2 className="text-2xl font-semibold tracking-tight">Agents</h2>
+                <p className="text-muted-foreground">
+                  List of approved agents.
+                </p>
               </div>
               <div className="flex flex-col md:flex-row justify-between items-center">
                 <div className="flex flex-col md:flex-row items-center gap-3">
@@ -218,20 +172,20 @@ export default function AgentsList() {
                   </Select>
                 </div>
               </div>
-                {loading ? (
-                  <div className="flex justify-center items-center h-40 gap-2 text-muted-foreground">
-                    <Loader className="h-5 w-5 animate-spin" />
-                    <p className="text-sm">Loading agents data...</p>
-                  </div>
-                ) : filteredAgents.length === 0 ? (
-                  <div className="flex justify-center items-center h-40">
-                    <p className="text-muted-foreground">No results found.</p>
-                  </div>
-                ) : (
-                  <div className="bg-white rounded-md pb-3">
-                    <DataTable columns={agentColumns} pageSize={10} data={filteredAgents} />
-                  </div>
-                )}
+              {loading ? (
+                <div className="flex justify-center items-center h-40 gap-2 text-muted-foreground">
+                  <Loader className="h-5 w-5 animate-spin" />
+                  <p className="text-sm">Loading agents data...</p>
+                </div>
+              ) : filteredAgents.length === 0 ? (
+                <div className="flex justify-center items-center h-40">
+                  <p className="text-muted-foreground">No results found.</p>
+                </div>
+              ) : (
+                <div className="bg-white rounded-md pb-3">
+                  <DataTable columns={agentColumns} pageSize={10} data={filteredAgents} />
+                </div>
+              )}
             </div>
           </div>
         </div>

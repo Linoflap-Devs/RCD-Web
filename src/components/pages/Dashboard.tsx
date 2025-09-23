@@ -32,7 +32,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="h-full w-full p-2 mt-4 space-y-3">
+    <div className="h-full w-full mt-3 space-y-3">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="bg-primary md:col-span-2 rounded-lg shadow-sm relative">
           <CardContent className="flex flex-col justify-center py-4 px-6 relative z-10">

@@ -43,7 +43,6 @@ export interface AgentsResponse {
 
 export const getAgents = async (): Promise<AgentsResponse> => {
   const response = await axiosInstance.get<AgentsResponse>("/agents");
-  console.log(response);
   return response.data; 
 };
 
@@ -58,6 +57,8 @@ export interface ProfileImage {
 }
 
 export interface AgentsRegisItem {
+  AgentID: number;
+  AgentRegistrationID: number;
   FirstName: string;
   MiddleName: string;
   LastName: string;
@@ -88,6 +89,25 @@ export interface AgentsRegisResponse {
 }
 
 export const getAgentsRegistrations = async (): Promise<AgentsRegisResponse> => {
-  const response = await axiosInstance.get<AgentsRegisResponse>("/crew");
+  const response = await axiosInstance.get<AgentsRegisResponse>("/agents/registrations");
+  console.log(response);
   return response.data; 
+}
+
+//////////////////===============================
+
+export interface ApproveAgentResponse {
+  success: boolean;
+  data: AgentsRegisItem[];
+  message?: string; 
+}
+
+export const approveAgent = async (agentRegistrationId: number, agentId?: number): Promise<ApproveAgentResponse> => {
+  const response = await axiosInstance.post<ApproveAgentResponse>(
+    `/auth/approve-registration`,
+    { agentRegistrationId, 
+      agentId
+    }
+  );
+  return response.data;
 }

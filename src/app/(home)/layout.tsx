@@ -34,7 +34,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <div className="text-sm">{getHomeBreadcrumb(pathname)}</div>
             </div>
           </header>
-          <main className="flex-1 px-4 py-5">{children}</main>
+          <main className="flex-1 px-4 pt-6 pb-5">{children}</main>
         </div>
       </SidebarInset>
     </SidebarProvider>
