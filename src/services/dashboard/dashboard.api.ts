@@ -6,6 +6,7 @@ export interface KPIItem {
     totalProjects: number;
     totalSalesPreviousYear: number;
     totalSalesCurrentMonth: number;
+    totalSalesLastMonth: number;
 }
 
 export interface DivisionSalesItem {
@@ -80,6 +81,12 @@ export interface SalesTargetItem {
     TargetYear: number;
 }
 
+export interface DownpaymentPercentItem {
+    TotalForecast: number;
+    TotalPaid: number;
+    TotalPaidPercent: number;
+}
+
 export interface DashboardItem {
     KPI: KPIItem;
     DivisionSales: DivisionSalesItem[];
@@ -90,6 +97,7 @@ export interface DashboardItem {
     CommissionForecastByYearMonth: CommissionForecastByYearMonthItem[];
     CommissionForecast: CommissionForecastItem[];
     SalesTarget: SalesTargetItem[];
+    DownpaymentPercent: DownpaymentPercentItem;
 }
 
 export interface DashboardResponse {

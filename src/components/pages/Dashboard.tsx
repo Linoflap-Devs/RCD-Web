@@ -32,12 +32,10 @@ export default function Dashboard() {
       .catch((err) => console.error("Error fetching dashboard data:", err));
   }, []);
 
-  console.log(dashboardData?.Top10Divisions);
-
-  console.log(dashboardData);
+  console.log(dashboardData); 
 
   const currentMonth = dashboardData?.KPI.totalSalesCurrentMonth ?? 0;
-  const lastYearMonth = dashboardData?.KPI?.totalSalesCurrentMonth ?? 0;
+  const lastYearMonth = dashboardData?.KPI?.totalSalesLastMonth ?? 0;
   //const percentage = (currentMonth / lastYearMonth) * 100;
 
   const handleTabChange = (value: string) => {
@@ -210,6 +208,7 @@ export default function Dashboard() {
               Top10ForecastBuyers={dashboardData?.Top10ForecastBuyers}
               CommissionForecastByYearMonth={dashboardData?.CommissionForecastByYearMonth}
               CommissionForecast={dashboardData?.CommissionForecast}
+              DownpaymentPercent={dashboardData?.DownpaymentPercent}
             />
           </TabsContent>
         </Tabs>

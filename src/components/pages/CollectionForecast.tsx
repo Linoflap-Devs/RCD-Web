@@ -28,7 +28,7 @@ import {
   ChartTooltipContent,
 } from "../../components/ui/chart";
 import DatePickerMonthYear from "../../components/ui/datepicker";
-import { CommissionForecastByYearMonthItem, CommissionForecastItem, Top10ForecastBuyersItem } from "@/services/dashboard/dashboard.api";
+import { CommissionForecastByYearMonthItem, CommissionForecastItem, DownpaymentPercentItem, Top10ForecastBuyersItem } from "@/services/dashboard/dashboard.api";
 import { DataTable } from "../ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { Search } from "lucide-react";
@@ -43,19 +43,6 @@ const chartConfig = {
     color: "var(--chart-1)",
   },
 } satisfies ChartConfig;
-
-const rawDPArray = [120, 80, 95]; // example data
-const total = rawDPArray.reduce((sum, val) => sum + val, 0);
-const averageDP = Math.round(total / rawDPArray.length); // e.g., 98
-
-const chartDataDP = [
-  {
-    name: "DP Paid",
-    dpPaid: Math.min(averageDP, 100), // bar length capped at 100
-    actualDP: averageDP, // label shows real value
-    maxDP: 100, // for "/100"
-  },
-];
 
 interface BuyerData {
   buyer: string;
@@ -181,16 +168,20 @@ interface CollectionForecastProps {
   Top10ForecastBuyers?: Top10ForecastBuyersItem[];
   CommissionForecastByYearMonth?: CommissionForecastByYearMonthItem[];
   CommissionForecast?: CommissionForecastItem[];
+  DownpaymentPercent?: DownpaymentPercentItem;
 }
 
 export function CollectionForecastDashboard({
   Top10ForecastBuyers,
   CommissionForecastByYearMonth,
-  CommissionForecast
+  CommissionForecast,
+  DownpaymentPercent
 }: CollectionForecastProps) {
 
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearch = useDebounce(searchTerm, 400);
+
+  console.log(DownpaymentPercent);
 
   const regex = new RegExp(debouncedSearch, "i");
 
@@ -229,6 +220,15 @@ export function CollectionForecastDashboard({
       })
     ) ?? [];
 
+  const chartDataDP = [
+    {
+      name: "DP Paid",
+      dpPaid: DownpaymentPercent?.TotalPaidPercent ?? 0, // cap bar
+      actualDP: DownpaymentPercent?.TotalPaid ?? 0,         // for labels/tooltip
+      maxDP: DownpaymentPercent?.TotalForecast ?? 0,
+    },
+  ];
+
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 items-stretch">
@@ -236,30 +236,30 @@ export function CollectionForecastDashboard({
           <CardHeader className="flex items-center gap-2 border-b">
             <div className="flex flex-col gap-1">
               <CardTitle className="text-primary">
-                DP (%) Paid Progress
+                DP Paid Progress
               </CardTitle>
               <CardDescription>Average forecasted DP paid.</CardDescription>
             </div>
           </CardHeader>
+
           <CardContent className="flex justify-center items-center">
-            <ChartContainer config={chartConfig} className="aspect-square h-40">
-              <ResponsiveContainer height="100%" width="100%" className="mt-8">
+            <ChartContainer config={chartConfig} className="aspect-square h-45">
+              <ResponsiveContainer height="100%" width="100%" className="mt-4">
                 <RadialBarChart
                   data={chartDataDP}
                   startAngle={180}
-                  endAngle={0} // half-circle
-                  innerRadius={70}
-                  outerRadius={120}
-                  barSize={20}
+                  endAngle={0}
+                  innerRadius="60%"
+                  outerRadius="100%"
+                  barSize={35}
                 >
-                  <PolarRadiusAxis
-                    tick={false}
-                    tickLine={false}
-                    axisLine={false}
-                  >
+                  <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
                     <Label
                       content={({ viewBox }) => {
                         if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                          const formatAmount = (num: number) =>
+                            (num / 1_000_000).toFixed(2) + "M";
+
                           return (
                             <text
                               x={viewBox.cx}
@@ -270,15 +270,22 @@ export function CollectionForecastDashboard({
                               <tspan
                                 x={viewBox.cx}
                                 y={(viewBox.cy || 0) - 8}
-                                className="fill-foreground text-3xl font-bold"
+                                className="fill-foreground text-xl font-bold"
                               >
-                                {chartDataDP[0].actualDP}{" "}
-                                <tspan className="text-sm font-normal">{`/ ${chartDataDP[0].maxDP}%`}</tspan>
+                                {chartDataDP[0].dpPaid.toFixed(2)}%
                               </tspan>
 
                               <tspan
                                 x={viewBox.cx}
                                 y={(viewBox.cy || 0) + 20}
+                                className="fill-muted-foreground text-sm"
+                              >
+                                {`${formatAmount(chartDataDP[0].actualDP)} / ${formatAmount(chartDataDP[0].maxDP)}`}
+                              </tspan>
+
+                              <tspan
+                                x={viewBox.cx}
+                                y={(viewBox.cy || 0) + 40}
                                 className="fill-muted-foreground text-sm"
                               >
                                 Forecasted DP Paid
@@ -295,9 +302,7 @@ export function CollectionForecastDashboard({
                     dataKey="dpPaid"
                     cornerRadius={10}
                     fill={
-                      chartDataDP[0].actualDP > 100
-                        ? "#ef4444"
-                        : "var(--chart-2)"
+                      chartDataDP[0].dpPaid > 100 ? "#ef4444" : "var(--chart-2)"
                     }
                   />
                 </RadialBarChart>
@@ -306,14 +311,18 @@ export function CollectionForecastDashboard({
           </CardContent>
           <CardFooter className="flex-col items-start gap-2 text-sm pt-2">
             <div className="flex gap-2 leading-none font-medium">
-              {chartDataDP[0].actualDP >= chartDataDP[0].maxDP ? (
+              {chartDataDP[0].dpPaid >= 100 ? (
                 <span className="text-green-600">Target reached!</span>
               ) : (
                 <span className="text-yellow-600">Still below target</span>
               )}
             </div>
             <div className="text-muted-foreground leading-none">
-              Current progress is {chartDataDP[0].actualDP}% out of {chartDataDP[0].maxDP}% forecasted.
+              Current progress is {""}
+              <span className="font-semibold">{chartDataDP[0].dpPaid.toFixed(2)}% </span>
+              ({chartDataDP[0].actualDP.toLocaleString()}) out of {""}
+              <span className="font-semibold">{(chartDataDP[0].maxDP / 1_000_000).toFixed(2)}</span> {""}
+              ({chartDataDP[0].maxDP.toLocaleString()}) forecasted.
             </div>
           </CardFooter>
         </Card>
@@ -340,7 +349,7 @@ export function CollectionForecastDashboard({
                 margin={{
                   top: 16,
                   right: 10,
-                  bottom: 37,
+                  bottom: 30,
                   left: 0,
                 }}
               >

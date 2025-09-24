@@ -122,7 +122,6 @@ export function DivisionDashboard({
 }: DivisionDashboardProps) {
   const [view, setView] = useState("chart");
   const [searchTerm, setSearchTerm] = useState("");
-  console.log('total sales target ', TotalSalesTarget);
 
   const colors = [
     "#D75C3C", "#F28E2B", "#FFBE0B", "#E15759", "#FF9F1C",
@@ -145,20 +144,24 @@ export function DivisionDashboard({
   }));
 
   // Adjusted mapped data
-  const divisionsData = (TotalSalesTarget ?? []).map((d) => {
-    const monthTarget = d.TargetMonth ?? 0;
-    const monthActual = d.CurrentMonth ?? 0;
+  const divisionsData =
+    Array.isArray(TotalSalesTarget)
+      ? TotalSalesTarget.map((d) => {
+          const monthTarget = d.TargetMonth ?? 0;
+          const monthActual = d.CurrentMonth ?? 0;
 
-    const monthTargetReach =
-      monthTarget > 0 ? Math.round((monthActual / monthTarget) * 100) : 0;
+          const monthTargetReach =
+            monthTarget > 0 ? Math.round((monthActual / monthTarget) * 100) : 0;
 
-    return {
-      division: d.DivisionName,
-      monthTarget,
-      monthActual,
-      monthTargetReach, // not yet dynamic
-    };
-  });
+          return {
+            division: d.DivisionName,
+            monthTarget,
+            monthActual,
+            monthTargetReach,
+          };
+        })
+      : [];
+
 
   return (
     <div className="space-y-4">
@@ -166,7 +169,7 @@ export function DivisionDashboard({
         <Card className="col-span-4 rounded-lg border bg-white shadow-none">
           <CardHeader className="flex items-center justify-between gap-1 border-b">
             <div className="flex flex-col gap-1">
-              <CardTitle className="text-primary">Top 10 Division</CardTitle>
+              <CardTitle className="text-primary">Top 10 Divisions</CardTitle>
               <CardDescription>Monthly Sales</CardDescription>
             </div>
             <div className="flex items-center gap-2">
@@ -274,7 +277,6 @@ export function DivisionDashboard({
               <XAxis
                 dataKey="division"
                 tickLine={false}
-                axisLine={false}
                 interval={0}
                 angle={-35}
                 textAnchor="end"

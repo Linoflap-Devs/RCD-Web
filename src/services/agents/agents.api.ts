@@ -99,7 +99,6 @@ export interface AgentsRegisResponse {
 
 export const getAgentsRegistrations = async (): Promise<AgentsRegisResponse> => {
   const response = await axiosInstance.get<AgentsRegisResponse>("/agents/registrations");
-  console.log(response);
   return response.data; 
 }
 
