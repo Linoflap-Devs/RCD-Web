@@ -214,7 +214,7 @@ export default function AgentsRegistrations() {
               onApprove={handleApprove}
               AgentID={AgentID}
             >
-            <span className="inline-flex items-center px-2 py-0.5 text-xs font-semibold text-green-800 bg-green-300 rounded-full shadow-sm hover:bg-green-400 hover:scale-105 transition-all duration-200 cursor-pointer">
+            <span className="inline-flex items-center px-2 py-0.5 text-xs font-semibold text-green-800 bg-green-200 rounded-full shadow-sm hover:bg-green-300 hover:scale-105 transition-all duration-200 cursor-pointer">
               <CheckCircle2 className="h-3 w-3 mr-1" />
               Approve
             </span>

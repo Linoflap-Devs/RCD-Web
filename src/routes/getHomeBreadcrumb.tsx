@@ -25,7 +25,7 @@ export const getHomeBreadcrumb = (pathname: string) => {
   );
 
   // Special case
-  if (pathname.startsWith("/home/crew/details")) {return match("/home/crew", "Crew List", "Crew Details");}
+  //if (pathname.startsWith("/home/crew/details")) {return match("/home/crew", "Crew List", "Crew Details");}
 
   // Loop through groups & items
   for (const group of routeGroups) {

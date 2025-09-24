@@ -212,7 +212,7 @@ export default function AgentsList() {
                     />
                   </div>
                 </div>
-                <div>
+                {/* <div>
                   <Select>
                     <SelectTrigger className="h-8 px-3 sm:px-4 text-xs sm:text-sm flex items-center gap-2">
                       <Filter className="h-4 w-4 text-primary" />
@@ -224,7 +224,7 @@ export default function AgentsList() {
                       <SelectItem value="pending">Inactive</SelectItem>
                     </SelectContent>
                   </Select>
-                </div>
+                </div> */}
               </div>
               {loading ? (
                 <div className="flex justify-center items-center h-40 gap-2 text-muted-foreground">

@@ -1,16 +1,16 @@
 "use client";
 
+import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent } from "../../components/ui/card";
 import { Badge } from "../../components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs";
-import { useRouter, useSearchParams } from "next/navigation";
 import { Building, Coins, FolderKanban, UserStar } from "lucide-react";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { DashboardItem, getDashboardWeb } from "@/services/dashboard/dashboard.api";
 import { DivisionDashboard } from "./DivisionDashboard";
 import { TeamDashboard } from "./TeamDashboard";
 import { CollectionForecastDashboard } from "./CollectionForecast";
+import Image from "next/image";
 
 export default function Dashboard() {
   const searchParams = useSearchParams();
@@ -18,9 +18,12 @@ export default function Dashboard() {
   const activeTab = searchParams.get("tab") || "divisions";
   const [loading, setLoading] = useState(false);
   const [dashboardData, setDashboardData] = useState<DashboardItem | undefined>(undefined);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // setLoading(true);
+    // setError(null);
+    
     getDashboardWeb()
       .then((res) => {
         if (res.success) {
@@ -29,8 +32,14 @@ export default function Dashboard() {
           console.error("Failed to fetch dashboard data:", res.message);
         }
       })
-      .catch((err) => console.error("Error fetching dashboard data:", err));
-  }, []);
+      .catch((err) => {
+        console.error("Error fetching dashboard data:", err);
+        setError(err.message || "An error occured.");
+      })
+      // .finally(() =>{
+      //   setLoading(false);
+      // });
+    }, []);
 
   console.log(dashboardData);
 
@@ -49,8 +58,8 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="h-full w-full mt-3 px-2 space-y-3">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className="h-full w-full px-2 space-y-3">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         <Card className="bg-primary md:col-span-2 rounded-lg shadow-sm relative">
           <CardContent className="flex flex-col justify-center py-4 px-6 relative z-10">
             <div className="max-w-md">
@@ -181,10 +190,10 @@ export default function Dashboard() {
         >
           <div className="flex items-center justify-start mb-4 pt-4">
             <h1 className="text-lg font-semibold ml-1 mr-4">{titleMap[activeTab]}</h1>
-            <TabsList className="w-auto rounded-full h-11">
-              <TabsTrigger value="divisions" className="px-5 rounded-full">Division Sales</TabsTrigger>
-              <TabsTrigger value="team" className="px-5 rounded-full">Team Sales</TabsTrigger>
-              <TabsTrigger value="forecast" className="px-5 rounded-full">Collection Forecast</TabsTrigger>
+            <TabsList className="w-auto">
+              <TabsTrigger value="divisions">Division Sales</TabsTrigger>
+              <TabsTrigger value="team">Team Sales</TabsTrigger>
+              <TabsTrigger value="forecast">Collection Forecast</TabsTrigger>
             </TabsList>
           </div>
 

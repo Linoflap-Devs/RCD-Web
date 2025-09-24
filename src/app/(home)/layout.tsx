@@ -1,40 +1,52 @@
 "use client"
 
-import { getHomeBreadcrumb } from "@/routes/getHomeBreadcrumb";
-import { getHomeRoutes } from "@/routes/homeRoutes";
-import { AppSidebar } from "@/routes/Sidebar";
+import { AppSidebar } from "@/components/app-sidebar"
 import {
-  SidebarProvider,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+} from "@/components/ui/breadcrumb"
+import { Separator } from "@/components/ui/separator"
+import {
   SidebarInset,
+  SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
-import { usePathname } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { getHomeBreadcrumb } from "@/routes/getHomeBreadcrumb"
+import { usePathname } from "next/navigation"
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
-  const router = useRouter()
-  const userType = 1
-
-  const groups = getHomeRoutes(pathname, userType ?? 0)
-
+    
   return (
     <SidebarProvider>
-      <AppSidebar
-        groups={groups}
-        company={{ name: "RCD Inc", description: "System", logoUrl: "/logo-vector.png" }}
-        user={{ name: "John Doe", email: "johndoe@email.com" }}
-      />
+      <AppSidebar />
       <SidebarInset>
-        <div className="flex flex-col h-full border-l">
-          <header className="flex h-12 items-center gap-1 px-4 border-b">
-            <SidebarTrigger />
-            <div className="mx-2 h-4 w-px bg-border" />
-            <div className="flex items-center text-base text-muted-foreground">
-              <div className="text-xs">{getHomeBreadcrumb(pathname)}</div>
-            </div>
-          </header>
-          <main className="flex-1 px-2 pt-6 pb-5">{children}</main>
+        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+          <div className="flex items-center gap-2 px-4">
+            <SidebarTrigger className="-ml-1" />
+            <Separator
+              orientation="vertical"
+              className="mr-2 data-[orientation=vertical]:h-4"
+            />
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem className="hidden md:block">
+                  <BreadcrumbLink href="#">
+                    {getHomeBreadcrumb(pathname)}
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                {/* <BreadcrumbSeparator className="hidden md:block" />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                </BreadcrumbItem> */}
+              </BreadcrumbList>
+            </Breadcrumb>
+          </div>
+        </header>
+        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+          {children}
         </div>
       </SidebarInset>
     </SidebarProvider>
