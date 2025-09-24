@@ -34,23 +34,10 @@ import {
 import { useState } from "react";
 import { ChartBar, Search, Table } from "lucide-react";
 import DatePickerMonthYear from "../../components/ui/datepicker";
-import Image from "next/image";
 import { DataTable } from "../ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { Input } from "../ui/input";
-
-const topDivisions = [
-  { name: "Black Diamond", sales: 1200, fill: "#D75C3C" }, // deep burnt orange
-  { name: "Golden Heart", sales: 980, fill: "#F28E2B" }, // rich orange
-  { name: "Jade", sales: 870, fill: "#FFBE0B" }, // golden yellow-orange
-  { name: "Dream Builder", sales: 760, fill: "#E15759" }, // red-orange
-  { name: "Alpha", sales: 690, fill: "#FF9F1C" }, // bright orange
-  { name: "Summit", sales: 6240, fill: "#76B041" }, // warm green (for contrast)
-  { name: "Rose", sales: 590, fill: "#FAA43A" }, // lighter orange
-  { name: "Alexanderite", sales: 530, fill: "#F4D35E" }, // muted yellow
-  { name: "England", sales: 480, fill: "#C6AC8F" }, // earthy beige/tan
-  { name: "Via Domus", sales: 1900, fill: "#8D99AE" }, // neutral gray-blue accent
-];
+import { DivisionSalesItem, Top10DivisionsItem } from "@/services/dashboard/dashboard.api";
 
 const divisionsData = Array.from({ length: 30 }, (_, i) => {
   const monthTarget = Math.floor(Math.random() * 5000) + 2000; // Target between 2000-7000
@@ -64,16 +51,6 @@ const divisionsData = Array.from({ length: 30 }, (_, i) => {
     monthTargetReach,
     currentMonth: monthActual,
     lastMonth: Math.floor(Math.random() * 5000),
-  };
-});
-
-const divisionsSalesData = Array.from({ length: 30 }, (_, i) => {
-  const Current = Math.floor(Math.random() * 5000);
-  const Last = Math.floor(Math.random() * 5000);
-  return {
-    division: `Division ${i + 1}`,
-    Current,
-    Last,
   };
 });
 
@@ -146,10 +123,39 @@ export const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export default function DivisionDashboard() {
+interface DivisionDashboardProps {
+  loading: boolean;
+  top10Division?: Top10DivisionsItem[];
+  DivisionSales?: DivisionSalesItem[];
+  //TotalSalesTarget?: 
+}
+
+export function DivisionDashboard({
+  top10Division,
+  DivisionSales
+}: DivisionDashboardProps) {
   const [view, setView] = useState("chart");
-  const sortedDivisions = [...topDivisions].sort((a, b) => b.sales - a.sales);
   const [searchTerm, setSearchTerm] = useState("");
+  
+  const colors = [
+    "#D75C3C", "#F28E2B", "#FFBE0B", "#E15759", "#FF9F1C",
+    "#76B041", "#FAA43A", "#F4D35E", "#C6AC8F", "#8D99AE"
+  ];
+
+  const top10Divisions = (top10Division ?? []).map((d, index) => ({
+    name: d.Division,
+    sales: d.CurrentMonth,
+    fill: colors[index % colors.length],
+  }));
+
+  const sortedDivisions = [...top10Divisions].sort((a, b) => b.sales - a.sales);
+
+  // DIVISION SALES
+  const divisionsSalesData = (DivisionSales ?? []).map((d) => ({
+    division: d.Division,
+    Current: d.CurrentMonth, // not yet dynamic
+    Last: d.LastMonth, // not yet dynamic
+  }));
 
   return (
     <div className="space-y-4">
@@ -406,7 +412,7 @@ export default function DivisionDashboard() {
                 <Tooltip content={<ChartTooltipContent />} />
 
                 <Area
-                  type="natural"
+                  type="step"
                   dataKey="Current"
                   stroke="var(--chart-2)"
                   fill="var(--chart-2)"
@@ -414,7 +420,7 @@ export default function DivisionDashboard() {
                   activeDot={{ r: 5 }}
                 />
                 <Area
-                  type="natural"
+                  type="step"
                   dataKey="Last"
                   stroke="var(--chart-1)"
                   fill="var(--chart-1)"

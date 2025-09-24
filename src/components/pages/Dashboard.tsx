@@ -4,18 +4,17 @@ import { Card, CardContent } from "../../components/ui/card";
 import { Badge } from "../../components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs";
 import { useRouter, useSearchParams } from "next/navigation";
-import DivisionDashboard from "./DivisionDashboard";
 import { Building, Coins, FolderKanban, UserStar } from "lucide-react";
 import TeamDashboard from "./TeamDashboard";
 import CollectionForecastDashboard from "./CollectionForecast";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { DashboardItem, getDashboardWeb } from "@/services/dashboard/dashboard.api";
+import { DivisionDashboard } from "./DivisionDashboard";
 
 export default function Dashboard() {
   const searchParams = useSearchParams();
   const router = useRouter();
-
   const activeTab = searchParams.get("tab") || "divisions";
   const [loading, setLoading] = useState(false);
   const [dashboardData, setDashboardData] = useState<DashboardItem | undefined>(undefined);
@@ -32,6 +31,8 @@ export default function Dashboard() {
       })
       .catch((err) => console.error("Error fetching dashboard data:", err));
   }, []);
+
+  console.log(dashboardData?.Top10Divisions);
 
   console.log(dashboardData);
 
@@ -191,7 +192,12 @@ export default function Dashboard() {
           </div>
 
           <TabsContent value="divisions">
-            <DivisionDashboard />
+            <DivisionDashboard
+              loading={loading}
+              top10Division={dashboardData?.Top10Divisions}
+              DivisionSales={dashboardData?.DivisionSales}  
+              //TotalSalesTarget={dashboardData?.TotalSalesTarget}
+            />
           </TabsContent>
           <TabsContent value="team">
             <TeamDashboard />
