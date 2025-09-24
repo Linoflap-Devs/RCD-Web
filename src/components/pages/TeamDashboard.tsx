@@ -26,24 +26,12 @@ import {
 import { ChartBar, Table, User } from "lucide-react";
 import { useState } from "react";
 import DatePickerMonthYear from "../../components/ui/datepicker";
+import { Top10SalesPersonsItem } from "@/services/dashboard/dashboard.api";
 
 const chartData = Array.from({ length: 20 }, (_, i) => ({
   developer: `Dev ${i + 1}`,
   sales: Math.floor(Math.random() * 2000 + 500), // random sales for demo
 }));
-
-const chartDataDevelopers = [
-  { name: "Alice", value: 1200, fill: "#D75C3C" }, // deep burnt orange
-  { name: "Bob", value: 980, fill: "#F28E2B" }, // rich orange
-  { name: "Charlie", value: 870, fill: "#FFBE0B" }, // golden yellow-orange
-  { name: "Diana", value: 760, fill: "#E15759" }, // red-orange
-  { name: "Ethan", value: 690, fill: "#FF9F1C" }, // bright orange
-  { name: "Fiona", value: 640, fill: "#76B041" }, // warm green (for contrast)
-  { name: "George", value: 590, fill: "#FAA43A" }, // lighter orange
-  { name: "Hannah", value: 530, fill: "#F4D35E" }, // muted yellow
-  { name: "Ian", value: 480, fill: "#C6AC8F" }, // earthy beige/tan
-  { name: "Jane", value: 420, fill: "#8D99AE" }, // neutral gray-blue accent
-];
 
 const topManagers = [
   { name: "Alice", sales: 1200 },
@@ -66,12 +54,32 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export default function TeamDashboard() {
+interface TeamSalesProps {
+  Top10SalesPersons?: Top10SalesPersonsItem[];
+}
+
+export function TeamDashboard({
+  Top10SalesPersons
+}: TeamSalesProps) {
   const [view, setView] = useState("chart");
-  const maxIndex = chartDataDevelopers.reduce(
+
+  const colors = [
+    "#D75C3C", "#F28E2B", "#FFBE0B", "#E15759", "#FF9F1C",
+    "#76B041", "#FAA43A", "#F4D35E", "#C6AC8F", "#8D99AE"
+  ];
+
+  const chartDataSalesPersons =
+    (Top10SalesPersons ?? []).map((p, idx) => ({
+      name: p.AgentName,
+      value: p.CurrentMonth,
+      fill: colors[idx % colors.length], // loop if >10
+    }));
+
+  const maxIndex = chartDataSalesPersons.reduce(
     (maxIdx, curr, idx, arr) => (curr.value > arr[maxIdx].value ? idx : maxIdx),
     0
   );
+
   const [activeIndex, setActiveIndex] = useState<number | null>(maxIndex);
 
   return (
@@ -101,7 +109,7 @@ export default function TeamDashboard() {
               >
                 <PieChart width={320} height={320}>
                   <Pie
-                    data={chartDataDevelopers}
+                    data={chartDataSalesPersons}
                     dataKey="value"
                     nameKey="name"
                     innerRadius={40}
@@ -119,7 +127,7 @@ export default function TeamDashboard() {
                     onMouseEnter={(_, index) => setActiveIndex(index)}
                     onMouseLeave={() => setActiveIndex(maxIndex)} // reset to highest
                   >
-                    {chartDataDevelopers.map((entry, index) => (
+                    {chartDataSalesPersons.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.fill} />
                     ))}
                   </Pie>
@@ -130,7 +138,7 @@ export default function TeamDashboard() {
 
             {/* List Below */}
             <div className="grid grid-cols-2 gap-4">
-              {chartDataDevelopers.slice(0, 10).map((dev, index) => (
+              {chartDataSalesPersons.slice(0, 10).map((dev, index) => (
                 <div
                   key={dev.name}
                   className="flex items-center justify-between pb-1 border-b text-sm"
@@ -183,11 +191,10 @@ export default function TeamDashboard() {
                         <div
                           className="h-1.5 rounded-full bg-primary"
                           style={{
-                            width: `${
-                              (manager.sales /
+                            width: `${(manager.sales /
                                 Math.max(...topManagers.map((m) => m.sales))) *
                               100
-                            }%`,
+                              }%`,
                           }}
                         />
                       </div>
@@ -218,21 +225,19 @@ export default function TeamDashboard() {
           <div className="flex items-center gap-2">
             <div className="inline-flex bg-white border rounded-xl p-[3px] h-9">
               <button
-                className={`flex items-center gap-1 px-3 py-1 text-sm font-medium rounded-md transition-colors ${
-                  view === "chart"
+                className={`flex items-center gap-1 px-3 py-1 text-sm font-medium rounded-md transition-colors ${view === "chart"
                     ? "bg-primary text-white shadow-sm"
                     : "text-muted-foreground hover:bg-gray-50"
-                }`}
+                  }`}
                 onClick={() => setView("chart")}
               >
                 <ChartBar className="w-3 h-3" />
               </button>
               <button
-                className={`flex items-center gap-1 px-3 py-1 text-sm font-medium rounded-md transition-colors ${
-                  view === "table"
+                className={`flex items-center gap-1 px-3 py-1 text-sm font-medium rounded-md transition-colors ${view === "table"
                     ? "bg-primary text-white shadow-sm"
                     : "text-muted-foreground hover:bg-gray-50"
-                }`}
+                  }`}
                 onClick={() => setView("table")}
               >
                 <Table className="w-3 h-3" />
