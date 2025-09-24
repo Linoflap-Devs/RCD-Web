@@ -5,7 +5,7 @@ import { Badge } from "../../components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs";
 import { useRouter, useSearchParams } from "next/navigation";
 import DivisionDashboard from "./DivisionDashboard";
-import { TrendingUp } from "lucide-react";
+import { Banknote, Building, Coins, FolderKanban, TrendingUp, Users } from "lucide-react";
 import TeamDashboard from "./TeamDashboard";
 import CollectionForecastDashboard from "./CollectionForecast";
 import Image from "next/image";
@@ -32,7 +32,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="h-full w-full mt-3 space-y-3">
+    <div className="h-full w-full mt-3 px-2 space-y-3">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="bg-primary md:col-span-2 rounded-lg shadow-sm relative">
           <CardContent className="flex flex-col justify-center py-4 px-6 relative z-10">
@@ -59,26 +59,26 @@ export default function Dashboard() {
           </div>
         </Card>
 
-        {/* Card 2 - normal width */}
+        {/* Card 2 */}
         <Card className="bg-primary rounded-lg border  flex flex-col justify-center">
           <CardContent className="flex flex-col gap-2">
             <div className="space-y-1">
               <div className="text-sm text-white">Total Active Salesforce</div>
               <div className="text-2xl text-white font-bold tracking-tight flex items-center">
-                <TrendingUp className="h-4 w-4 mr-2 " /> <span>2,400</span>
+                <Banknote className="h-4 w-4 mr-2 " /> <span>2,400</span>
               </div>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 items-stretch">
-        <Card className="rounded-lg border flex flex-col justify-center shadow-none">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 items-stretch">
+        <Card className="bg-white rounded-lg border flex flex-col justify-center shadow-none">
           <CardContent className="flex flex-col gap-2">
             <div className="space-y-1">
               <div className="text-sm text-muted-foreground">Total Active Divisions</div>
               <div className="text-2xl font-bold tracking-tight text-primary flex items-center">
-                <TrendingUp className="h-4 w-4 mr-2" /> <span>2,400</span>
+                <Building className="h-4 w-4 mr-2" /> <span>2,400</span>
               </div>
             </div>
           </CardContent>
@@ -87,9 +87,9 @@ export default function Dashboard() {
         <Card className="rounded-lg border flex flex-col justify-center shadow-none">
           <CardContent className="flex flex-col gap-2">
             <div className="space-y-1">
-              <div className="text-sm text-muted-foreground">Total Active Agents</div>
+              <div className="text-sm text-muted-foreground">Total Projects</div>
               <div className="text-2xl font-bold tracking-tight text-primary flex items-center">
-                <TrendingUp className="h-4 w-4 mr-2" /> <span>30</span>
+                <FolderKanban className="h-4 w-4 mr-2" /> <span>30</span>
               </div>
             </div>
           </CardContent>
@@ -100,7 +100,7 @@ export default function Dashboard() {
             <div className="space-y-1">
               <div className="text-sm text-muted-foreground">Total Sales Previous Year</div>
               <div className="text-2xl font-bold tracking-tight text-primary flex items-center">
-                <TrendingUp className="h-4 w-4 mr-2" /> <span>155,620,177.74</span>
+                <Coins className="h-4 w-4 mr-2" /> <span>155,620,177.74</span>
               </div>
             </div>
           </CardContent>
@@ -164,7 +164,7 @@ export default function Dashboard() {
           className="w-full"
         >
           <div className="flex items-center justify-start mb-4 pt-4">
-            <h1 className="text-xl font-bold mr-4">{titleMap[activeTab]}</h1>
+            <h1 className="text-lg font-semibold ml-1 mr-4">{titleMap[activeTab]}</h1>
             <TabsList className="w-auto">
               <TabsTrigger value="divisions">Division Sales</TabsTrigger>
               <TabsTrigger value="team">Team Sales</TabsTrigger>

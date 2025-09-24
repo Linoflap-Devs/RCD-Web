@@ -29,32 +29,51 @@ import {
 } from "../../components/ui/dropdown-menu";
 import { AgentsItem, getAgents } from "@/services/agents/agents.api";
 import { useDebounce } from "@/hooks/use-debounce";
-import { Badge } from "../ui/badge";
 
 const agentColumns: ColumnDef<AgentsItem>[] = [
-  {
-    accessorKey: "AgentID",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        ID
-        <ChevronsUpDown className="ml-1 h-4 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) => <div className="text-sm">{row.getValue("AgentID")}</div>,
-  },
+  // {
+  //   accessorKey: "AgentID",
+  //   header: ({ column }) => (
+  //     <Button
+  //       variant="ghost"
+  //       onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+  //     >
+  //       ID
+  //       <ChevronsUpDown className="ml-1 h-4 w-4" />
+  //     </Button>
+  //   ),
+  //   cell: ({ row }) => <div className="text-sm">{row.getValue("AgentID")}</div>,
+  // },
   {
     accessorKey: "AgentCode",
-    header: "Code",
-    cell: ({ row }) => <div className="text-sm">{row.getValue("AgentCode")}</div>,
+    header: "Agent Code",
+    cell: ({ row }) => <div className="text-xs">{row.getValue("AgentCode")}</div>,
   },
   {
     accessorFn: (row) => `${row.FirstName} ${row.MiddleName || ""} ${row.LastName}`,
     id: "FullName",
     header: "Agent Name",
-    cell: ({ row }) => <div className="text-sm">{row.getValue("FullName")}</div>,
+    cell: ({ row }) => {
+      const fullName = row.getValue("FullName") as string;
+      const firstLetter = fullName.charAt(0).toUpperCase();
+      const gender = row.original.Sex;
+
+      const bgColor =
+        gender === "Male"
+          ? "bg-blue-200"
+          : gender === "Female"
+            ? "bg-red-200"
+            : "bg-gray-200";
+
+      return (
+        <div className="flex items-center space-x-2">
+          <div className={`w-6 h-6 rounded-full ${bgColor} flex items-center justify-center text-gray-600 text-xs font-medium`}>
+            {firstLetter}
+          </div>
+          <div className="text-xs font-semibold ml-1">{fullName.toLocaleUpperCase()}</div>
+        </div>
+      );
+    },
   },
   {
     accessorKey: "DivisionID",
@@ -70,6 +89,11 @@ const agentColumns: ColumnDef<AgentsItem>[] = [
     },
   },
   {
+    accessorKey: "AgentTaxRate",
+    header: "Agent Tax Rate",
+    cell: ({ row }) => row.getValue("AgentTaxRate") ?? "N/A",
+  },
+  {
     id: "actions",
     header: "",
     cell: ({ row }) => {
@@ -81,7 +105,8 @@ const agentColumns: ColumnDef<AgentsItem>[] = [
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-4 w-4 p-0 sm:h-4 sm:w-4">
                 <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-2 w-2 sm:h-2 sm:w-2" />
+                {/* Smaller icon */}
+                <MoreHorizontal className="h-1.5 w-1.5 sm:h-2 sm:w-2" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="text-xs sm:text-sm">
@@ -167,12 +192,12 @@ export default function AgentsList() {
         }
       `}</style>
         <div className="h-full overflow-hidden">
-          <div className="p-2 sm:py-0 flex flex-col space-y-4 sm:space-y-6 h-full">
-            <div className="flex flex-col space-y-5 sm:space-y-3.5 min-h-full">
+          <div className="p-2 sm:py-0 flex flex-col space-y-4 sm:space-y-4 h-full">
+            <div className="flex flex-col space-y-5 sm:space-y-5 min-h-full">
               <div className="space-y-0.5">
                 <h2 className="text-2xl font-semibold tracking-tight">Agents</h2>
-                <p className="text-muted-foreground">
-                  List of approved agents.
+                <p className="text-sm text-muted-foreground">
+                  List of all agents.
                 </p>
               </div>
               <div className="flex flex-col md:flex-row justify-between items-center">

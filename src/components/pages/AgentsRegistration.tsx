@@ -102,8 +102,14 @@ export default function AgentsRegistrations() {
     const fetchAgentsRegis = async () => {
       try {
         setLoading(true);
-        const res = await getAgentsRegistrations();
-        setAgentsRegis(res.data)
+        
+        const [agentsRes, agentsRegisRes] = await Promise.all([
+          getAgents(),
+          getAgentsRegistrations(),
+        ]);
+
+        setAgents(agentsRes.data);
+        setAgentsRegis(agentsRegisRes.data);
       } catch (err: any) {
         setError(err.message || "Failed to fetch agents registration list.");
       } finally {
@@ -114,24 +120,8 @@ export default function AgentsRegistrations() {
     fetchAgentsRegis();
   }, []);
 
-  useEffect(() => {
-    const fetchAgents = async () => {
-      try {
-        setLoading(true);
-        const res = await getAgents();
-        setAgents(res.data);
-      } catch (err: any) {
-        setError(err.message || "Failed to fetch agents");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchAgents();
-  }, []);
-
-  console.log(agentsRegis);
-  console.log(agents);
+  //console.log(agentsRegis);
+  //console.log(agents);
 
   const regex = new RegExp(debouncedSearch, "i");
 
@@ -155,14 +145,34 @@ export default function AgentsRegistrations() {
           <ChevronsUpDown className="ml-1 h-4 w-4" />
         </Button>
       ),
-      cell: ({ row }) => <div className="text-sm">{row.getValue("AgentRegistrationID")}</div>,
+      cell: ({ row }) => <div className="text-xs">{row.getValue("AgentRegistrationID")}</div>,
     },
-    {
-      accessorFn: (row) => `${row.FirstName} ${row.MiddleName || ""} ${row.LastName}`,
-      id: "FullName",
-      header: "Agent Name",
-      cell: ({ row }) => <div className="text-sm">{row.getValue("FullName")}</div>,
+  {
+    accessorFn: (row) => `${row.FirstName} ${row.MiddleName || ""} ${row.LastName}`,
+    id: "FullName",
+    header: "Agent Name",
+    cell: ({ row }) => {
+      const fullName = row.getValue("FullName") as string;
+      const firstLetter = fullName.charAt(0).toUpperCase();
+      const gender = row.original.Gender;
+
+      const bgColor =
+        gender === "Male"
+          ? "bg-blue-200"
+          : gender === "Female"
+            ? "bg-red-200"
+            : "bg-gray-200";
+
+      return (
+        <div className="flex items-center space-x-2">
+          <div className={`w-6 h-6 rounded-full ${bgColor} flex items-center justify-center text-gray-600 text-xs font-medium`}>
+            {firstLetter}
+          </div>
+          <div className="text-xs font-semibold ml-1">{fullName.toLocaleUpperCase()}</div>
+        </div>
+      );
     },
+  },
     {
       accessorKey: "Email",
       header: "Email",
@@ -175,7 +185,7 @@ export default function AgentsRegistrations() {
     },
     {
       accessorKey: "ContactNumber",
-      header: "ContactNumber",
+      header: "Contact Number",
       cell: ({ row }) => row.getValue("ContactNumber") ?? "N/A",
     },
     {
@@ -195,7 +205,7 @@ export default function AgentsRegistrations() {
         });
 
         const AgentID = matchedAgent?.AgentID ?? null;
-        console.log("AgentID:", AgentID);
+        //console.log("AgentID:", AgentID);
 
         return (
           <div className="flex justify-center">
@@ -204,7 +214,7 @@ export default function AgentsRegistrations() {
               onApprove={handleApprove}
               AgentID={AgentID}
             >
-            <span className="inline-flex items-center px-2 py-0.5 text-xs font-semibold text-green-800 bg-green-100 rounded-full shadow-sm hover:bg-green-200 hover:scale-105 transition-all duration-200 cursor-pointer">
+            <span className="inline-flex items-center px-2 py-0.5 text-xs font-semibold text-green-800 bg-green-300 rounded-full shadow-sm hover:bg-green-400 hover:scale-105 transition-all duration-200 cursor-pointer">
               <CheckCircle2 className="h-3 w-3 mr-1" />
               Approve
             </span>
@@ -247,11 +257,11 @@ export default function AgentsRegistrations() {
         }
       `}</style>
         <div className="h-full overflow-hidden">
-          <div className="p-2 sm:py-0 flex flex-col space-y-4 sm:space-y-6 h-full">
-            <div className="flex flex-col space-y-5 sm:space-y-3.5 min-h-full">
+          <div className="p-2 sm:py-0 flex flex-col space-y-4 sm:space-y-4 h-full">
+            <div className="flex flex-col space-y-5 sm:space-y-5 min-h-full">
               <div className="space-y-0.5">
                 <h2 className="text-2xl font-semibold tracking-tight">Agents Registration List</h2>
-                <p className="text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   List of agents awaiting approval.
                 </p>
               </div>
