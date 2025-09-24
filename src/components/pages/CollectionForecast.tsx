@@ -28,7 +28,7 @@ import {
   ChartTooltipContent,
 } from "../../components/ui/chart";
 import DatePickerMonthYear from "../../components/ui/datepicker";
-import { TrendingUp } from "lucide-react";
+import { Top10ForecastBuyersItem } from "@/services/dashboard/dashboard.api";
 
 // Chart config
 const chartConfig = {
@@ -55,42 +55,6 @@ interface BuyerData {
   buyer: string;
   value: number;
 }
-
-// Mock data
-const chartData: BuyerData[] = [
-  { buyer: "Buyer A", value: 120000 },
-  { buyer: "Buyer B", value: 95000 },
-  { buyer: "Buyer C", value: 150000 },
-  { buyer: "Buyer D", value: 80000 },
-  { buyer: "Buyer E", value: 120000 },
-  { buyer: "Buyer F", value: 95000 },
-  { buyer: "Buyer G", value: 150000 },
-  { buyer: "Buyer H", value: 80000 },
-  { buyer: "Buyer A", value: 120000 },
-  { buyer: "Buyer B", value: 95000 },
-  { buyer: "Buyer C", value: 150000 },
-  { buyer: "Buyer D", value: 80000 },
-  { buyer: "Buyer E", value: 120000 },
-  { buyer: "Buyer F", value: 95000 },
-  { buyer: "Buyer G", value: 150000 },
-  { buyer: "Buyer H", value: 80000 },
-  { buyer: "Buyer A", value: 120000 },
-  { buyer: "Buyer B", value: 95000 },
-  { buyer: "Buyer C", value: 150000 },
-  { buyer: "Buyer D", value: 80000 },
-  { buyer: "Buyer E", value: 120000 },
-  { buyer: "Buyer F", value: 95000 },
-  { buyer: "Buyer G", value: 150000 },
-  { buyer: "Buyer H", value: 80000 },
-  { buyer: "Buyer A", value: 120000 },
-  { buyer: "Buyer B", value: 95000 },
-  { buyer: "Buyer C", value: 150000 },
-  { buyer: "Buyer D", value: 80000 },
-  { buyer: "Buyer E", value: 120000 },
-  { buyer: "Buyer F", value: 95000 },
-  { buyer: "Buyer G", value: 150000 },
-  { buyer: "Buyer H", value: 80000 },
-];
 
 const activeChart = "value";
 
@@ -123,7 +87,29 @@ export const chartConfigNetForecast = {
   },
 };
 
-export default function CollectionForecastDashboard() {
+interface CollectionForecastProps {
+  Top10ForecastBuyers?: Top10ForecastBuyersItem[];
+}
+
+export function CollectionForecastDashboard({
+  Top10ForecastBuyers,
+
+}: CollectionForecastProps) {
+  console.log('TOP 10 FORECAST BUYERS', Top10ForecastBuyers);
+
+  const colors = [
+    "#D75C3C", "#F28E2B", "#FFBE0B", "#E15759", "#FF9F1C",
+    "#76B041", "#FAA43A", "#F4D35E", "#C6AC8F", "#8D99AE"
+  ];
+
+  // Transform API data
+  const chartDataForecastBuyers: BuyerData[] =
+    (Top10ForecastBuyers ?? []).map((b, idx) => ({
+      buyer: b.BuyersName,
+      value: b.NetTotalTCP,
+      fill: colors[idx % colors.length],
+    }));
+
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 items-stretch">
@@ -214,11 +200,11 @@ export default function CollectionForecastDashboard() {
           </CardFooter>
         </Card>
 
-        <Card className="col-span-2   rounded-lg border shadow-none bg-white">
+        <Card className="col-span-2 rounded-lg border shadow-none bg-white">
           <CardHeader className="flex items-center gap-2 border-b">
             <div className="flex flex-col gap-1">
               <CardTitle className="text-primary">
-                Buyer Contribution / Forecast
+                Top 10 Buyer Contribution / Forecast
               </CardTitle>
               <CardDescription>
                 Top buyers by forecasted net contracts.
@@ -232,21 +218,33 @@ export default function CollectionForecastDashboard() {
               className="aspect-auto h-50 w-full"
             >
               <BarChart
-                data={chartData}
+                data={chartDataForecastBuyers}
                 margin={{
                   top: 16,
                   right: 10,
-                  bottom: 16,
+                  bottom: 37,
                   left: 0,
                 }}
               >
                 <CartesianGrid vertical={false} stroke="#f1f1f1" />
                 <XAxis
                   dataKey="buyer"
+                  interval={0} // force all labels
                   tickLine={false}
                   axisLine={false}
                   tickMargin={8}
-                  minTickGap={2}
+                  tick={({ x, y, payload }: any) => (
+                    <text
+                      x={x}
+                      y={y + 10}
+                      textAnchor="end"
+                      transform={`rotate(-20, ${x}, ${y})`}
+                      fontSize={10}
+                      fill="#333"
+                    >
+                      {payload.value}
+                    </text>
+                  )}
                 />
                 <YAxis
                   tickLine={false}
@@ -276,8 +274,6 @@ export default function CollectionForecastDashboard() {
             </ChartContainer>
           </CardContent>
         </Card>
-
-
       </div>
 
       <Card className="rounded-lg border shadow-none bg-white">

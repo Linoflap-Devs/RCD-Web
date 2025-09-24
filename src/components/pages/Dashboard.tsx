@@ -5,12 +5,12 @@ import { Badge } from "../../components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Building, Coins, FolderKanban, UserStar } from "lucide-react";
-import CollectionForecastDashboard from "./CollectionForecast";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { DashboardItem, getDashboardWeb } from "@/services/dashboard/dashboard.api";
 import { DivisionDashboard } from "./DivisionDashboard";
 import { TeamDashboard } from "./TeamDashboard";
+import { CollectionForecastDashboard } from "./CollectionForecast";
 
 export default function Dashboard() {
   const searchParams = useSearchParams();
@@ -203,10 +203,13 @@ export default function Dashboard() {
             <TeamDashboard 
               Top10SalesPersons={dashboardData?.Top10SalesPersons}
               Top10UnitManagers={dashboardData?.Top10UnitManagers}
+              //Top10DeveloperSales={dashboardData?.Top}
             />
           </TabsContent>
           <TabsContent value="forecast">
-            <CollectionForecastDashboard />
+            <CollectionForecastDashboard
+              Top10ForecastBuyers={dashboardData?.Top10ForecastBuyers}
+            />
           </TabsContent>
         </Tabs>
       </div>

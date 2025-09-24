@@ -343,7 +343,7 @@ export function DivisionDashboard({
       </Card>
 
       <Card className="overflow-x-auto rounded-lg gap-0 shadow-none">
-        <CardHeader className="mb-3 flex items-center justify-between gap-2">
+        <CardHeader className="mb-3 flex items-center justify-between gap-2 mt-4">
           <div className="flex flex-col gap-1">
             <CardTitle className="text-primary">
               Division Sales <span className="text-muted-foreground">(30)</span>
@@ -387,7 +387,7 @@ export function DivisionDashboard({
         </CardHeader>
 
         {view === "chart" ? (
-          <CardContent className="h-64 min-w-[800px] my-4">
+          <CardContent className="h-75 min-w-[800px] my-4">
             <ChartContainer
               className="h-full w-full"
               config={{
@@ -397,7 +397,7 @@ export function DivisionDashboard({
             >
               <AreaChart
                 data={divisionsSalesData}
-                margin={{ top: 20, right: 20, left: 0, bottom: 20 }}
+                margin={{ top: 20, right: 20, left: 0, bottom: 50 }}
               >
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
                 <XAxis
