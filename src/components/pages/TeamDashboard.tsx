@@ -26,25 +26,12 @@ import {
 import { ChartBar, Table, User } from "lucide-react";
 import { useState } from "react";
 import DatePickerMonthYear from "../../components/ui/datepicker";
-import { Top10SalesPersonsItem } from "@/services/dashboard/dashboard.api";
+import { Top10SalesPersonsItem, Top10UnitManagersItem } from "@/services/dashboard/dashboard.api";
 
 const chartData = Array.from({ length: 20 }, (_, i) => ({
   developer: `Dev ${i + 1}`,
   sales: Math.floor(Math.random() * 2000 + 500), // random sales for demo
 }));
-
-const topManagers = [
-  { name: "Alice", sales: 1200 },
-  { name: "Bob", sales: 1100 },
-  { name: "Charlie", sales: 980 },
-  { name: "Diana", sales: 950 },
-  { name: "Ethan", sales: 900 },
-  { name: "Fiona", sales: 870 },
-  { name: "George", sales: 850 },
-  { name: "Hannah", sales: 800 },
-  { name: "Ian", sales: 780 },
-  { name: "Jane", sales: 750 },
-];
 
 const chartConfig = {
   sales: {
@@ -56,10 +43,12 @@ const chartConfig = {
 
 interface TeamSalesProps {
   Top10SalesPersons?: Top10SalesPersonsItem[];
+  Top10UnitManagers?: Top10UnitManagersItem[];
 }
 
 export function TeamDashboard({
-  Top10SalesPersons
+  Top10SalesPersons,
+  Top10UnitManagers
 }: TeamSalesProps) {
   const [view, setView] = useState("chart");
 
@@ -81,6 +70,13 @@ export function TeamDashboard({
   );
 
   const [activeIndex, setActiveIndex] = useState<number | null>(maxIndex);
+
+  const topManagers =
+    (Top10UnitManagers ?? []).map((p, idx) => ({
+      name: p.AgentName,
+      value: p.CurrentMonth,
+      //fill: colors[idx % colors.length], // loop if >10
+    }));
 
   return (
     <div className="space-y-4">
@@ -191,8 +187,8 @@ export function TeamDashboard({
                         <div
                           className="h-1.5 rounded-full bg-primary"
                           style={{
-                            width: `${(manager.sales /
-                                Math.max(...topManagers.map((m) => m.sales))) *
+                            width: `${(manager.value /
+                                Math.max(...topManagers.map((m) => m.value))) *
                               100
                               }%`,
                           }}
@@ -203,7 +199,7 @@ export function TeamDashboard({
 
                   {/* Right: Sales */}
                   <span className="text-gray-600 font-medium">
-                    {manager.sales.toLocaleString()}
+                    {manager.value.toLocaleString()}
                   </span>
                 </div>
               ))}

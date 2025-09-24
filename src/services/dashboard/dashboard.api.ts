@@ -29,6 +29,11 @@ export interface Top10SalesPersonsItem {
     CurrentMonth: number; // sales
 }
 
+export interface Top10UnitManagersItem {
+    AgentName: string;
+    CurrentMonth: number; // sales
+}
+
 export interface Top10ForecastBuyersItem {
     BuyersName: string;
     NetTotalTCP: number;
@@ -69,6 +74,7 @@ export interface DashboardItem {
     DivisionSales: DivisionSalesItem[];
     Top10Divisions: Top10DivisionsItem[];
     Top10SalesPersons: Top10SalesPersonsItem[];
+    Top10UnitManagers: Top10UnitManagersItem[];
     Top10ForecastBuyers: Top10ForecastBuyersItem[];
     CommissionForecastByYearMonth: CommissionForecastByYearMonthItem[];
     CommissionForecast: CommissionForecastItem[];
