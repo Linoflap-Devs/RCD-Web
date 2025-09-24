@@ -169,7 +169,7 @@ export function DivisionDashboard({
   });
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-stretch">
         <Card className="col-span-4 rounded-lg border bg-white shadow-none">
           <CardHeader className="flex items-center justify-between border-b">
