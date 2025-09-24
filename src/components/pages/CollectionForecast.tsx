@@ -464,7 +464,7 @@ export function CollectionForecastDashboard({
         </CardContent>
       </Card>
       <Card className="rounded-lg border shadow-none bg-white">
-        <CardHeader className="mb-3 flex items-center justify-between gap-2 border-b">
+        <CardHeader className="flex items-center justify-between gap-2 border-b">
           <div className="flex flex-col gap-1">
             <CardTitle className="text-primary">Data Overview</CardTitle>
             <CardDescription>
@@ -476,7 +476,7 @@ export function CollectionForecastDashboard({
             <DatePickerMonthYear />
           </div>
         </CardHeader>
-        <CardContent className="overflow-x-auto">
+        <CardContent className="overflow-y-auto">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex flex-col md:flex-row items-center gap-3 mt-3 mb-4">
               <div className="relative rounded-lg">

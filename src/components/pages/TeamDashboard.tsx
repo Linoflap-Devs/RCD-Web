@@ -188,7 +188,7 @@ export function TeamDashboard({
                           className="h-1.5 rounded-full bg-primary"
                           style={{
                             width: `${(manager.value /
-                                Math.max(...topManagers.map((m) => m.value))) *
+                              Math.max(...topManagers.map((m) => m.value))) *
                               100
                               }%`,
                           }}
@@ -222,8 +222,8 @@ export function TeamDashboard({
             <div className="inline-flex bg-white border rounded-xl p-[3px] h-9">
               <button
                 className={`flex items-center gap-1 px-3 py-1 text-sm font-medium rounded-md transition-colors ${view === "chart"
-                    ? "bg-primary text-white shadow-sm"
-                    : "text-muted-foreground hover:bg-gray-50"
+                  ? "bg-primary text-white shadow-sm"
+                  : "text-muted-foreground hover:bg-gray-50"
                   }`}
                 onClick={() => setView("chart")}
               >
@@ -231,8 +231,8 @@ export function TeamDashboard({
               </button>
               <button
                 className={`flex items-center gap-1 px-3 py-1 text-sm font-medium rounded-md transition-colors ${view === "table"
-                    ? "bg-primary text-white shadow-sm"
-                    : "text-muted-foreground hover:bg-gray-50"
+                  ? "bg-primary text-white shadow-sm"
+                  : "text-muted-foreground hover:bg-gray-50"
                   }`}
                 onClick={() => setView("table")}
               >

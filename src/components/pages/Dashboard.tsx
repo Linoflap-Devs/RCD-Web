@@ -78,7 +78,6 @@ export default function Dashboard() {
           </div>
         </Card>
 
-        {/* Card 2 */}
         <Card className="bg-primary rounded-lg border  flex flex-col justify-center">
           <CardContent className="flex flex-col gap-2">
             <div className="space-y-1">
@@ -196,7 +195,7 @@ export default function Dashboard() {
               loading={loading}
               top10Division={dashboardData?.Top10Divisions}
               DivisionSales={dashboardData?.DivisionSales}
-            //TotalSalesTarget={dashboardData?.TotalSalesTarget}
+              TotalSalesTarget={dashboardData?.SalesTarget}
             />
           </TabsContent>
           <TabsContent value="team">

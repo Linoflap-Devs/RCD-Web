@@ -69,6 +69,17 @@ export interface CommissionForecastItem {
     rowno: string
 }
 
+export interface SalesTargetItem {
+    CurrentMonth:  number;
+    CurrentYear: number;
+    DivisionName: string;
+    PercentMonth: number;
+    PercentYear: number;
+    SalesYear: number;
+    TargetMonth: number;
+    TargetYear: number;
+}
+
 export interface DashboardItem {
     KPI: KPIItem;
     DivisionSales: DivisionSalesItem[];
@@ -78,6 +89,7 @@ export interface DashboardItem {
     Top10ForecastBuyers: Top10ForecastBuyersItem[];
     CommissionForecastByYearMonth: CommissionForecastByYearMonthItem[];
     CommissionForecast: CommissionForecastItem[];
+    SalesTarget: SalesTargetItem[];
 }
 
 export interface DashboardResponse {
@@ -88,6 +100,5 @@ export interface DashboardResponse {
 
 export const getDashboardWeb = async (): Promise<DashboardResponse> => {
     const response = await axiosInstance.get<DashboardResponse>("/dashboard/web")
-    console.log(response);
     return response.data;
 }

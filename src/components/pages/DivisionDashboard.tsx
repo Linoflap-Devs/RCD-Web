@@ -37,22 +37,7 @@ import DatePickerMonthYear from "../../components/ui/datepicker";
 import { DataTable } from "../ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { Input } from "../ui/input";
-import { DivisionSalesItem, Top10DivisionsItem } from "@/services/dashboard/dashboard.api";
-
-const divisionsData = Array.from({ length: 30 }, (_, i) => {
-  const monthTarget = Math.floor(Math.random() * 5000) + 2000; // Target between 2000-7000
-  const monthActual = Math.floor(Math.random() * monthTarget); // Actual <= Target
-  const monthTargetReach = Math.round((monthActual / monthTarget) * 100); // % Reach
-
-  return {
-    division: `Division ${i + 1}`,
-    monthTarget,
-    monthActual,
-    monthTargetReach,
-    currentMonth: monthActual,
-    lastMonth: Math.floor(Math.random() * 5000),
-  };
-});
+import { DivisionSalesItem, SalesTargetItem, Top10DivisionsItem } from "@/services/dashboard/dashboard.api";
 
 type Agents = {
   id: string;
@@ -127,16 +112,18 @@ interface DivisionDashboardProps {
   loading: boolean;
   top10Division?: Top10DivisionsItem[];
   DivisionSales?: DivisionSalesItem[];
-  //TotalSalesTarget?: 
+  TotalSalesTarget?: SalesTargetItem[];
 }
 
 export function DivisionDashboard({
   top10Division,
-  DivisionSales
+  DivisionSales,
+  TotalSalesTarget
 }: DivisionDashboardProps) {
   const [view, setView] = useState("chart");
   const [searchTerm, setSearchTerm] = useState("");
-  
+  console.log('total sales target ', TotalSalesTarget);
+
   const colors = [
     "#D75C3C", "#F28E2B", "#FFBE0B", "#E15759", "#FF9F1C",
     "#76B041", "#FAA43A", "#F4D35E", "#C6AC8F", "#8D99AE"
@@ -156,6 +143,22 @@ export function DivisionDashboard({
     Current: d.CurrentMonth, // not yet dynamic
     Last: d.LastMonth, // not yet dynamic
   }));
+
+  // Adjusted mapped data
+  const divisionsData = (TotalSalesTarget ?? []).map((d) => {
+    const monthTarget = d.TargetMonth ?? 0;
+    const monthActual = d.CurrentMonth ?? 0;
+
+    const monthTargetReach =
+      monthTarget > 0 ? Math.round((monthActual / monthTarget) * 100) : 0;
+
+    return {
+      division: d.DivisionName,
+      monthTarget,
+      monthActual,
+      monthTargetReach, // not yet dynamic
+    };
+  });
 
   return (
     <div className="space-y-4">
@@ -178,7 +181,6 @@ export function DivisionDashboard({
                     key={division.name}
                     className="relative flex items-center justify-between px-2 py-1 rounded-lg transition-all hover:bg-primary/10"
                   >
-
                     <div
                       style={{ backgroundColor: division.fill }}
                       className="relative z-10 flex items-center justify-center w-6 h-6 rounded-full text-white text-xs font-medium flex-shrink-0"
@@ -266,7 +268,7 @@ export function DivisionDashboard({
           >
             <BarChart
               data={divisionsData}
-              margin={{ top: 20, right: 20, left: 0, bottom: 20 }}
+              margin={{ top: 20, right: 20, left: 0, bottom: 40 }}
             >
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
               <XAxis

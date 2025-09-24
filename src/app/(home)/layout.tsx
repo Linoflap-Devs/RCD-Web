@@ -26,7 +26,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         user={{ name: "John Doe", email: "johndoe@email.com" }}
       />
       <SidebarInset>
-        <div className="flex flex-col h-full border">
+        <div className="flex flex-col h-full border-l">
           <header className="flex h-12 items-center gap-1 px-4 border-b">
             <SidebarTrigger />
             <div className="mx-2 h-4 w-px bg-border" />
