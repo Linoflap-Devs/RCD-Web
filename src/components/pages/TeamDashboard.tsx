@@ -92,8 +92,8 @@ export function TeamDashboard({
             </div>
           </CardHeader>
 
-          <CardContent className="flex flex-col gap-3">
-            <div className="flex justify-center">
+          <CardContent className="flex flex-col gap-4">
+            <div className="flex justify-center mt-4">
               <ChartContainer
                 config={{
                   value: {
@@ -101,9 +101,9 @@ export function TeamDashboard({
                     color: "hsl(var(--chart-1))",
                   },
                 }}
-                className="h-[250px] w-full max-w-sm"
+                className="h-full w-full max-w-sm"
               >
-                <PieChart width={320} height={320}>
+                <PieChart width={300} height={300}>
                   <Pie
                     data={chartDataSalesPersons}
                     dataKey="value"
@@ -133,13 +133,13 @@ export function TeamDashboard({
             </div>
 
             {/* List Below */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3.5 mt-3">
               {chartDataSalesPersons.slice(0, 10).map((dev, index) => (
                 <div
                   key={dev.name}
                   className="flex items-center justify-between pb-1 border-b text-sm"
                 >
-                  <span className="flex items-center font-semibold gap-2 text-gray-700">
+                  <span className="flex items-center font-semibold gap-2 text-gray-700 text-sm">
                     <span
                       className="h-3 w-3 rounded-full"
                       style={{ backgroundColor: dev.fill }}

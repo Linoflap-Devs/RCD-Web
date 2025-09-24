@@ -32,7 +32,7 @@ export default function Dashboard() {
       .catch((err) => console.error("Error fetching dashboard data:", err));
   }, []);
 
-  console.log(dashboardData); 
+  console.log(dashboardData);
 
   const currentMonth = dashboardData?.KPI.totalSalesCurrentMonth ?? 0;
   const lastYearMonth = dashboardData?.KPI?.totalSalesLastMonth ?? 0;
@@ -181,10 +181,10 @@ export default function Dashboard() {
         >
           <div className="flex items-center justify-start mb-4 pt-4">
             <h1 className="text-lg font-semibold ml-1 mr-4">{titleMap[activeTab]}</h1>
-            <TabsList className="w-auto">
-              <TabsTrigger value="divisions">Division Sales</TabsTrigger>
-              <TabsTrigger value="team">Team Sales</TabsTrigger>
-              <TabsTrigger value="forecast">Collection Forecast</TabsTrigger>
+            <TabsList className="w-auto rounded-full h-11">
+              <TabsTrigger value="divisions" className="px-5 rounded-full">Division Sales</TabsTrigger>
+              <TabsTrigger value="team" className="px-5 rounded-full">Team Sales</TabsTrigger>
+              <TabsTrigger value="forecast" className="px-5 rounded-full">Collection Forecast</TabsTrigger>
             </TabsList>
           </div>
 
@@ -200,7 +200,7 @@ export default function Dashboard() {
             <TeamDashboard
               Top10SalesPersons={dashboardData?.Top10SalesPersons}
               Top10UnitManagers={dashboardData?.Top10UnitManagers}
-              //Top10DeveloperSales={dashboardData?.Top}
+            //Top10DeveloperSales={dashboardData?.Top}
             />
           </TabsContent>
           <TabsContent value="forecast">

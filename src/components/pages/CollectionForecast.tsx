@@ -28,7 +28,12 @@ import {
   ChartTooltipContent,
 } from "../../components/ui/chart";
 import DatePickerMonthYear from "../../components/ui/datepicker";
-import { CommissionForecastByYearMonthItem, CommissionForecastItem, DownpaymentPercentItem, Top10ForecastBuyersItem } from "@/services/dashboard/dashboard.api";
+import {
+  CommissionForecastByYearMonthItem,
+  CommissionForecastItem,
+  DownpaymentPercentItem,
+  Top10ForecastBuyersItem
+} from "@/services/dashboard/dashboard.api";
 import { DataTable } from "../ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { Search } from "lucide-react";
@@ -36,18 +41,17 @@ import { Input } from "../ui/input";
 import { useState } from "react";
 import { useDebounce } from "@/hooks/use-debounce";
 
-// Chart config
+interface BuyerData {
+  buyer: string;
+  value: number;
+}
+
 const chartConfig = {
   dpPaid: {
     label: "DP Paid",
     color: "var(--chart-1)",
   },
 } satisfies ChartConfig;
-
-interface BuyerData {
-  buyer: string;
-  value: number;
-}
 
 const activeChart = "value";
 
@@ -58,7 +62,7 @@ const chartConfigForecast = {
   },
 } satisfies ChartConfig;
 
-export const chartConfigNetForecast = {
+const chartConfigNetForecast = {
   netContractPrice: {
     label: "Net Contract Price",
     color: "#2563eb",
@@ -183,11 +187,8 @@ export function CollectionForecastDashboard({
   CommissionForecast,
   DownpaymentPercent
 }: CollectionForecastProps) {
-
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearch = useDebounce(searchTerm, 400);
-
-  console.log(DownpaymentPercent);
 
   const regex = new RegExp(debouncedSearch, "i");
 
@@ -303,7 +304,6 @@ export function CollectionForecastDashboard({
                       }}
                     />
                   </PolarRadiusAxis>
-
                   <RadialBar
                     dataKey="dpPaid"
                     cornerRadius={10}
@@ -320,15 +320,15 @@ export function CollectionForecastDashboard({
               {chartDataDP[0].dpPaid >= 100 ? (
                 <span className="text-green-600">Target reached!</span>
               ) : (
-                <span className="text-yellow-600">Still below target</span>
+                <span className="text-yellow-600">Still below target.</span>
               )}
             </div>
             <div className="text-muted-foreground leading-none">
-              Current progress is {""}
-              <span className="font-semibold">{chartDataDP[0].dpPaid.toFixed(2)}% </span>
-              ({chartDataDP[0].actualDP.toLocaleString()}) out of {""}
-              <span className="font-semibold">{(chartDataDP[0].maxDP / 1_000_000).toFixed(2)}</span> {""}
-              ({chartDataDP[0].maxDP.toLocaleString()}) forecasted.
+              Current progress is{" "}
+              <span className="font-semibold">{chartDataDP[0].dpPaid.toFixed(2)}%</span>{" "}
+              ({(chartDataDP[0].actualDP / 1_000_000).toFixed(2)}M) out of{" "}
+              <span className="font-semibold">{(chartDataDP[0].maxDP / 1_000_000).toFixed(2)}M</span>{" "}
+              forecasted.
             </div>
           </CardFooter>
         </Card>

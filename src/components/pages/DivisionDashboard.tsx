@@ -38,69 +38,66 @@ import { DataTable } from "../ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { Input } from "../ui/input";
 import { DivisionSalesItem, SalesTargetItem, Top10DivisionsItem } from "@/services/dashboard/dashboard.api";
+import { useDebounce } from "@/hooks/use-debounce";
 
-type Agents = {
-  id: string;
-  name: string;
-  properties?: number;
-  division: string;
-  divisions?: string;
-};
-
-const columns: ColumnDef<Agents>[] = [
+const columnsSalesItem: ColumnDef<DivisionSalesItem>[] = [
   {
-    accessorKey: "id",
-    header: () => <div className="text-justify">ID</div>,
-    cell: ({ row }) => (
-      <div className="text-justify">{row.getValue("id")}</div>
-    ),
-  },
-  {
-    accessorKey: "name",
-    header: () => <div className="text-justify">Name</div>,
-    cell: ({ row }) => (
-      <div className="text-justify">{row.getValue("name")}</div>
-    ),
-  },
-  {
-    accessorKey: "division",
+    accessorKey: "Division",
     header: () => <div className="text-justify">Division</div>,
     cell: ({ row }) => (
-      <div className="text-justify">{row.getValue("division")}</div>
+      <div className="text-justify">{row.getValue("Division")}</div>
     ),
   },
   {
-    accessorKey: "properties",
-    header: "Properties Assigned",
-    cell: ({ row }) => row.getValue("properties") ?? 0,
+    accessorKey: "CurrentMonth",
+    header: () => <div className="text-justify">CurrentMonth</div>,
+    cell: ({ row }) =>
+      row.getValue("CurrentMonth")
+        ? (row.getValue("CurrentMonth") as number).toLocaleString()
+        : "0",
   },
   {
-    accessorKey: "divisions",
-    header: "Divisions Assigned",
-    cell: ({ row }) => row.getValue("divisions") ?? "N/A",
+    accessorKey: "CurrentMonthLastYear",
+    header: () => <div className="text-justify">Current Month Last Year</div>,
+    cell: ({ row }) =>
+      row.getValue("CurrentMonthLastYear")
+        ? (row.getValue("CurrentMonthLastYear") as number).toLocaleString()
+        : "0",
+  },
+  {
+    accessorKey: "CurrentQuarter",
+    header: () => <div className="text-justify">Current Quarter</div>,
+    cell: ({ row }) =>
+      row.getValue("CurrentQuarter")
+        ? (row.getValue("CurrentQuarter") as number).toLocaleString()
+        : "0",
+  },
+  {
+    accessorKey: "LastQuarter",
+    header: () => <div className="text-justify">Last Quarter</div>,
+    cell: ({ row }) =>
+      row.getValue("LastQuarter")
+        ? (row.getValue("LastQuarter") as number).toLocaleString()
+        : "0",
+  },
+  {
+    accessorKey: "CurrentYear",
+    header: () => <div className="text-justify">Current Year</div>,
+    cell: ({ row }) =>
+      row.getValue("CurrentMonth")
+        ? (row.getValue("CurrentMonth") as number).toLocaleString()
+        : "0",
+  },
+  {
+    accessorKey: "LastYear",
+    header: () => <div className="text-justify">Last Year</div>,
+    cell: ({ row }) =>
+      row.getValue("LastYear")
+        ? (row.getValue("LastYear") as number).toLocaleString()
+        : "0",
   },
 ];
 
-const data: Agents[] = [
-  { id: "1", name: "Juan Dela Cruz", division: "Living Hope Division" },
-  { id: "2", name: "Carlos Santos", division: "Living Hope Division" },
-  { id: "3", name: "Juan Dela Cruz", division: "Living Hope Division" },
-  { id: "4", name: "Carlos Santos", division: "Living Hope Division" },
-  { id: "1", name: "Juan Dela Cruz", division: "Living Hope Division" },
-  { id: "2", name: "Carlos Santos", division: "Living Hope Division" },
-  { id: "3", name: "Juan Dela Cruz", division: "Living Hope Division" },
-  { id: "4", name: "Carlos Santos", division: "Living Hope Division" },
-  { id: "1", name: "Juan Dela Cruz", division: "Living Hope Division" },
-  { id: "2", name: "Carlos Santos", division: "Living Hope Division" },
-  { id: "3", name: "Juan Dela Cruz", division: "Living Hope Division" },
-  { id: "4", name: "Carlos Santos", division: "Living Hope Division" },
-  { id: "1", name: "Juan Dela Cruz", division: "Living Hope Division" },
-  { id: "2", name: "Carlos Santos", division: "Living Hope Division" },
-  { id: "3", name: "Juan Dela Cruz", division: "Living Hope Division" },
-  { id: "4", name: "Carlos Santos", division: "Living Hope Division" },
-];
-
-// chartConfig.ts
 export const chartConfig = {
   sales: {
     label: "Sales",
@@ -123,7 +120,7 @@ export function DivisionDashboard({
   const [view, setView] = useState("chart");
   const [searchTerm, setSearchTerm] = useState("");
 
-  console.log(TotalSalesTarget);
+  console.log(DivisionSales);
 
   const colors = [
     "#D75C3C", "#F28E2B", "#FFBE0B", "#E15759", "#FF9F1C",
@@ -145,6 +142,8 @@ export function DivisionDashboard({
     Last: d.LastMonth, // not yet dynamic
   }));
 
+  const totalDivisions = (DivisionSales ?? []).flatMap(item => item.Division ?? []).length;
+  
   // Adjusted mapped data
   const divisionsData = (TotalSalesTarget?.Divisions ?? []).map((d) => {
     const monthTarget = d.TargetMonth ?? 0;
@@ -160,7 +159,17 @@ export function DivisionDashboard({
       monthTargetReach, // not yet dynamic
     };
   });
+  
+  const debouncedSearch = useDebounce(searchTerm, 400);
 
+  const regex = new RegExp(debouncedSearch, "i");
+
+  const filteredDivisionSales = DivisionSales?.filter((item) => {
+    const division = item.Division ?? "";
+
+    return regex.test(division);
+  });
+  
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 items-stretch">
@@ -240,15 +249,15 @@ export function DivisionDashboard({
 
             {/* Stats */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 flex-1 sm:ml-[30rem]">
-              <div className="col-span-2 relative z-30 flex flex-col px-6 justify-center text-left border border-primary rounded-lg">
+              <div className="bg-primary col-span-2 relative z-30 flex flex-col px-6 justify-center text-left border border-primary rounded-lg">
                 <div className="flex divide-x divide-gray-300">
                   <div className="flex-1 flex flex-col gap-0.3">
-                    <span className="text-primary text-xs block">Total Target</span>
-                    <span className="text-primary text-lg font-bold sm:text-2xl">{TotalSalesTarget?.TotalTargetMonth ?? 0}</span>
+                    <span className="text-white text-xs block">Total Target</span>
+                    <span className="text-white text-lg font-bold sm:text-2xl">{TotalSalesTarget?.TotalTargetMonth.toLocaleString() ?? 0}</span>
                   </div>
                   <div className="flex-1 pl-4 flex flex-col gap-0.3">
-                    <span className="text-primary text-xs block">Total Actual</span>
-                    <span className="text-primary text-lg font-bold sm:text-2xl">{TotalSalesTarget?.TotalCurrentMonth ?? 0}</span>
+                    <span className="text-white text-xs block">Total Actual</span>
+                    <span className="text-white text-lg font-bold sm:text-2xl">{TotalSalesTarget?.TotalCurrentMonth.toLocaleString() ?? 0}</span>
                   </div>
                 </div>
               </div>
@@ -330,13 +339,13 @@ export function DivisionDashboard({
               <Bar
                 dataKey="monthTarget"
                 stackId="a"
-                fill="var(--chart-2)"
+                fill="var(--chart-1)"
                 radius={[4, 4, 4, 4]}
               />
               <Bar
                 dataKey="monthActual"
                 stackId="a"
-                fill="var(--chart-1)"
+                fill="var(--chart-2)"
                 radius={[4, 4, 4, 4]}
               />
             </BarChart>
@@ -345,10 +354,10 @@ export function DivisionDashboard({
       </Card>
 
       <Card className="overflow-x-auto rounded-lg gap-0 shadow-none">
-        <CardHeader className="mb-3 flex items-center justify-between gap-2 mt-4">
+        <CardHeader className="flex items-center justify-between border-b">
           <div className="flex flex-col gap-1">
             <CardTitle className="text-primary">
-              Division Sales <span className="text-muted-foreground">(30)</span>
+              Division Sales <span className="text-muted-foreground">({totalDivisions})</span>
             </CardTitle>
             <CardDescription>Monthly Sales</CardDescription>
           </div>
@@ -418,7 +427,7 @@ export function DivisionDashboard({
                   dataKey="Current"
                   stroke="var(--chart-2)"
                   fill="var(--chart-2)"
-                  fillOpacity={0.7}
+                  fillOpacity={3}
                   activeDot={{ r: 5 }}
                 />
                 <Area
@@ -426,13 +435,13 @@ export function DivisionDashboard({
                   dataKey="Last"
                   stroke="var(--chart-1)"
                   fill="var(--chart-1)"
-                  fillOpacity={0.7}
+                  fillOpacity={3}
                 />
               </AreaChart>
             </ChartContainer>
           </CardContent>
         ) : (
-          <CardContent className="overflow-x-auto">
+          <CardContent className="overflow-x-auto mt-5">
             <div className="flex flex-col md:flex-row justify-between items-center">
               <div className="flex flex-col md:flex-row items-center gap-3 mt-3 mb-4">
                 <div className="relative rounded-lg">
@@ -446,7 +455,7 @@ export function DivisionDashboard({
                 </div>
               </div>
             </div>
-            <DataTable data={data} columns={columns} />
+            <DataTable data={filteredDivisionSales ?? []} columns={columnsSalesItem} />
           </CardContent>
         )}
       </Card>
