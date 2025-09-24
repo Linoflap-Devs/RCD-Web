@@ -112,7 +112,7 @@ interface DivisionDashboardProps {
   loading: boolean;
   top10Division?: Top10DivisionsItem[];
   DivisionSales?: DivisionSalesItem[];
-  TotalSalesTarget?: SalesTargetItem[];
+  TotalSalesTarget?: SalesTargetItem;
 }
 
 export function DivisionDashboard({
@@ -122,6 +122,8 @@ export function DivisionDashboard({
 }: DivisionDashboardProps) {
   const [view, setView] = useState("chart");
   const [searchTerm, setSearchTerm] = useState("");
+
+  console.log(TotalSalesTarget);
 
   const colors = [
     "#D75C3C", "#F28E2B", "#FFBE0B", "#E15759", "#FF9F1C",
@@ -144,24 +146,20 @@ export function DivisionDashboard({
   }));
 
   // Adjusted mapped data
-  const divisionsData =
-    Array.isArray(TotalSalesTarget)
-      ? TotalSalesTarget.map((d) => {
-          const monthTarget = d.TargetMonth ?? 0;
-          const monthActual = d.CurrentMonth ?? 0;
+  const divisionsData = (TotalSalesTarget?.Divisions ?? []).map((d) => {
+    const monthTarget = d.TargetMonth ?? 0;
+    const monthActual = d.CurrentMonth ?? 0;
 
-          const monthTargetReach =
-            monthTarget > 0 ? Math.round((monthActual / monthTarget) * 100) : 0;
+    const monthTargetReach =
+      monthTarget > 0 ? Math.round((monthActual / monthTarget) * 100) : 0;
 
-          return {
-            division: d.DivisionName,
-            monthTarget,
-            monthActual,
-            monthTargetReach,
-          };
-        })
-      : [];
-
+    return {
+      division: d.DivisionName,
+      monthTarget,
+      monthActual,
+      monthTargetReach, // not yet dynamic
+    };
+  });
 
   return (
     <div className="space-y-4">
@@ -246,17 +244,17 @@ export function DivisionDashboard({
                 <div className="flex divide-x divide-gray-300">
                   <div className="flex-1 flex flex-col gap-0.3">
                     <span className="text-primary text-xs block">Total Target</span>
-                    <span className="text-primary text-lg font-bold sm:text-2xl">89%</span>
+                    <span className="text-primary text-lg font-bold sm:text-2xl">{TotalSalesTarget?.TotalTargetMonth ?? 0}</span>
                   </div>
                   <div className="flex-1 pl-4 flex flex-col gap-0.3">
                     <span className="text-primary text-xs block">Total Actual</span>
-                    <span className="text-primary text-lg font-bold sm:text-2xl">120%</span>
+                    <span className="text-primary text-lg font-bold sm:text-2xl">{TotalSalesTarget?.TotalCurrentMonth ?? 0}</span>
                   </div>
                 </div>
               </div>
               <div className="bg-[#76B041] rounded-lg p-4 flex-1 pl-4 flex flex-col gap-0.3">
                 <span className="text-white text-xs block">Total Reach</span>
-                <span className="text-white text-base font-bold sm:text-2xl">120%</span>
+                <span className="text-white text-base font-bold sm:text-2xl">{TotalSalesTarget?.TotalReachPercent ?? 0}</span>
               </div>
             </div>
           </div>

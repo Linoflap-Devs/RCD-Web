@@ -139,7 +139,7 @@ export function TeamDashboard({
                   key={dev.name}
                   className="flex items-center justify-between pb-1 border-b text-sm"
                 >
-                  <span className="flex items-center gap-2 font-medium text-gray-700">
+                  <span className="flex items-center font-semibold gap-2 text-gray-700">
                     <span
                       className="h-3 w-3 rounded-full"
                       style={{ backgroundColor: dev.fill }}

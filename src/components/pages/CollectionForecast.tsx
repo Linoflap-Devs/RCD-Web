@@ -79,7 +79,13 @@ export const forecastColumns: ColumnDef<CommissionForecastItem>[] = [
   {
     accessorKey: "BuyersName",
     header: "Buyer’s Name",
-    cell: ({ row }) => row.getValue("BuyersName") ?? "N/A",
+    cell: ({ row }) => {
+      const buyersName = row.getValue("BuyersName") as String;
+
+      return (
+        <div className="font-semibold">{buyersName}</div>
+      )
+    }
   },
   // {
   //   accessorKey: "ProjectName",
@@ -243,8 +249,8 @@ export function CollectionForecastDashboard({
           </CardHeader>
 
           <CardContent className="flex justify-center items-center">
-            <ChartContainer config={chartConfig} className="aspect-square h-45">
-              <ResponsiveContainer height="100%" width="100%" className="mt-4">
+            <ChartContainer config={chartConfig} className="aspect-square h-50">
+              <ResponsiveContainer height="100%" width="100%" className="mt-6">
                 <RadialBarChart
                   data={chartDataDP}
                   startAngle={180}
@@ -270,7 +276,7 @@ export function CollectionForecastDashboard({
                               <tspan
                                 x={viewBox.cx}
                                 y={(viewBox.cy || 0) - 8}
-                                className="fill-foreground text-xl font-bold"
+                                className="fill-foreground text-lg font-bold"
                               >
                                 {chartDataDP[0].dpPaid.toFixed(2)}%
                               </tspan>
@@ -342,14 +348,14 @@ export function CollectionForecastDashboard({
           <CardContent className="px-2 sm:p-6 sm:pb-0">
             <ChartContainer
               config={chartConfigForecast}
-              className="aspect-auto h-50 w-full"
+              className="aspect-auto h-55 w-full"
             >
               <BarChart
                 data={chartDataForecastBuyers}
                 margin={{
-                  top: 16,
+                  top: 20,
                   right: 10,
-                  bottom: 30,
+                  bottom: 35,
                   left: 0,
                 }}
               >

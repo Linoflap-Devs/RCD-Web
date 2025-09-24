@@ -71,14 +71,19 @@ export interface CommissionForecastItem {
 }
 
 export interface SalesTargetItem {
-    CurrentMonth:  number;
-    CurrentYear: number;
-    DivisionName: string;
-    PercentMonth: number;
-    PercentYear: number;
-    SalesYear: number;
-    TargetMonth: number;
-    TargetYear: number;
+    Divisions: {
+        CurrentMonth:  number;
+        CurrentYear: number;
+        DivisionName: string;
+        PercentMonth: number;
+        PercentYear: number;
+        SalesYear: number;
+        TargetMonth: number;
+        TargetYear: number;
+    }[];
+    TotalCurrentMonth: number;
+    TotalReachPercent: number;
+    TotalTargetMonth: number;
 }
 
 export interface DownpaymentPercentItem {
@@ -96,7 +101,7 @@ export interface DashboardItem {
     Top10ForecastBuyers: Top10ForecastBuyersItem[];
     CommissionForecastByYearMonth: CommissionForecastByYearMonthItem[];
     CommissionForecast: CommissionForecastItem[];
-    SalesTarget: SalesTargetItem[];
+    SalesTarget: SalesTargetItem;
     DownpaymentPercent: DownpaymentPercentItem;
 }
 
