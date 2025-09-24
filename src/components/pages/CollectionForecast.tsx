@@ -28,7 +28,13 @@ import {
   ChartTooltipContent,
 } from "../../components/ui/chart";
 import DatePickerMonthYear from "../../components/ui/datepicker";
-import { Top10ForecastBuyersItem } from "@/services/dashboard/dashboard.api";
+import { CommissionForecastByYearMonthItem, CommissionForecastItem, Top10ForecastBuyersItem } from "@/services/dashboard/dashboard.api";
+import { DataTable } from "../ui/data-table";
+import { ColumnDef } from "@tanstack/react-table";
+import { Search } from "lucide-react";
+import { Input } from "../ui/input";
+import { useState } from "react";
+import { useDebounce } from "@/hooks/use-debounce";
 
 // Chart config
 const chartConfig = {
@@ -65,21 +71,6 @@ const chartConfigForecast = {
   },
 } satisfies ChartConfig;
 
-const forecastMonthlyData = [
-  { month: "2025-01", netContractPrice: 10_800_000 }, // Jan
-  { month: "2025-02", netContractPrice: 10_520_000 }, // Feb
-  { month: "2025-03", netContractPrice: 11_200_000 }, // Mar
-  { month: "2025-04", netContractPrice: 12_000_000 }, // Apr
-  { month: "2025-05", netContractPrice: 12_800_000 }, // May
-  { month: "2025-06", netContractPrice: 13_500_000 }, // Jun
-  { month: "2025-07", netContractPrice: 14_200_000 }, // Jul
-  { month: "2025-08", netContractPrice: 13_900_000 }, // Aug
-  { month: "2025-09", netContractPrice: 14_800_000 }, // Sep
-  { month: "2025-10", netContractPrice: 15_600_000 }, // Oct
-  { month: "2025-11", netContractPrice: 16_200_000 }, // Nov
-  { month: "2025-12", netContractPrice: 17_000_000 }, // Dec
-];
-
 export const chartConfigNetForecast = {
   netContractPrice: {
     label: "Net Contract Price",
@@ -87,22 +78,136 @@ export const chartConfigNetForecast = {
   },
 };
 
+export const forecastColumns: ColumnDef<CommissionForecastItem>[] = [
+  // {
+  //   accessorKey: "rowno",
+  //   header: "#",
+  //   cell: ({ row }) => row.getValue("rowno") ?? "-",
+  // },
+  {
+    accessorKey: "DeveloperName",
+    header: "Developer",
+    cell: ({ row }) => row.getValue("DeveloperName") ?? "N/A",
+  },
+  {
+    accessorKey: "BuyersName",
+    header: "Buyer’s Name",
+    cell: ({ row }) => row.getValue("BuyersName") ?? "N/A",
+  },
+  // {
+  //   accessorKey: "ProjectName",
+  //   header: "Project",
+  //   cell: ({ row }) => row.getValue("ProjectName") ?? "N/A",
+  // },
+  // {
+  //   accessorKey: "Division",
+  //   header: "Division",
+  //   cell: ({ row }) => row.getValue("Division") ?? "N/A",
+  // },
+  {
+    accessorKey: "ReservationDate",
+    header: "Reservation Date",
+    cell: ({ row }) => {
+      const date = row.getValue("ReservationDate") as string | null;
+      return date ? new Date(date).toLocaleDateString() : "N/A";
+    },
+  },
+  // {
+  //   accessorKey: "DownPayment",
+  //   header: "Down Payment",
+  //   cell: ({ row }) =>
+  //     row.getValue("DownPayment")
+  //       ? (row.getValue("DownPayment") as number).toLocaleString()
+  //       : "0",
+  // },
+  // {
+  //   accessorKey: "DPPaid",
+  //   header: "DP Paid",
+  //   cell: ({ row }) =>
+  //     row.getValue("DPPaid")
+  //       ? (row.getValue("DPPaid") as number).toLocaleString()
+  //       : "0",
+  // },
+  // {
+  //   accessorKey: "DPPercentPaid",
+  //   header: "DP % Paid",
+  //   cell: ({ row }) => `${row.getValue("DPPercentPaid") ?? 0}%`,
+  // },
+  // {
+  //   accessorKey: "MonthlyDP",
+  //   header: "Monthly DP",
+  //   cell: ({ row }) =>
+  //     row.getValue("MonthlyDP")
+  //       ? (row.getValue("MonthlyDP") as number).toLocaleString()
+  //       : "0",
+  // },
+  {
+    accessorKey: "NetTotalTCP",
+    header: "Net TCP",
+    cell: ({ row }) =>
+      row.getValue("NetTotalTCP")
+        ? (row.getValue("NetTotalTCP") as number).toLocaleString()
+        : "0",
+  },
+  // {
+  //   accessorKey: "PercentRelease",
+  //   header: "Release %",
+  //   cell: ({ row }) => `${row.getValue("PercentRelease") ?? 0}%`,
+  // },
+  {
+    accessorKey: "ForeCastPercentDPPaid",
+    header: "Forecast DP % Paid",
+    cell: ({ row }) => `${row.getValue("ForeCastPercentDPPaid") ?? 0}%`,
+  },
+  // {
+  //   accessorKey: "DPStartSchedule",
+  //   header: "DP Start",
+  //   cell: ({ row }) => {
+  //     const date = row.getValue("DPStartSchedule") as string | null;
+  //     return date ? new Date(date).toLocaleDateString() : "N/A";
+  //   },
+  // },
+  // {
+  //   accessorKey: "EndDP",
+  //   header: "DP End",
+  //   cell: ({ row }) => {
+  //     const date = row.getValue("EndDP") as string | null;
+  //     return date ? new Date(date).toLocaleDateString() : "N/A";
+  //   },
+  // },
+];
+
 interface CollectionForecastProps {
   Top10ForecastBuyers?: Top10ForecastBuyersItem[];
+  CommissionForecastByYearMonth?: CommissionForecastByYearMonthItem[];
+  CommissionForecast?: CommissionForecastItem[];
 }
 
 export function CollectionForecastDashboard({
   Top10ForecastBuyers,
-
+  CommissionForecastByYearMonth,
+  CommissionForecast
 }: CollectionForecastProps) {
-  console.log('TOP 10 FORECAST BUYERS', Top10ForecastBuyers);
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearch = useDebounce(searchTerm, 400);
+
+  const regex = new RegExp(debouncedSearch, "i");
+
+  const filteredForecast = CommissionForecast?.filter((item) => {
+    const fullName = item.BuyersName ?? "";
+    const rowno = item.rowno?.toString() ?? "";
+    const projectName = item.ProjectName ?? "";
+    const division = item.Division ?? "";
+
+    return regex.test(fullName) || regex.test(rowno) || regex.test(projectName) || regex.test(division);
+  });
 
   const colors = [
     "#D75C3C", "#F28E2B", "#FFBE0B", "#E15759", "#FF9F1C",
     "#76B041", "#FAA43A", "#F4D35E", "#C6AC8F", "#8D99AE"
   ];
 
-  // Transform API data
   const chartDataForecastBuyers: BuyerData[] =
     (Top10ForecastBuyers ?? []).map((b, idx) => ({
       buyer: b.BuyersName,
@@ -110,10 +215,23 @@ export function CollectionForecastDashboard({
       fill: colors[idx % colors.length],
     }));
 
+  const forecastMonthlyData =
+    CommissionForecastByYearMonth?.flatMap((yearData) =>
+      yearData.Months.map((m) => {
+        // Create a Date from Year + Month (JS months are 0-based)
+        const date = new Date(yearData.Year, m.Month - 1, 1);
+
+        return {
+          month: `${date.getFullYear()}-${String(m.Month).padStart(2, "0")}`, // "2024-09"
+          netContractPrice: m.NetTotalTCP,
+          dateObj: date, // keep actual Date object for formatting in chart
+        };
+      })
+    ) ?? [];
+
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 items-stretch">
-        {/* Downpayment Summary Card */}
         <Card className="rounded-lg border shadow-none bg-white">
           <CardHeader className="flex items-center gap-2 border-b">
             <div className="flex flex-col gap-1">
@@ -330,7 +448,7 @@ export function CollectionForecastDashboard({
 
                 <Legend />
 
-                {/* Line instead of Area */}
+                {/* Line */}
                 <Line
                   type="monotone"
                   dataKey="netContractPrice"
@@ -358,7 +476,22 @@ export function CollectionForecastDashboard({
             <DatePickerMonthYear />
           </div>
         </CardHeader>
-        <CardContent className="grid grid-cols-2 gap-8"> </CardContent>
+        <CardContent className="overflow-x-auto">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="flex flex-col md:flex-row items-center gap-3 mt-3 mb-4">
+              <div className="relative rounded-lg">
+                <Search className="absolute left-2 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
+                <Input
+                  placeholder="Search..."
+                  className="pl-7 text-xs sm:text-sm h-8 w-90"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+            </div>
+          </div>
+          <DataTable data={filteredForecast ?? []} columns={forecastColumns} />
+        </CardContent>
       </Card>
     </div>
   );

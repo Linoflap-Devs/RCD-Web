@@ -195,20 +195,22 @@ export default function Dashboard() {
             <DivisionDashboard
               loading={loading}
               top10Division={dashboardData?.Top10Divisions}
-              DivisionSales={dashboardData?.DivisionSales}  
-              //TotalSalesTarget={dashboardData?.TotalSalesTarget}
+              DivisionSales={dashboardData?.DivisionSales}
+            //TotalSalesTarget={dashboardData?.TotalSalesTarget}
             />
           </TabsContent>
           <TabsContent value="team">
-            <TeamDashboard 
+            <TeamDashboard
               Top10SalesPersons={dashboardData?.Top10SalesPersons}
               Top10UnitManagers={dashboardData?.Top10UnitManagers}
-              //Top10DeveloperSales={dashboardData?.Top}
+            //Top10DeveloperSales={dashboardData?.Top}
             />
           </TabsContent>
           <TabsContent value="forecast">
             <CollectionForecastDashboard
               Top10ForecastBuyers={dashboardData?.Top10ForecastBuyers}
+              CommissionForecastByYearMonth={dashboardData?.CommissionForecastByYearMonth}
+              CommissionForecast={dashboardData?.CommissionForecast}
             />
           </TabsContent>
         </Tabs>
