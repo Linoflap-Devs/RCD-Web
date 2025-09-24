@@ -9,15 +9,34 @@ import { Building, Coins, FolderKanban, UserStar } from "lucide-react";
 import TeamDashboard from "./TeamDashboard";
 import CollectionForecastDashboard from "./CollectionForecast";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import { DashboardItem, getDashboardWeb } from "@/services/dashboard/dashboard.api";
 
 export default function Dashboard() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
   const activeTab = searchParams.get("tab") || "divisions";
+  const [loading, setLoading] = useState(false);
+  const [dashboardData, setDashboardData] = useState<DashboardItem | undefined>(undefined);
+  const [error, setError] = useState(false);
 
-  const currentMonth = 15520177.74;
-  const lastYearMonth = 5556277.74;
+  useEffect(() => {
+    getDashboardWeb()
+      .then((res) => {
+        if (res.success) {
+          setDashboardData(res.data);
+        } else {
+          console.error("Failed to fetch dashboard data:", res.message);
+        }
+      })
+      .catch((err) => console.error("Error fetching dashboard data:", err));
+  }, []);
+
+  console.log(dashboardData);
+
+  const currentMonth = dashboardData?.KPI.totalSalesCurrentMonth ?? 0;
+  const lastYearMonth = dashboardData?.KPI?.totalSalesCurrentMonth ?? 0;
   //const percentage = (currentMonth / lastYearMonth) * 100;
 
   const handleTabChange = (value: string) => {
@@ -62,9 +81,9 @@ export default function Dashboard() {
         <Card className="bg-primary rounded-lg border  flex flex-col justify-center">
           <CardContent className="flex flex-col gap-2">
             <div className="space-y-1">
-              <div className="text-sm text-white">Total Active Salesforce</div>
+              <div className="text-sm text-white">Total Sales Force</div>
               <div className="text-2xl text-white font-bold tracking-tight flex items-center">
-                <UserStar className="h-4 w-4 mr-2 " /> <span>2,400</span>
+                <UserStar className="h-4 w-4 mr-2 " /> <span>{dashboardData?.KPI.totalAgents.toLocaleString() ?? 0}</span>
               </div>
             </div>
           </CardContent>
@@ -77,7 +96,7 @@ export default function Dashboard() {
             <div className="space-y-1">
               <div className="text-sm text-muted-foreground">Total Active Divisions</div>
               <div className="text-2xl font-bold tracking-tight text-primary flex items-center">
-                <Building className="h-4 w-4 mr-2" /> <span>2,400</span>
+                <Building className="h-4 w-4 mr-2" /> <span>{dashboardData?.KPI.totalDivisions.toLocaleString() ?? 0}</span>
               </div>
             </div>
           </CardContent>
@@ -88,7 +107,7 @@ export default function Dashboard() {
             <div className="space-y-1">
               <div className="text-sm text-muted-foreground">Total Projects</div>
               <div className="text-2xl font-bold tracking-tight text-primary flex items-center">
-                <FolderKanban className="h-4 w-4 mr-2" /> <span>30</span>
+                <FolderKanban className="h-4 w-4 mr-2" /> <span>{dashboardData?.KPI.totalProjects.toLocaleString() ?? 0}</span>
               </div>
             </div>
           </CardContent>
@@ -99,7 +118,7 @@ export default function Dashboard() {
             <div className="space-y-1">
               <div className="text-sm text-muted-foreground">Total Sales Previous Year</div>
               <div className="text-2xl font-bold tracking-tight text-primary flex items-center">
-                <Coins className="h-4 w-4 mr-2" /> <span>155,620,177.74</span>
+                <Coins className="h-4 w-4 mr-2" /> <span>{dashboardData?.KPI.totalSalesPreviousYear.toLocaleString() ?? 0}</span>
               </div>
             </div>
           </CardContent>
