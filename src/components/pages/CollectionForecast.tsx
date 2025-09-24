@@ -241,11 +241,13 @@ export function CollectionForecastDashboard({
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 items-stretch">
         <Card className="rounded-lg border shadow-none bg-white">
           <CardHeader className="flex items-center gap-2 border-b">
-            <div className="flex flex-col gap-1">
-              <CardTitle className="text-primary">
+            <div className="flex flex-1 flex-col justify-center gap-1 sm:pb-0">
+              <CardTitle>
                 DP Paid Progress
               </CardTitle>
-              <CardDescription>Average forecasted DP paid.</CardDescription>
+              <CardDescription>
+                Showing the average forecasted DP paid
+              </CardDescription>
             </div>
           </CardHeader>
 
@@ -335,16 +337,15 @@ export function CollectionForecastDashboard({
 
         <Card className="col-span-2 rounded-lg border shadow-none bg-white">
           <CardHeader className="flex items-center gap-2 border-b">
-            <div className="flex flex-col gap-1">
-              <CardTitle className="text-primary">
+            <div className="flex flex-1 flex-col justify-center gap-1 sm:pb-0">
+              <CardTitle>
                 Top 10 Buyer Contribution / Forecast
               </CardTitle>
               <CardDescription>
-                Top buyers by forecasted net contracts.
+                Showing the top buyers by forecasted net contracts
               </CardDescription>
             </div>
           </CardHeader>
-
           <CardContent className="px-2 sm:p-6 sm:pb-0">
             <ChartContainer
               config={chartConfigForecast}
@@ -411,12 +412,12 @@ export function CollectionForecastDashboard({
 
       <Card className="rounded-lg border shadow-none bg-white">
         <CardHeader className="flex items-center gap-2 border-b">
-          <div className="flex flex-col gap-1">
-            <CardTitle className="text-primary">
+          <div className="flex flex-1 flex-col justify-center gap-1 sm:pb-0">
+            <CardTitle>
               Reservation Date vs Net Contract Price
             </CardTitle>
             <CardDescription>
-              Forecasted net contracts across reservation dates.
+              Showing the the forecasted net contracts across reservation dates.
             </CardDescription>
           </div>
         </CardHeader>
@@ -480,13 +481,14 @@ export function CollectionForecastDashboard({
       </Card>
       <Card className="rounded-lg border shadow-none bg-white">
         <CardHeader className="flex items-center justify-between gap-2 border-b">
-          <div className="flex flex-col gap-1">
-            <CardTitle className="text-primary">Data Overview</CardTitle>
+          <div className="flex flex-1 flex-col justify-center gap-1 sm:pb-0">
+            <CardTitle>
+              Data Collection Forecasr Overview
+            </CardTitle>
             <CardDescription>
-              Tabular history of all collection forecasts.
+              Showing the tabular history of all collection forecasts.
             </CardDescription>
           </div>
-
           <div className="flex items-center gap-2">
             <DatePickerMonthYear />
           </div>

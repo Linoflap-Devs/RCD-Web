@@ -27,6 +27,7 @@ import { ChartBar, Table, User } from "lucide-react";
 import { useState } from "react";
 import DatePickerMonthYear from "../../components/ui/datepicker";
 import { Top10SalesPersonsItem, Top10UnitManagersItem } from "@/services/dashboard/dashboard.api";
+import { formattedName } from "@/hooks/use-formattedname";
 
 const chartData = Array.from({ length: 20 }, (_, i) => ({
   developer: `Dev ${i + 1}`,
@@ -71,21 +72,24 @@ export function TeamDashboard({
 
   const [activeIndex, setActiveIndex] = useState<number | null>(maxIndex);
 
-  const topManagers =
-    (Top10UnitManagers ?? []).map((p, idx) => ({
-      name: p.AgentName,
-      value: p.CurrentMonth,
-      //fill: colors[idx % colors.length], // loop if >10
-    }));
+  const topManagers = (Top10UnitManagers ?? []).map((p, idx) => ({
+    name: p.AgentName,
+    value: p.CurrentMonth,
+    //fill: colors[idx % colors.length], // loop if >10
+  }));
 
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4 items-stretch">
         <Card className="rounded-lg border shadow-none bg-white gap-3">
           <CardHeader className="flex items-center justify-between gap-2 border-b">
-            <div className="flex flex-col gap-1">
-              <CardTitle className="text-primary">Top 10 Sales Persons</CardTitle>
-              <CardDescription>Monthly Sales</CardDescription>
+            <div className="flex flex-1 flex-col justify-center gap-1 sm:pb-0">
+              <CardTitle>
+                Top 10 Sales Persons
+              </CardTitle>
+              <CardDescription>
+                Showing the top 10 sales person
+              </CardDescription>
             </div>
             <div className="flex items-center gap-2">
               <DatePickerMonthYear />
@@ -139,12 +143,12 @@ export function TeamDashboard({
                   key={dev.name}
                   className="flex items-center justify-between pb-1 border-b text-sm"
                 >
-                  <span className="flex items-center font-semibold gap-2 text-gray-700 text-sm">
+                  <span className="flex items-center font-regular gap-2 text-gray-700 text-sm">
                     <span
                       className="h-3 w-3 rounded-full"
                       style={{ backgroundColor: dev.fill }}
                     />
-                    {index + 1}. {dev.name}
+                    {index + 1}. {formattedName(dev.name)}
                   </span>
                   <span className="text-gray-600">
                     {dev.value.toLocaleString()}
@@ -157,11 +161,13 @@ export function TeamDashboard({
 
         <Card className="rounded-lg border shadow-none bg-white">
           <CardHeader className="flex items-center justify-between gap-2 border-b">
-            <div className="flex flex-col gap-1">
-              <CardTitle className="text-primary">
+            <div className="flex flex-1 flex-col justify-center gap-1 sm:pb-0">
+              <CardTitle>
                 Top 10 Unit Managers
               </CardTitle>
-              <CardDescription>Monthly Sales</CardDescription>
+              <CardDescription>
+                Showing the top 10 unit managers
+              </CardDescription>
             </div>
             <div className="flex items-center gap-2">
               <DatePickerMonthYear />
@@ -176,12 +182,12 @@ export function TeamDashboard({
                   className="flex items-center justify-between"
                 >
                   <div className="flex items-center gap-4">
-                    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-gray-200 text-xs font-semibold">
+                    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-gray-200 text-xs font-regular">
                       {index + 1}
                     </span>
                     <div className="flex flex-col gap-1">
-                      <span className="font-medium text-sm text-gray-700">
-                        {manager.name}
+                      <span className="text-sm text-gray-700">
+                        {formattedName(manager.name)}
                       </span>
                       <div className="h-1 w-64 bg-gray-200 rounded-full mt-1">
                         <div
@@ -210,14 +216,15 @@ export function TeamDashboard({
 
       <Card className="overflow-x-auto rounded-lg shadow-none">
         <CardHeader className="flex items-center justify-between gap-2 border-b">
-          <div className="flex flex-col gap-1">
-            <CardTitle className="text-primary">
+          <div className="flex flex-1 flex-col justify-center gap-1 sm:pb-0">
+            <CardTitle>
               Developer Sales{" "}
               <span className="text-muted-foreground">(26 out of 40)</span>
             </CardTitle>
-            <CardDescription>Monthly Sales Comparison</CardDescription>
+            <CardDescription>
+              Showing the developer sales for the current month.
+            </CardDescription>
           </div>
-
           <div className="flex items-center gap-2">
             <div className="inline-flex bg-white border rounded-xl p-[3px] h-9">
               <button

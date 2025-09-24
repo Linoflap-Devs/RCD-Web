@@ -135,7 +135,6 @@ export function DivisionDashboard({
 
   const sortedDivisions = [...top10Divisions].sort((a, b) => b.sales - a.sales);
 
-  // DIVISION SALES
   const divisionsSalesData = (DivisionSales ?? []).map((d) => ({
     division: d.Division,
     Current: d.CurrentMonth, // not yet dynamic
@@ -143,8 +142,7 @@ export function DivisionDashboard({
   }));
 
   const totalDivisions = (DivisionSales ?? []).flatMap(item => item.Division ?? []).length;
-  
-  // Adjusted mapped data
+
   const divisionsData = (TotalSalesTarget?.Divisions ?? []).map((d) => {
     const monthTarget = d.TargetMonth ?? 0;
     const monthActual = d.CurrentMonth ?? 0;
@@ -159,25 +157,29 @@ export function DivisionDashboard({
       monthTargetReach, // not yet dynamic
     };
   });
-  
+
   const debouncedSearch = useDebounce(searchTerm, 400);
 
   const regex = new RegExp(debouncedSearch, "i");
 
   const filteredDivisionSales = DivisionSales?.filter((item) => {
     const division = item.Division ?? "";
-
+    
     return regex.test(division);
   });
-  
+
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 items-stretch">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-stretch">
         <Card className="col-span-4 rounded-lg border bg-white shadow-none">
-          <CardHeader className="flex items-center justify-between gap-1 border-b">
-            <div className="flex flex-col gap-1">
-              <CardTitle className="text-primary">Top 10 Divisions</CardTitle>
-              <CardDescription>Monthly Sales</CardDescription>
+          <CardHeader className="flex items-center justify-between border-b">
+            <div className="flex flex-1 flex-col justify-center gap-1 sm:pb-0">
+              <CardTitle>
+                Top 10 Divisions
+              </CardTitle>
+              <CardDescription>
+                Showing the top 10 division for the current month
+              </CardDescription>
             </div>
             <div className="flex items-center gap-2">
               <DatePickerMonthYear />
@@ -239,32 +241,38 @@ export function DivisionDashboard({
         </Card>
       </div>
 
-      <Card className="overflow-x-auto rounded-lg shadow-none">
-        <CardHeader className="mb-3 items-center gap-2 px-6 border-b">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full">
-            <div className="flex flex-col gap-1">
-              <CardTitle className="text-primary">Total Target Sales</CardTitle>
-              <CardDescription>Monthly Sales</CardDescription>
+      <Card className="overflow-x-auto rounded-lg shadow-none py-0 pb-6">
+        <CardHeader className="flex flex-col items-stretch border-b !p-0 sm:flex-row">
+          <div className="flex flex-1 flex-col justify-center gap-1 px-6 pb-3 sm:pb-0">
+            <CardTitle>Total Target Sales</CardTitle>
+            <CardDescription>
+              Showing the sales target for the current month.
+            </CardDescription>
+          </div>
+          <div className="flex">
+            <div className="flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l sm:border-t-0 sm:border-l sm:px-8 sm:py-6">
+              <span className="text-muted-foreground text-xs">
+                Total Target
+              </span>
+              <span className="text-lg leading-none font-bold sm:text-3xl">
+                {TotalSalesTarget?.TotalTargetMonth.toLocaleString() ?? 0}
+              </span>
             </div>
-
-            {/* Stats */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 flex-1 sm:ml-[30rem]">
-              <div className="col-span-2 relative z-30 flex flex-col px-6 justify-center text-left border rounded-lg">
-                <div className="flex divide-x divide-gray-300">
-                  <div className="flex-1 flex flex-col gap-0.3">
-                    <span className="text-primary text-xs block">Total Target</span>
-                    <span className="text-primary text-lg font-bold sm:text-2xl">{TotalSalesTarget?.TotalTargetMonth.toLocaleString() ?? 0}</span>
-                  </div>
-                  <div className="flex-1 pl-4 flex flex-col gap-0.3">
-                    <span className="text-primary text-xs block">Total Actual</span>
-                    <span className="text-primary text-lg font-bold sm:text-2xl">{TotalSalesTarget?.TotalCurrentMonth.toLocaleString() ?? 0}</span>
-                  </div>
-                </div>
-              </div>
-              <div className="bg-[#76B041] rounded-lg p-4 flex-1 pl-4 flex flex-col gap-0.3">
-                <span className="text-white text-xs block">Total Reach</span>
-                <span className="text-white text-base font-bold sm:text-2xl">{TotalSalesTarget?.TotalReachPercent ?? 0}</span>
-              </div>
+            <div className="flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l sm:border-t-0 sm:border-l sm:px-8 sm:py-6">
+              <span className="text-muted-foreground text-xs">
+                Total Actual
+              </span>
+              <span className="text-lg leading-none font-bold sm:text-3xl">
+                {TotalSalesTarget?.TotalCurrentMonth.toLocaleString() ?? 0}
+              </span>
+            </div>
+            <div className="flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l sm:border-t-0 sm:border-l sm:px-8 sm:py-6">
+              <span className="text-muted-foreground text-xs">
+                Total Reach
+              </span>
+              <span className="text-lg leading-none font-bold sm:text-3xl">
+                {TotalSalesTarget?.TotalReachPercent ?? 0}%
+              </span>
             </div>
           </div>
         </CardHeader>
@@ -355,11 +363,13 @@ export function DivisionDashboard({
 
       <Card className="overflow-x-auto rounded-lg gap-0 shadow-none">
         <CardHeader className="flex items-center justify-between border-b">
-          <div className="flex flex-col gap-1">
-            <CardTitle className="text-primary">
+          <div className="flex flex-1 flex-col justify-center gap-1 pb-3 sm:pb-0">
+            <CardTitle>
               Division Sales <span className="text-muted-foreground">({totalDivisions})</span>
             </CardTitle>
-            <CardDescription>Monthly Sales</CardDescription>
+            <CardDescription>
+              Showing the division sales for the current month.
+            </CardDescription>
           </div>
 
           <div className="flex items-center gap-2">
