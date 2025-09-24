@@ -5,11 +5,10 @@ import { Badge } from "../../components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs";
 import { useRouter, useSearchParams } from "next/navigation";
 import DivisionDashboard from "./DivisionDashboard";
-import { Banknote, Building, Coins, FolderKanban, TrendingUp, Users } from "lucide-react";
+import { Building, Coins, FolderKanban, UserStar } from "lucide-react";
 import TeamDashboard from "./TeamDashboard";
 import CollectionForecastDashboard from "./CollectionForecast";
 import Image from "next/image";
-import { useState } from "react";
 
 export default function Dashboard() {
   const searchParams = useSearchParams();
@@ -65,7 +64,7 @@ export default function Dashboard() {
             <div className="space-y-1">
               <div className="text-sm text-white">Total Active Salesforce</div>
               <div className="text-2xl text-white font-bold tracking-tight flex items-center">
-                <Banknote className="h-4 w-4 mr-2 " /> <span>2,400</span>
+                <UserStar className="h-4 w-4 mr-2 " /> <span>2,400</span>
               </div>
             </div>
           </CardContent>

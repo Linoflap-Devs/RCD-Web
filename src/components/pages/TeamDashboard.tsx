@@ -80,7 +80,7 @@ export default function TeamDashboard() {
         <Card className="rounded-lg border shadow-none bg-white gap-3">
           <CardHeader className="flex items-center justify-between gap-2 border-b">
             <div className="flex flex-col gap-1">
-              <CardTitle className="text-primary">Top 10 Developers</CardTitle>
+              <CardTitle className="text-primary">Top 10 Sales Persons</CardTitle>
               <CardDescription>Monthly Sales</CardDescription>
             </div>
             <div className="flex items-center gap-2">

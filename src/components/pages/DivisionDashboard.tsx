@@ -231,15 +231,15 @@ export default function DivisionDashboard() {
 
             {/* Stats */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 flex-1 sm:ml-[30rem]">
-              <div className="bg-primary col-span-2 relative z-30 flex flex-col px-6 justify-center text-left border border-primary rounded-lg">
+              <div className="col-span-2 relative z-30 flex flex-col px-6 justify-center text-left border border-primary rounded-lg">
                 <div className="flex divide-x divide-gray-300">
                   <div className="flex-1 flex flex-col gap-0.3">
-                    <span className="text-white text-xs block">Total Target</span>
-                    <span className="text-white text-lg font-bold sm:text-2xl">89%</span>
+                    <span className="text-primary text-xs block">Total Target</span>
+                    <span className="text-primary text-lg font-bold sm:text-2xl">89%</span>
                   </div>
                   <div className="flex-1 pl-4 flex flex-col gap-0.3">
-                    <span className="text-white text-xs block">Total Actual</span>
-                    <span className="text-white text-lg font-bold sm:text-2xl">120%</span>
+                    <span className="text-primary text-xs block">Total Actual</span>
+                    <span className="text-primary text-lg font-bold sm:text-2xl">120%</span>
                   </div>
                 </div>
               </div>
