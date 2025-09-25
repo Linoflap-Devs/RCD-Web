@@ -172,9 +172,9 @@ export function DivisionDashboard({
     <div className="space-y-5">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-stretch">
         <Card className="col-span-4 rounded-lg border bg-white shadow-none">
-          <CardHeader className="flex items-center justify-between border-b">
+          <CardHeader className="flex items-center justify-between py-3">
             <div className="flex flex-1 flex-col justify-center gap-1 sm:pb-0">
-              <CardTitle>
+              <CardTitle className="text-primary">
                 Top 10 Divisions
               </CardTitle>
               <CardDescription>
@@ -242,9 +242,9 @@ export function DivisionDashboard({
       </div>
 
       <Card className="overflow-x-auto rounded-lg shadow-none py-0 pb-6">
-        <CardHeader className="flex flex-col items-stretch border-b !p-0 sm:flex-row">
+        <CardHeader className="flex flex-col items-stretch !p-0 sm:flex-row border-b">
           <div className="flex flex-1 flex-col justify-center gap-1 px-6 pb-3 sm:pb-0">
-            <CardTitle>Total Target Sales</CardTitle>
+            <CardTitle className="text-primary">Total Target Sales</CardTitle>
             <CardDescription>
               Showing the sales target for the current month.
             </CardDescription>
@@ -362,9 +362,9 @@ export function DivisionDashboard({
       </Card>
 
       <Card className="overflow-x-auto rounded-lg gap-0 shadow-none">
-        <CardHeader className="flex items-center justify-between border-b">
+        <CardHeader className="flex items-center justify-between pt-3 pb-6">
           <div className="flex flex-1 flex-col justify-center gap-1 pb-3 sm:pb-0">
-            <CardTitle>
+            <CardTitle className="text-primary">
               Division Sales <span className="text-muted-foreground">({totalDivisions})</span>
             </CardTitle>
             <CardDescription>
@@ -408,7 +408,7 @@ export function DivisionDashboard({
         </CardHeader>
 
         {view === "chart" ? (
-          <CardContent className="h-75 min-w-[800px] my-4">
+          <CardContent className="h-75 min-w-[800px]">
             <ChartContainer
               className="h-full w-full"
               config={{

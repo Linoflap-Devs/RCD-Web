@@ -82,9 +82,9 @@ export function TeamDashboard({
     <div className="space-y-5">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4 items-stretch">
         <Card className="rounded-lg border shadow-none bg-white gap-3">
-          <CardHeader className="flex items-center justify-between gap-2 border-b">
+          <CardHeader className="flex items-center justify-between gap-2 py-2">
             <div className="flex flex-1 flex-col justify-center gap-1 sm:pb-0">
-              <CardTitle>
+              <CardTitle className="text-primary">
                 Top 10 Sales Persons
               </CardTitle>
               <CardDescription>
@@ -141,7 +141,7 @@ export function TeamDashboard({
               {chartDataSalesPersons.slice(0, 10).map((dev, index) => (
                 <div
                   key={dev.name}
-                  className="flex items-center justify-between pb-1 border-b text-sm"
+                  className="flex items-center justify-between pb-1 text-sm border-b"
                 >
                   <span className="flex items-center font-regular gap-2 text-gray-700 text-sm">
                     <span
@@ -160,9 +160,9 @@ export function TeamDashboard({
         </Card>
 
         <Card className="rounded-lg border shadow-none bg-white">
-          <CardHeader className="flex items-center justify-between gap-2 border-b">
+          <CardHeader className="flex items-center justify-between gap-2 py-3">
             <div className="flex flex-1 flex-col justify-center gap-1 sm:pb-0">
-              <CardTitle>
+              <CardTitle className="text-primary">
                 Top 10 Unit Managers
               </CardTitle>
               <CardDescription>
@@ -215,9 +215,9 @@ export function TeamDashboard({
       </div>
 
       <Card className="overflow-x-auto rounded-lg shadow-none">
-        <CardHeader className="flex items-center justify-between gap-2 border-b">
+        <CardHeader className="flex items-center justify-between gap-2 ">
           <div className="flex flex-1 flex-col justify-center gap-1 sm:pb-0">
-            <CardTitle>
+            <CardTitle className="text-primary">
               Developer Sales{" "}
               <span className="text-muted-foreground">(26 out of 40)</span>
             </CardTitle>

@@ -125,11 +125,11 @@ export const forecastColumns: ColumnDef<CommissionForecastItem>[] = [
   //       ? (row.getValue("DPPaid") as number).toLocaleString()
   //       : "0",
   // },
-  // {
-  //   accessorKey: "DPPercentPaid",
-  //   header: "DP % Paid",
-  //   cell: ({ row }) => `${row.getValue("DPPercentPaid") ?? 0}%`,
-  // },
+  {
+    accessorKey: "DPPercentPaid",
+    header: "DP % Paid",
+    cell: ({ row }) => `${row.getValue("DPPercentPaid") ?? 0}%`,
+  },
   // {
   //   accessorKey: "MonthlyDP",
   //   header: "Monthly DP",
@@ -146,11 +146,11 @@ export const forecastColumns: ColumnDef<CommissionForecastItem>[] = [
         ? (row.getValue("NetTotalTCP") as number).toLocaleString()
         : "0",
   },
-  // {
-  //   accessorKey: "PercentRelease",
-  //   header: "Release %",
-  //   cell: ({ row }) => `${row.getValue("PercentRelease") ?? 0}%`,
-  // },
+  {
+    accessorKey: "PercentRelease",
+    header: "Release %",
+    cell: ({ row }) => `${row.getValue("PercentRelease") ?? 0}%`,
+  },
   {
     accessorKey: "ForeCastPercentDPPaid",
     header: "Forecast DP % Paid",
@@ -240,9 +240,9 @@ export function CollectionForecastDashboard({
     <div className="space-y-5">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 items-stretch">
         <Card className="rounded-lg border shadow-none bg-white">
-          <CardHeader className="flex items-center gap-2 border-b">
+          <CardHeader className="flex items-center gap-2">
             <div className="flex flex-1 flex-col justify-center gap-1 sm:pb-0">
-              <CardTitle>
+              <CardTitle className="text-primary">
                 DP Paid Progress
               </CardTitle>
               <CardDescription>
@@ -253,7 +253,7 @@ export function CollectionForecastDashboard({
 
           <CardContent className="flex justify-center items-center">
             <ChartContainer config={chartConfig} className="aspect-square h-50">
-              <ResponsiveContainer height="100%" width="100%" className="mt-6">
+              <ResponsiveContainer height="100%" width="100%" className="mt-3">
                 <RadialBarChart
                   data={chartDataDP}
                   startAngle={180}
@@ -336,9 +336,9 @@ export function CollectionForecastDashboard({
         </Card>
 
         <Card className="col-span-2 rounded-lg border shadow-none bg-white">
-          <CardHeader className="flex items-center gap-2 border-b">
+          <CardHeader className="flex items-center gap-2">
             <div className="flex flex-1 flex-col justify-center gap-1 sm:pb-0">
-              <CardTitle>
+              <CardTitle className="text-primary">
                 Top 10 Buyer Contribution / Forecast
               </CardTitle>
               <CardDescription>
@@ -349,7 +349,7 @@ export function CollectionForecastDashboard({
           <CardContent className="px-2 sm:p-6 sm:pb-0">
             <ChartContainer
               config={chartConfigForecast}
-              className="aspect-auto h-55 w-full"
+              className="aspect-auto h-65 w-full"
             >
               <BarChart
                 data={chartDataForecastBuyers}
@@ -411,9 +411,9 @@ export function CollectionForecastDashboard({
       </div>
 
       <Card className="rounded-lg border shadow-none bg-white">
-        <CardHeader className="flex items-center gap-2 border-b">
+        <CardHeader className="flex items-center gap-2">
           <div className="flex flex-1 flex-col justify-center gap-1 sm:pb-0">
-            <CardTitle>
+            <CardTitle className="text-primary">
               Reservation Date vs Net Contract Price
             </CardTitle>
             <CardDescription>
@@ -429,8 +429,6 @@ export function CollectionForecastDashboard({
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={forecastMonthlyData}>
                 <CartesianGrid strokeDasharray="3 3" />
-
-                {/* X-axis uses month */}
                 <XAxis
                   dataKey="month"
                   tickFormatter={(date) =>
@@ -480,9 +478,9 @@ export function CollectionForecastDashboard({
         </CardContent>
       </Card>
       <Card className="rounded-lg border shadow-none bg-white">
-        <CardHeader className="flex items-center justify-between gap-2 border-b">
+        <CardHeader className="flex items-center justify-between gap-2">
           <div className="flex flex-1 flex-col justify-center gap-1 sm:pb-0">
-            <CardTitle>
+            <CardTitle className="text-primary">
               Data Collection Forecasr Overview
             </CardTitle>
             <CardDescription>
