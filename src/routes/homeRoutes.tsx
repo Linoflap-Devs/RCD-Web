@@ -40,6 +40,33 @@ export const getHomeRoutes = (pathname: string, userType: number): SidebarGroupD
           active: pathname === ("/agents"),
           allowedUserTypes: [1, 3, 4, 5],
         },
+        {
+          label: "Users List",
+          icon: Users2,
+          href: "/users",
+          active: pathname === "/users",
+          allowedUserTypes: [1, 3, 4, 5],
+          subItems: [
+            {
+              label: "All Users",
+              href: "/users",
+              active: pathname === "/users",
+              allowedUserTypes: [1, 3, 4, 5]
+            },
+            {
+              label: "Managers", // for testing only
+              href: "/users/managers",
+              active: pathname === "/users/managers",
+              allowedUserTypes: [1, 3, 4, 5]
+            },
+            {
+              label: "Executives", // for testing only
+              href: "/users/executives",
+              active: pathname === "/users/executives",
+              allowedUserTypes: [1, 3, 4, 5]
+            },
+          ],
+        },
       ],
     },
       {

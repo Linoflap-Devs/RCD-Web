@@ -49,7 +49,7 @@ export function NavMain({ groups }: NavMainProps) {
       {groups.map((group) => (
         <div key={group.label} className="mb-4">
           <SidebarGroupLabel>{group.label}</SidebarGroupLabel>
-          <SidebarMenu>
+          <SidebarMenu className="gap-0.5">
             {group.routes.map((route) =>
               route.subItems && route.subItems.length > 0 ? (
                 // Routes with sub-items
