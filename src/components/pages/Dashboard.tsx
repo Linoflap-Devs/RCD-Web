@@ -1,10 +1,10 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { Card, CardContent } from "../../components/ui/card";
+import { Card, CardContent, CardDescription, CardTitle } from "../../components/ui/card";
 import { Badge } from "../../components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs";
-import { Building, Coins, FolderKanban, UserStar } from "lucide-react";
+import { Building, Coins, FolderKanban, Users, UserStar } from "lucide-react";
 import { useEffect, useState } from "react";
 import { DashboardItem, getDashboardWeb } from "@/services/dashboard/dashboard.api";
 import { DivisionDashboard } from "./DivisionDashboard";
@@ -21,9 +21,9 @@ export default function Dashboard() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // setLoading(true);
-    // setError(null);
-    
+    setLoading(true);
+    setError(null);
+
     getDashboardWeb()
       .then((res) => {
         if (res.success) {
@@ -36,10 +36,10 @@ export default function Dashboard() {
         console.error("Error fetching dashboard data:", err);
         setError(err.message || "An error occured.");
       })
-      // .finally(() =>{
-      //   setLoading(false);
-      // });
-    }, []);
+    .finally(() =>{
+     setLoading(false);
+    });
+  }, []);
 
   console.log(dashboardData);
 
@@ -59,11 +59,11 @@ export default function Dashboard() {
 
   return (
     <div className="h-full w-full px-2 space-y-3">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-        <Card className="bg-primary md:col-span-2 rounded-lg shadow-sm relative">
-          <CardContent className="flex flex-col justify-center py-4 px-6 relative z-10">
-            <div className="max-w-md">
-              <h1 className="text-xl font-bold text-white mb-1">
+      <div className="grid grid-cols-1 gap-4">
+        <Card className="bg-primary md:col-span-2 rounded-md shadow-sm relative">
+          <CardContent className="flex flex-col justify-center py-3 px-6 relative z-10">
+            <div className="max-w-full">
+              <h1 className="text-2xl font-bold text-white mb-1">
                 Welcome to RCD Realty Marketing Corp
               </h1>
               <p className="text-sm text-[#F1F1F1]">
@@ -84,105 +84,126 @@ export default function Dashboard() {
             />
           </div>
         </Card>
-
-        <Card className="bg-primary rounded-lg border  flex flex-col justify-center">
-          <CardContent className="flex flex-col gap-2">
-            <div className="space-y-1">
-              <div className="text-sm text-white">Total Sales Force</div>
-              <div className="text-2xl text-white font-bold tracking-tight flex items-center">
-                <UserStar className="h-4 w-4 mr-2 " /> <span>{dashboardData?.KPI.totalAgents.toLocaleString() ?? 0}</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 items-stretch">
-        <Card className="bg-white rounded-lg border flex flex-col justify-center shadow-none">
-          <CardContent className="flex flex-col gap-2">
-            <div className="space-y-1">
-              <div className="text-sm text-muted-foreground">Total Active Divisions</div>
-              <div className="text-2xl font-bold tracking-tight text-primary flex items-center">
-                <Building className="h-4 w-4 mr-2" /> <span>{dashboardData?.KPI.totalDivisions.toLocaleString() ?? 0}</span>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <Card className="bg-white border flex flex-col justify-center shadow-none rounded-md">
+            <CardContent>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center justify-center w-14 h-14 rounded-sm bg-primary text-white border">
+                  <Users className="h-6 w-6" />
+                </div>
+                <div className="flex flex-col space-y-1">
+                  <div className="text-2xl font-semibold tracking-tight">{dashboardData?.KPI.totalAgents.toLocaleString() ?? 0}</div>
+                  <div className="text-xs text-muted-foreground">Total Active Salesforce</div>
+                </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
 
-        <Card className="rounded-lg border flex flex-col justify-center shadow-none">
-          <CardContent className="flex flex-col gap-2">
-            <div className="space-y-1">
-              <div className="text-sm text-muted-foreground">Total Projects</div>
-              <div className="text-2xl font-bold tracking-tight text-primary flex items-center">
-                <FolderKanban className="h-4 w-4 mr-2" /> <span>{dashboardData?.KPI.totalProjects.toLocaleString() ?? 0}</span>
+          <Card className="bg-white border flex flex-col justify-center shadow-none not-user-invalid:rounded-md">
+            <CardContent>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center justify-center w-14 h-14 rounded-sm bg-[#F28E2B] text-white border">
+                  <Building className="h-6 w-6" />
+                </div>
+                <div className="flex flex-col space-y-1">
+                  <div className="text-2xl font-semibold tracking-tight">{dashboardData?.KPI.totalDivisions.toLocaleString() ?? 0}</div>
+                  <div className="text-xs text-muted-foreground">Total Divisions</div>
+                </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
 
-        <Card className="rounded-lg border flex flex-col justify-center shadow-none">
-          <CardContent className="flex flex-col gap-2">
-            <div className="space-y-1">
-              <div className="text-sm text-muted-foreground">Total Sales Previous Year</div>
-              <div className="text-2xl font-bold tracking-tight text-primary flex items-center">
-                <Coins className="h-4 w-4 mr-2" /> <span>{dashboardData?.KPI.totalSalesPreviousYear.toLocaleString() ?? 0}</span>
+          <Card className="bg-white border flex flex-col justify-center shadow-none rounded-md">
+            <CardContent>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center justify-center w-14 h-14 rounded-sm bg-[#FFBE0B] text-white border">
+                  <Building className="h-6 w-6" />
+                </div>
+                <div className="flex flex-col space-y-1">
+                  <div className="text-2xl font-semibold tracking-tight">{dashboardData?.KPI.totalProjects.toLocaleString() ?? 0}</div>
+                  <div className="text-xs text-muted-foreground">Total Projects</div>
+                </div>
               </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-white border flex flex-col justify-center shadow-none rounded-md">
+            <CardContent>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center justify-center w-14 h-14 rounded-sm bg-[#76B041] text-white border">
+                  <Building className="h-6 w-6" />
+                </div>
+                <div className="flex flex-col space-y-1">
+                  <div className="text-2xl font-semibold tracking-tight">{dashboardData?.KPI.totalSalesPreviousYear.toLocaleString() ?? 0}</div>
+                  <div className="text-xs text-muted-foreground">Total Sales Previous Year</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Right column (transparent) */}
+        <Card className="bg-transparent border-none flex flex-col justify-center shadow-none">
+          <CardContent>
+            <div className="mb-5">
+              <CardTitle className="text-xl font-semibold">
+                Total Sales Comparison
+              </CardTitle>
+              <CardDescription className="text-sm text-muted-foreground">
+                Showing sales comparison in previous month and current month
+              </CardDescription>
             </div>
-          </CardContent>
-        </Card>
 
-        <Card className="flex flex-col col-span-2 rounded-lg  gap-4 relative overflow-hidden text-primary shadow-none">
-          {(() => {
-            // normalize bar widths (relative to highest value)
-            const maxValue = Math.max(currentMonth, lastYearMonth);
-            const currentWidth = (currentMonth / maxValue) * 100;
-            const previousWidth = (lastYearMonth / maxValue) * 100;
+            {(() => {
+              // normalize bar widths (relative to highest value)
+              const maxValue = Math.max(currentMonth, lastYearMonth);
+              const currentWidth = (currentMonth / maxValue) * 100;
+              const previousWidth = (lastYearMonth / maxValue) * 100;
 
-            return (
-              <>
-                {/* Row: Current Month */}
-                <div className="flex flex-col gap-1 px-6">
-                  <div className="flex justify-between text-xs pb-1">
+              return (
+                <div className="space-y-5">
+                  <div className="flex flex-col gap-2">
                     <Badge
                       variant="secondary"
-                      className="px-2 py-0.5 flex items-center gap-1 bg-primary/20 text-primary"
+                      className="px-2 py-0.5 text-xs flex items-center gap-1 bg-primary/20 text-primary"
                     >
                       <span className="h-2 w-2 rounded-full bg-primary/70 mr-1"></span>
                       Sales Current Month:
                       <span className="ml-2 font-medium">{currentMonth.toLocaleString()}</span>
                     </Badge>
-                  </div>
-                  <div className="w-full flex rounded-full overflow-hidden">
-                    <div
-                      className="h-2 bg-primary/70"
-                      style={{ width: `${currentWidth}%` }}
-                    ></div>
-                  </div>
-                </div>
-
-                {/* Row: Previous Month */}
-                <div className="flex flex-col gap-1 px-6">
-                  <div className="flex justify-between text-xs">
-                    <div className="px-2 py-0.5 flex items-center gap-1">
-                      <span className="h-2 w-2 rounded-full bg-primary/30 mr-1"></span>
-                      Sales Previous Month:
-                      <span className="ml-2 font-medium">{lastYearMonth.toLocaleString()}</span>
+                    <div className="w-full flex rounded-full overflow-hidden">
+                      <div
+                        className="h-4.5 bg-primary"
+                        style={{ width: `${currentWidth}%` }}
+                      ></div>
                     </div>
                   </div>
-                  <div className="w-full flex rounded-full overflow-hidden">
-                    <div
-                      className="h-2 bg-primary/30"
-                      style={{ width: `${previousWidth}%` }}
-                    ></div>
+                  <div className="flex flex-col gap-1">
+                    <div className="flex justify-between text-xs">
+                      <div className="px-2 py-0.5 flex items-center gap-1">
+                        <span className="h-2 w-2 rounded-full bg-primary/30 mr-1"></span>
+                        Sales Previous Month:
+                        <span className="ml-2 font-medium">{lastYearMonth.toLocaleString()}</span>
+                      </div>
+                    </div>
+                    <div className="w-full flex rounded-full overflow-hidden">
+                      <div
+                        className="h-4.5 bg-primary/70"
+                        style={{ width: `${previousWidth}%` }}
+                      ></div>
+                    </div>
                   </div>
                 </div>
-              </>
-            );
-          })()}
+              );
+            })()}
+          </CardContent>
         </Card>
       </div>
 
-      <div>
+      {/* <div>
         <Tabs
           value={activeTab}
           onValueChange={handleTabChange}
@@ -221,7 +242,7 @@ export default function Dashboard() {
             />
           </TabsContent>
         </Tabs>
-      </div>
+      </div> */}
     </div>
   );
 }
