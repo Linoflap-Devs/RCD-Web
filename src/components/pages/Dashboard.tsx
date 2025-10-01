@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardDescription, CardTitle } from "../../components/ui/card";
 import { Badge } from "../../components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs";
-import { Building, Coins, FolderKanban, Users, UserStar } from "lucide-react";
+import { BarChart3, BarChartBig, Building, Coins, FolderClosed, FolderKanban, Users, UserStar } from "lucide-react";
 import { useEffect, useState } from "react";
 import { DashboardItem, getDashboardWeb } from "@/services/dashboard/dashboard.api";
 import { DivisionDashboard } from "./DivisionDashboard";
@@ -36,12 +36,10 @@ export default function Dashboard() {
         console.error("Error fetching dashboard data:", err);
         setError(err.message || "An error occured.");
       })
-    .finally(() =>{
-     setLoading(false);
-    });
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
-
-  console.log(dashboardData);
 
   const currentMonth = dashboardData?.KPI.totalSalesCurrentMonth ?? 0;
   const lastYearMonth = dashboardData?.KPI?.totalSalesLastMonth ?? 0;
@@ -57,8 +55,28 @@ export default function Dashboard() {
     forecast: "Collection Forecast Report"
   }
 
+  const now = new Date();
+
+  const formattedDate = now.toLocaleDateString("en-US", {
+    weekday: "long", // e.g., Monday
+    month: "long",   // e.g., October
+    day: "numeric",
+    year: "numeric",
+  });
+
   return (
-    <div className="h-full w-full px-2 space-y-3">
+    <div className="h-full w-full px-2 space-y-4">
+      {/* <div className="mb-6 flex justify-between">
+        <div className="">
+          <div className="text-xl font-bold">Hello, System Administrator</div>
+          <div className="text-sm text-muted-foreground">
+            RCD Realty Marketing Corp — Improving Lives
+          </div>
+        </div>
+        <div className="text-sm mt-1 justify-center items-center">
+          {formattedDate}
+        </div>
+      </div> */}
       <div className="grid grid-cols-1 gap-4">
         <Card className="bg-primary md:col-span-2 rounded-md shadow-sm relative">
           <CardContent className="flex flex-col justify-center py-3 px-6 relative z-10">
@@ -120,7 +138,7 @@ export default function Dashboard() {
             <CardContent>
               <div className="flex items-center gap-4">
                 <div className="flex items-center justify-center w-14 h-14 rounded-sm bg-[#FFBE0B] text-white border">
-                  <Building className="h-6 w-6" />
+                  <FolderClosed className="h-6 w-6" />
                 </div>
                 <div className="flex flex-col space-y-1">
                   <div className="text-2xl font-semibold tracking-tight">{dashboardData?.KPI.totalProjects.toLocaleString() ?? 0}</div>
@@ -134,7 +152,7 @@ export default function Dashboard() {
             <CardContent>
               <div className="flex items-center gap-4">
                 <div className="flex items-center justify-center w-14 h-14 rounded-sm bg-[#76B041] text-white border">
-                  <Building className="h-6 w-6" />
+                  <Coins className="h-6 w-6" />
                 </div>
                 <div className="flex flex-col space-y-1">
                   <div className="text-2xl font-semibold tracking-tight">{dashboardData?.KPI.totalSalesPreviousYear.toLocaleString() ?? 0}</div>
@@ -145,7 +163,6 @@ export default function Dashboard() {
           </Card>
         </div>
 
-        {/* Right column (transparent) */}
         <Card className="bg-transparent border-none flex flex-col justify-center shadow-none">
           <CardContent>
             <div className="mb-5">
@@ -176,7 +193,7 @@ export default function Dashboard() {
                     </Badge>
                     <div className="w-full flex rounded-full overflow-hidden">
                       <div
-                        className="h-4.5 bg-primary"
+                        className="h-4 bg-primary"
                         style={{ width: `${currentWidth}%` }}
                       ></div>
                     </div>
@@ -191,7 +208,7 @@ export default function Dashboard() {
                     </div>
                     <div className="w-full flex rounded-full overflow-hidden">
                       <div
-                        className="h-4.5 bg-primary/70"
+                        className="h-4 bg-primary/70"
                         style={{ width: `${previousWidth}%` }}
                       ></div>
                     </div>
@@ -203,15 +220,26 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      {/* <div>
+      <div>
         <Tabs
           value={activeTab}
           onValueChange={handleTabChange}
-          className="w-full"
+          className="w-full border-none"
         >
-          <div className="flex items-center justify-start mb-4 pt-4">
-            <h1 className="text-lg font-semibold ml-1 mr-4">{titleMap[activeTab]}</h1>
-            <TabsList className="w-auto">
+          <div className="mt-7 flex items-center space-x-4 px-3 py-1">
+            <FolderKanban className="w-6 h-6 text-primary mt-1" />
+            <div>
+              <CardTitle className="text-xl font-semibold">
+                Data Analytics and Reports
+              </CardTitle>
+              <CardDescription className="text-sm text-muted-foreground">
+                Showing analytic reports on a variety of topics.
+              </CardDescription>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-start mb-4 pt-4 border-b">
+            <TabsList className="w-auto bg-transparent border-none p-0 h-8 flex justify-between space-x-5">
               <TabsTrigger value="divisions">Division Sales</TabsTrigger>
               <TabsTrigger value="team">Team Sales</TabsTrigger>
               <TabsTrigger value="forecast">Collection Forecast</TabsTrigger>
@@ -242,7 +270,7 @@ export default function Dashboard() {
             />
           </TabsContent>
         </Tabs>
-      </div> */}
+      </div>
     </div>
   );
 }

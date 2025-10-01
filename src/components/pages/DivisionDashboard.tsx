@@ -164,20 +164,20 @@ export function DivisionDashboard({
 
   const filteredDivisionSales = DivisionSales?.filter((item) => {
     const division = item.Division ?? "";
-    
+
     return regex.test(division);
   });
 
   return (
     <div className="space-y-5">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-stretch">
-        <Card className="col-span-4 rounded-lg border bg-white shadow-none">
-          <CardHeader className="flex items-center justify-between py-3">
+        <Card className="col-span-4 rounded-md border bg-white shadow-none">
+          <CardHeader className="flex items-center justify-between py-1 border-b">
             <div className="flex flex-1 flex-col justify-center gap-1 sm:pb-0">
-              <CardTitle className="text-primary">
+              <CardTitle className="font-semibold">
                 Top 10 Divisions
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="font-normal">
                 Showing the top 10 division for the current month
               </CardDescription>
             </div>
@@ -191,7 +191,7 @@ export function DivisionDashboard({
                 return (
                   <div
                     key={division.name}
-                    className="relative flex items-center justify-between px-2 py-1 rounded-lg transition-all hover:bg-primary/10"
+                    className="relative flex items-center justify-between px-2 py-1.5 transition-all hover:bg-primary/10"
                   >
                     <div
                       style={{ backgroundColor: division.fill }}
@@ -211,12 +211,12 @@ export function DivisionDashboard({
                 );
               })}
             </div>
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-1.5">
               {sortedDivisions.slice(5, 10).map((division, index) => {
                 return (
                   <div
                     key={division.name}
-                    className="relative flex items-center justify-between px-2 py-1 rounded-lg transition-all hover:bg-primary/10"
+                    className="relative flex items-center justify-between px-2 py-1.5 transition-all hover:bg-primary/10"
                   >
 
                     <div

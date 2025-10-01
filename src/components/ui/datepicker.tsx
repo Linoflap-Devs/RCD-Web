@@ -14,7 +14,7 @@ export default function DatePickerMonthYear() {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" className="justify-between font-regular">
+        <Button variant="cleanwhite" className="justify-between font-regular">
           {selectedMonth
             ? selectedMonth.toLocaleString("default", {
                 month: "long",
