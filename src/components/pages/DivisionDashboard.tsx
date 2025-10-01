@@ -241,39 +241,53 @@ export function DivisionDashboard({
         </Card>
       </div>
 
-      <Card className="overflow-x-auto rounded-lg shadow-none py-0 pb-6">
-        <CardHeader className="flex flex-col items-stretch !p-0 sm:flex-row border-b">
-          <div className="flex flex-1 flex-col justify-center gap-1 px-6 pb-3 sm:pb-0">
-            <CardTitle className="text-primary">Total Target Sales</CardTitle>
-            <CardDescription>
-              Showing the sales target for the current month.
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 items-stretch">
+        <Card className="rounded-lg border flex flex-col justify-center shadow-none">
+          <CardContent className="flex flex-col gap-2">
+            <div className="space-y-1">
+              <div className="text-2xl font-bold tracking-tight flex items-center">
+                <span>{TotalSalesTarget?.TotalTargetMonth.toLocaleString() ?? 0}</span>
+              </div>
+              <div className="text-sm text-muted-foreground">Total Sales Target</div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="rounded-lg border flex flex-col justify-center shadow-none">
+          <CardContent className="flex flex-col gap-2">
+            <div className="space-y-1">
+              <div className="text-2xl font-bold tracking-tight flex items-center">
+                <span>{TotalSalesTarget?.TotalCurrentMonth.toLocaleString() ?? 0}</span>
+              </div>
+              <div className="text-sm text-muted-foreground">Total Actual</div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-[#76B041] rounded-lg border flex flex-col justify-center shadow-none">
+          <CardContent className="flex flex-col gap-2">
+            <div className="space-y-1">
+              <div className="text-2xl font-bold text-white tracking-tight flex items-center">
+                <span>{TotalSalesTarget?.TotalReachPercent.toLocaleString() ?? 0}</span>
+              </div>
+              <div className="text-sm text-white">Total Reach</div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card className="overflow-x-auto rounded-lg shadow-none pb-6">
+        <CardHeader className="flex items-center justify-between py-1 border-b">
+          <div className="flex flex-1 flex-col justify-center gap-1 sm:pb-0">
+            <CardTitle className="font-semibold">
+              Total Sales Target
+            </CardTitle>
+            <CardDescription className="font-normal">
+              Showing the total sales target for the current month
             </CardDescription>
           </div>
-          <div className="flex">
-            <div className="flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l sm:border-t-0 sm:border-l sm:px-8 sm:py-6">
-              <span className="text-muted-foreground text-xs">
-                Total Target
-              </span>
-              <span className="text-lg leading-none font-bold sm:text-3xl">
-                {TotalSalesTarget?.TotalTargetMonth.toLocaleString() ?? 0}
-              </span>
-            </div>
-            <div className="flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l sm:border-t-0 sm:border-l sm:px-8 sm:py-6">
-              <span className="text-muted-foreground text-xs">
-                Total Actual
-              </span>
-              <span className="text-lg leading-none font-bold sm:text-3xl">
-                {TotalSalesTarget?.TotalCurrentMonth.toLocaleString() ?? 0}
-              </span>
-            </div>
-            <div className="flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l sm:border-t-0 sm:border-l sm:px-8 sm:py-6">
-              <span className="text-muted-foreground text-xs">
-                Total Reach
-              </span>
-              <span className="text-lg leading-none font-bold sm:text-3xl">
-                {TotalSalesTarget?.TotalReachPercent ?? 0}%
-              </span>
-            </div>
+          <div className="flex items-center gap-2">
+            <DatePickerMonthYear />
           </div>
         </CardHeader>
         <CardContent className="h-64 min-w-[800px]">
@@ -362,9 +376,9 @@ export function DivisionDashboard({
       </Card>
 
       <Card className="overflow-x-auto rounded-lg gap-0 shadow-none">
-        <CardHeader className="flex items-center justify-between pt-3 pb-6">
+        <CardHeader className="flex items-center justify-between pt-3 pb-6 border-b">
           <div className="flex flex-1 flex-col justify-center gap-1 pb-3 sm:pb-0">
-            <CardTitle className="text-primary">
+            <CardTitle>
               Division Sales <span className="text-muted-foreground">({totalDivisions})</span>
             </CardTitle>
             <CardDescription>
@@ -418,7 +432,7 @@ export function DivisionDashboard({
             >
               <AreaChart
                 data={divisionsSalesData}
-                margin={{ top: 20, right: 20, left: 0, bottom: 50 }}
+                margin={{ top: 40, right: 20, left: 0, bottom: 50 }}
               >
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
                 <XAxis

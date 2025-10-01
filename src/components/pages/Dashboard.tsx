@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardDescription, CardTitle } from "../../components/ui/card";
 import { Badge } from "../../components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs";
-import { BarChart3, BarChartBig, Building, Coins, FolderClosed, FolderKanban, Users, UserStar } from "lucide-react";
+import { Building, Coins, FolderClosed, FolderKanban, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { DashboardItem, getDashboardWeb } from "@/services/dashboard/dashboard.api";
 import { DivisionDashboard } from "./DivisionDashboard";
@@ -65,7 +65,7 @@ export default function Dashboard() {
   });
 
   return (
-    <div className="h-full w-full px-2 space-y-4">
+    <div className="h-full w-full px-2 space-y-3">
       {/* <div className="mb-6 flex justify-between">
         <div className="">
           <div className="text-xl font-bold">Hello, System Administrator</div>
@@ -81,7 +81,7 @@ export default function Dashboard() {
         <Card className="bg-primary md:col-span-2 rounded-md shadow-sm relative">
           <CardContent className="flex flex-col justify-center py-3 px-6 relative z-10">
             <div className="max-w-full">
-              <h1 className="text-2xl font-bold text-white mb-1">
+              <h1 className="text-xl font-bold text-white mb-1">
                 Welcome to RCD Realty Marketing Corp
               </h1>
               <p className="text-sm text-[#F1F1F1]">
@@ -229,7 +229,7 @@ export default function Dashboard() {
           <div className="mt-7 flex items-center space-x-4 px-3 py-1">
             <FolderKanban className="w-6 h-6 text-primary mt-1" />
             <div>
-              <CardTitle className="text-xl font-semibold">
+              <CardTitle className="text-lg font-semibold">
                 Data Analytics and Reports
               </CardTitle>
               <CardDescription className="text-sm text-muted-foreground">
