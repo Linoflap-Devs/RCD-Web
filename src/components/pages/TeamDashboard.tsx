@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/chart";
 import { ChartBar, Table, User } from "lucide-react";
 import { useEffect, useState } from "react";
-import DatePickerMonthYear from "../../components/ui/datepicker";
+import DatePickerDate from "../../components/ui/datepicker";
 import { DeveloperSalesItem, Top10SalesPersonsItem, Top10UnitManagersItem } from "@/services/dashboard/dashboard.api";
 import { formattedName } from "@/hooks/use-formattedname";
 import { getTop10SalesPersons, Top10SalesPersonItem } from "@/services/sales-person/salesperson.api";
@@ -45,14 +45,10 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 interface TeamSalesProps {
-  Top10SalesPersons?: Top10SalesPersonsItem[];
-  Top10UnitManagers?: Top10UnitManagersItem[];
   DeveloperSales?: DeveloperSalesItem[];
 }
 
 export function TeamDashboard({
-  //Top10SalesPersons,
-  //Top10UnitManagers,
   DeveloperSales,
 }: TeamSalesProps) {
   const [view, setView] = useState("chart");
@@ -154,7 +150,7 @@ export function TeamDashboard({
               </CardDescription>
             </div>
             <div className="flex items-center gap-2">
-              <DatePickerMonthYear value={selectedTop10SalesPersons} onChange={setSelectedTop10SalesPersons} />
+              <DatePickerDate value={selectedTop10SalesPersons} onChange={setSelectedTop10SalesPersons} />
             </div>
           </CardHeader>
 
@@ -232,7 +228,7 @@ export function TeamDashboard({
               </CardDescription>
             </div>
             <div className="flex items-center gap-2">
-              <DatePickerMonthYear value={selectedTop10UnitManagers} onChange={setSelectedTop10UnitManagers} />
+              <DatePickerDate value={selectedTop10UnitManagers} onChange={setSelectedTop10UnitManagers} />
             </div>
           </CardHeader>
 

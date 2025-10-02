@@ -259,15 +259,12 @@ export default function Dashboard() {
           <TabsContent value="divisions">
             <DivisionDashboard
               loading={loading}
-              top10Division={dashboardData?.Top10Divisions}
               DivisionSales={dashboardData?.DivisionSales}
               TotalSalesTarget={dashboardData?.SalesTarget}
             />
           </TabsContent>
           <TabsContent value="team">
             <TeamDashboard
-              Top10SalesPersons={dashboardData?.Top10SalesPersons}
-              Top10UnitManagers={dashboardData?.Top10UnitManagers}
               DeveloperSales={dashboardData?.DeveloperSales}
             />
           </TabsContent>

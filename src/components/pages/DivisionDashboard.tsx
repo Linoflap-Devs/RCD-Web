@@ -33,14 +33,13 @@ import {
 } from "../../components/ui/select";
 import { useState, useEffect } from "react";
 import { ChartBar, FileChartColumnIncreasingIcon, Search, SquareMousePointer, Table, TargetIcon } from "lucide-react";
-import DatePickerMonthYear from "../../components/ui/datepicker";
+import DatePickerDate from "../../components/ui/datepicker";
 import { DataTable } from "../ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { Input } from "../ui/input";
 import { DivisionSalesItem, SalesTargetItem } from "@/services/dashboard/dashboard.api";
 import { useDebounce } from "@/hooks/use-debounce";
 import { getTop10Divisions, Top10DivisionsItem, Top10DivisionsResponse } from "@/services/divisions/division.api";
-import DatePickerDate from "../../components/ui/datepicker";
 
 const columnsSalesItem: ColumnDef<DivisionSalesItem>[] = [
   {
@@ -109,7 +108,6 @@ export const chartConfig = {
 
 interface DivisionDashboardProps {
   loading: boolean;
-  top10Division?: Top10DivisionsItem[];
   DivisionSales?: DivisionSalesItem[];
   TotalSalesTarget?: SalesTargetItem;
 }
@@ -389,7 +387,7 @@ export function DivisionDashboard({
               </CardDescription>
             </div>
             <div className="flex items-center gap-2">
-              <DatePickerMonthYear value={selectedTop10DivisionDate} onChange={setSelectedTop10DivisionDate} />
+              <DatePickerDate value={selectedTop10DivisionDate} onChange={setSelectedTop10DivisionDate} />
             </div>
           </CardHeader>
           <CardContent className="grid grid-cols-2 gap-8">
