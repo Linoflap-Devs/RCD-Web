@@ -20,8 +20,6 @@ export default function Dashboard() {
   const [dashboardData, setDashboardData] = useState<DashboardItem | undefined>(undefined);
   const [error, setError] = useState<string | null>(null);
 
-  console.log(dashboardData);
-
   useEffect(() => {
     setLoading(true);
     setError(null);
@@ -50,12 +48,6 @@ export default function Dashboard() {
   const handleTabChange = (value: string) => {
     router.replace(`/dashboard?tab=${value}`);
   };
-
-  const titleMap: Record<string, string> = {
-    divisions: "Division Sales Report",
-    team: "Team Sales Report",
-    forecast: "Collection Forecast Report"
-  }
 
   const now = new Date();
 

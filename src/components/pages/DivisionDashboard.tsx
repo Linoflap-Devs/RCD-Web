@@ -206,9 +206,8 @@ export function DivisionDashboard({
   }));
 
   const sortedDivisions = [...top10Divisions].sort((a, b) => b.sales - a.sales);
-
   const totalDivisions = (DivisionSales ?? []).flatMap(item => item.Division ?? []).length;
-
+  
   const debouncedSearch = useDebounce(searchTerm, 400);
 
   const regex = new RegExp(debouncedSearch, "i");
