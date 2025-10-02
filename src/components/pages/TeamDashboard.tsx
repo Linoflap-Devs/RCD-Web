@@ -31,11 +31,6 @@ import { getTop10SalesPersons, Top10SalesPersonItem } from "@/services/sales-per
 import { getTop10UnitManagers, Top10UnitManagerItem } from "@/services/unit-managers/unitmanagers.api";
 import { MonthYearPicker } from "../ui/monthyearpicker";
 
-const chartData = Array.from({ length: 20 }, (_, i) => ({
-  developer: `Dev ${i + 1}`,
-  sales: Math.floor(Math.random() * 2000 + 500), // random sales for demo
-}));
-
 const chartConfig = {
   sales: {
     label: "Monthly Sales",
@@ -55,7 +50,7 @@ export function TeamDashboard({
   const [salesPersonLoading, setSalesPersonLoading] = useState(false);
   const [salesPersonError, setSalesPersonError] = useState<string | null>(null);
   const [unitManagersLoading, setUnitManagerLoading] = useState(false);
-  const [unitManagerError, setUnitManagerError] = useState<string | null>(null);  
+  const [unitManagerError, setUnitManagerError] = useState<string | null>(null);
   const [Top10SalesPersonData, setTop10SalesPersonData] = useState<Top10SalesPersonItem[]>([]);
   const [selectedTop10SalesPersons, setSelectedTop10SalesPersons] = useState<Date | undefined>(new Date());
   const [Top10UnitManagersData, setTop10UnitManagersData] = useState<Top10UnitManagerItem[]>([]);
@@ -122,6 +117,15 @@ export function TeamDashboard({
       value: p.CurrentMonth,
       fill: colors[idx % colors.length], // loop if >10
     }));
+
+  const chartDataDeveloperSales =
+    (DeveloperSales ?? [])
+      //.slice(0, 10) // limit to first 20
+      .map((p, idx) => ({
+        developer: p.DeveloperName,
+        sales: p.NetTotalTCP,
+        fill: colors[idx % colors.length], // loop if >10
+      }));
 
   const maxIndex = chartDataSalesPersons.reduce(
     (maxIdx, curr, idx, arr) => (curr.value > arr[maxIdx].value ? idx : maxIdx),
@@ -311,13 +315,21 @@ export function TeamDashboard({
           <CardContent className="pt-6 pb-0 min-w-[800px]">
             <ChartContainer
               config={chartConfig}
-              className="aspect-auto h-70 w-full"
+              className="aspect-auto h-110 w-full"
             >
-              <AreaChart data={chartData}>
+              <AreaChart data={chartDataDeveloperSales} margin={{ top: 15, right: 20, left: 0, bottom: 70 }}>
                 <CartesianGrid strokeDasharray="3 3" />
 
                 {/* X-axis is developer names */}
-                <XAxis dataKey="developer" />
+                <XAxis
+                  dataKey="developer"
+                  interval={0}
+                  angle={-45}
+                  textAnchor="end"
+                  tickFormatter={(name) =>
+                    name.length > 20 ? name.substring(0, 10) + "…" : name
+                  }
+                />
 
                 {/* Y-axis is sales */}
                 <YAxis />
@@ -332,7 +344,7 @@ export function TeamDashboard({
                 />
 
                 <Area
-                  type="linear"
+                  type="natural"
                   dataKey="sales"
                   stroke="var(--chart-2)"
                   fill="var(--chart-2)"
