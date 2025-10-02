@@ -24,10 +24,12 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { ChartBar, Table, User } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DatePickerMonthYear from "../../components/ui/datepicker";
 import { DeveloperSalesItem, Top10SalesPersonsItem, Top10UnitManagersItem } from "@/services/dashboard/dashboard.api";
 import { formattedName } from "@/hooks/use-formattedname";
+import { getTop10SalesPersons, Top10SalesPersonItem } from "@/services/sales-person/salesperson.api";
+import { getTop10UnitManagers, Top10UnitManagerItem } from "@/services/unit-managers/unitmanagers.api";
 
 const chartData = Array.from({ length: 20 }, (_, i) => ({
   developer: `Dev ${i + 1}`,
@@ -49,19 +51,77 @@ interface TeamSalesProps {
 }
 
 export function TeamDashboard({
-  Top10SalesPersons,
-  Top10UnitManagers,
+  //Top10SalesPersons,
+  //Top10UnitManagers,
   DeveloperSales,
 }: TeamSalesProps) {
   const [view, setView] = useState("chart");
-  console.log(DeveloperSales);
+  const [salesPersonLoading, setSalesPersonLoading] = useState(false);
+  const [salesPersonError, setSalesPersonError] = useState<string | null>(null);
+  const [unitManagersLoading, setUnitManagerLoading] = useState(false);
+  const [unitManagerError, setUnitManagerError] = useState<string | null>(null);  
+  const [Top10SalesPersonData, setTop10SalesPersonData] = useState<Top10SalesPersonItem[]>([]);
+  const [selectedTop10SalesPersons, setSelectedTop10SalesPersons] = useState<Date | undefined>(new Date());
+  const [Top10UnitManagersData, setTop10UnitManagersData] = useState<Top10UnitManagerItem[]>([]);
+  const [selectedTop10UnitManagers, setSelectedTop10UnitManagers] = useState<Date | undefined>(new Date());
+
+  useEffect(() => {
+    if (!selectedTop10SalesPersons) return;
+
+    setSalesPersonLoading(true);
+    setSalesPersonError(null);
+
+    const formatted = selectedTop10SalesPersons.toISOString().split("T")[0]; // yyyy-mm-dd
+
+    getTop10SalesPersons(formatted)
+      .then((res) => {
+        if (res.success) {
+          setTop10SalesPersonData(res.data);
+        } else {
+          console.error("Failed to fetch top 10 salesperson data:", res.message);
+        }
+      })
+      .catch((err) => {
+        console.error("Error fetching top 10 salesperson data:", err);
+        setSalesPersonError(err.message || "An error occured.");
+      })
+      .finally(() => {
+        setSalesPersonLoading(false);
+      });
+  }, [selectedTop10SalesPersons]);
+
+  useEffect(() => {
+    if (!selectedTop10UnitManagers) return;
+
+    setUnitManagerLoading(true);
+    setUnitManagerError(null);
+
+    const formatted = selectedTop10UnitManagers.toISOString().split("T")[0]; // yyyy-mm-dd
+
+    getTop10UnitManagers(formatted)
+      .then((res) => {
+        if (res.success) {
+          setTop10UnitManagersData(res.data);
+        } else {
+          console.error("Failed to fetch top 10 unit manager data:", res.message);
+        }
+      })
+      .catch((err) => {
+        console.error("Error fetching top 10 unit manager data:", err);
+        setUnitManagerError(err.message || "An error occured.");
+      })
+      .finally(() => {
+        setUnitManagerLoading(false);
+      });
+  }, [selectedTop10UnitManagers]);
+
   const colors = [
     "#D75C3C", "#F28E2B", "#FFBE0B", "#E15759", "#FF9F1C",
     "#76B041", "#FAA43A", "#F4D35E", "#C6AC8F", "#8D99AE"
   ];
 
   const chartDataSalesPersons =
-    (Top10SalesPersons ?? []).map((p, idx) => ({
+    (Top10SalesPersonData ?? []).map((p, idx) => ({
       name: p.AgentName,
       value: p.CurrentMonth,
       fill: colors[idx % colors.length], // loop if >10
@@ -74,7 +134,7 @@ export function TeamDashboard({
 
   const [activeIndex, setActiveIndex] = useState<number | null>(maxIndex);
 
-  const topManagers = (Top10UnitManagers ?? []).map((p, idx) => ({
+  const topManagers = (Top10UnitManagersData ?? []).map((p, idx) => ({
     name: p.AgentName,
     value: p.CurrentMonth,
     //fill: colors[idx % colors.length], // loop if >10
@@ -94,7 +154,7 @@ export function TeamDashboard({
               </CardDescription>
             </div>
             <div className="flex items-center gap-2">
-              <DatePickerMonthYear />
+              <DatePickerMonthYear value={selectedTop10SalesPersons} onChange={setSelectedTop10SalesPersons} />
             </div>
           </CardHeader>
 
@@ -172,7 +232,7 @@ export function TeamDashboard({
               </CardDescription>
             </div>
             <div className="flex items-center gap-2">
-              <DatePickerMonthYear />
+              <DatePickerMonthYear value={selectedTop10UnitManagers} onChange={setSelectedTop10UnitManagers} />
             </div>
           </CardHeader>
 
