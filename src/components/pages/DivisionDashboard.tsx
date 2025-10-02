@@ -124,15 +124,18 @@ export function DivisionDashboard({
   const [divisionLoading, setDivisionLoading] = useState(false);
   const [divisionError, setDivisionError] = useState<string | null>(null);
   const [Top10DivisionData, setTop10DivisionData] = useState<Top10DivisionsItem[]>([]);
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  
+  const [selectedTop10DivisionDate, setSelectedTop10DivisionDate] = useState<Date | undefined>(new Date());
+
+  const [selectGranularityDivisionSales, setSelectGranularityDivisionSales] = useState<"monthly" | "quarterly" | "yearly">("monthly");
 
   useEffect(() => {
-    if (!selectedDate) return;
+    if (!selectedTop10DivisionDate) return;
 
     setDivisionLoading(true);
     setDivisionError(null);
 
-    const formatted = selectedDate.toISOString().split("T")[0]; // yyyy-mm-dd
+    const formatted = selectedTop10DivisionDate.toISOString().split("T")[0]; // yyyy-mm-dd
 
     getTop10Divisions(formatted)
       .then((res) => {
@@ -149,29 +152,40 @@ export function DivisionDashboard({
       .finally(() => {
         setDivisionLoading(false);
       });
-  }, [selectedDate]);
+  }, [selectedTop10DivisionDate]);
 
-  console.log('top 10 division data: ', Top10DivisionData);
-  console.log(DivisionSales);
+  const divisionSalesData = DivisionSales?.map((d) => ({
+      division: d.Division,
+      Current:
+        selectGranularityDivisionSales === "monthly"
+          ? d.CurrentMonth
+          : selectGranularityDivisionSales === "quarterly"
+          ? d.CurrentQuarter
+          : selectGranularityDivisionSales === "yearly"
+          ? d.CurrentYear
+          : 0,
+      Last:
+        selectGranularityDivisionSales === "monthly"
+          ? d.CurrentMonthLastYear
+          : selectGranularityDivisionSales === "quarterly"
+          ? d.LastQuarter
+          : selectGranularityDivisionSales === "yearly"
+          ? d.LastYear
+          : 0, 
+    })) ?? [];
 
   const colors = [
     "#D75C3C", "#F28E2B", "#FFBE0B", "#E15759", "#FF9F1C",
     "#76B041", "#FAA43A", "#F4D35E", "#C6AC8F", "#8D99AE"
   ];
 
-  const top10Divisions = (Top10DivisionData ?? []).map((d, index) => ({ // Parameter 'index' implicitly has an 'any' type.ts(7006) 
+  const top10Divisions = (Top10DivisionData ?? []).map((d, index) => ({ 
     name: d.Division,
     sales: d.CurrentMonth,
     fill: colors[index % colors.length],
   }));
 
   const sortedDivisions = [...top10Divisions].sort((a, b) => b.sales - a.sales);
-
-  const divisionsSalesData = (DivisionSales ?? []).map((d) => ({
-    division: d.Division,
-    Current: d.CurrentMonth, // not yet dynamic
-    Last: d.LastMonth, // not yet dynamic
-  }));
 
   const totalDivisions = (DivisionSales ?? []).flatMap(item => item.Division ?? []).length;
 
@@ -200,8 +214,6 @@ export function DivisionDashboard({
     return regex.test(division);
   });
 
-  //console.log(TotalSalesTarget);
-
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-stretch">
@@ -216,7 +228,7 @@ export function DivisionDashboard({
               </CardDescription>
             </div>
             <div className="flex items-center gap-2">
-              <DatePickerMonthYear value={selectedDate} onChange={setSelectedDate} />
+              <DatePickerMonthYear value={selectedTop10DivisionDate} onChange={setSelectedTop10DivisionDate} />
             </div>
           </CardHeader>
           <CardContent className="grid grid-cols-2 gap-8">
@@ -425,19 +437,22 @@ export function DivisionDashboard({
               Division Sales <span className="text-muted-foreground">({totalDivisions})</span>
             </CardTitle>
             <CardDescription>
-              Showing the division sales for the current month.
+              Showing the division sales.
             </CardDescription>
           </div>
 
           <div className="flex items-center gap-2">
-            <Select>
+            <Select
+              value={selectGranularityDivisionSales}
+              onValueChange={(val) => setSelectGranularityDivisionSales(val as "monthly" | "quarterly" | "yearly")}
+            >
               <SelectTrigger className="w-[150px]">
-                <SelectValue placeholder="Monthly" />
+                <SelectValue placeholder="Select Granularity" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="currentMonth">Monthly</SelectItem>
-                <SelectItem value="lastMonth">Quarterly</SelectItem>
-                <SelectItem value="currentQuarter">Yearly</SelectItem>
+                <SelectItem value="monthly">Monthly</SelectItem>
+                <SelectItem value="quarterly">Quarterly</SelectItem>
+                <SelectItem value="yearly">Yearly</SelectItem>
               </SelectContent>
             </Select>
 
@@ -468,13 +483,13 @@ export function DivisionDashboard({
           <CardContent className="h-75 min-w-[800px]">
             <ChartContainer
               className="h-full w-full"
-              config={{
-                target: { label: "Current Month", color: "var(--chart-1)" },
-                actual: { label: "Current Year", color: "var(--chart-2)" },
-              }}
+                config={{
+                  Current: { label: "Current", color: "var(--chart-2)" },
+                  Last: { label: "Last", color: "var(--chart-1)" },
+                }}
             >
               <AreaChart
-                data={divisionsSalesData}
+                data={divisionSalesData}
                 margin={{ top: 40, right: 20, left: 0, bottom: 50 }}
               >
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
