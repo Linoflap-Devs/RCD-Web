@@ -174,8 +174,6 @@ export function DivisionDashboard({
             : 0,
   })) ?? [];
 
-  console.log(TotalSalesTarget?.Divisions);
-
   const targetSalesData = TotalSalesTarget?.Divisions.map((d) => ({
     name: d.DivisionName,
     monthTarget:
@@ -190,7 +188,7 @@ export function DivisionDashboard({
         : selectGranularityTargetSales === "yearly"
           ? d.CurrentYear
           : 0,
-    monthPercent:
+    monthTargetReach:
       selectGranularityTargetSales === "monthly"
         ? d.PercentMonth
         : selectGranularityTargetSales === "yearly"
@@ -219,83 +217,11 @@ export function DivisionDashboard({
 
   const filteredDivisionSales = DivisionSales?.filter((item) => {
     const division = item.Division ?? "";
-
     return regex.test(division);
   });
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-stretch">
-        <Card className="col-span-4 rounded-md border bg-white shadow-none">
-          <CardHeader className="flex items-center justify-between py-1 border-b">
-            <div className="flex flex-1 flex-col justify-center gap-1 sm:pb-0">
-              <CardTitle className="font-semibold">
-                Top 10 Divisions
-              </CardTitle>
-              <CardDescription className="font-normal">
-                Showing the top 10 division for the current month
-              </CardDescription>
-            </div>
-            <div className="flex items-center gap-2">
-              <DatePickerMonthYear value={selectedTop10DivisionDate} onChange={setSelectedTop10DivisionDate} />
-            </div>
-          </CardHeader>
-          <CardContent className="grid grid-cols-2 gap-8">
-            <div className="flex flex-col gap-1">
-              {sortedDivisions.slice(0, 5).map((division, index) => {
-                return (
-                  <div
-                    key={division.name}
-                    className="relative flex items-center justify-between px-2 py-1.5 transition-all hover:bg-primary/10"
-                  >
-                    <div
-                      style={{ backgroundColor: division.fill }}
-                      className="relative z-10 flex items-center justify-center w-6 h-6 rounded-full text-white text-xs font-medium flex-shrink-0"
-                    >
-                      {index + 1}
-                    </div>
-
-                    <div className="relative z-10 flex-1 px-2 text-sm font-medium text-foreground truncate">
-                      {division.name}
-                    </div>
-
-                    <div className="relative z-10 text-sm font-semibold text-primary">
-                      {division.sales.toLocaleString()}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-            <div className="flex flex-col gap-1.5">
-              {sortedDivisions.slice(5, 10).map((division, index) => {
-                return (
-                  <div
-                    key={division.name}
-                    className="relative flex items-center justify-between px-2 py-1.5 transition-all hover:bg-primary/10"
-                  >
-
-                    <div
-                      style={{ backgroundColor: division.fill }}
-                      className="relative z-10 flex items-center justify-center w-6 h-6 rounded-full text-white text-xs font-medium flex-shrink-0"
-                    >
-                      {index + 6}
-                    </div>
-
-                    <div className="relative z-10 flex-1 px-2 text-sm font-medium text-foreground truncate">
-                      {division.name}
-                    </div>
-
-                    <div className="relative z-10 text-sm font-semibold text-primary">
-                      {division.sales.toLocaleString()}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 items-stretch">
         <Card className="bg-white border flex flex-col justify-center shadow-none rounded-md">
           <CardContent>
@@ -450,6 +376,77 @@ export function DivisionDashboard({
           </ChartContainer>
         </CardContent>
       </Card>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-stretch">
+        <Card className="col-span-4 rounded-md border bg-white shadow-none">
+          <CardHeader className="flex items-center justify-between py-1 border-b">
+            <div className="flex flex-1 flex-col justify-center gap-1 sm:pb-0">
+              <CardTitle className="font-semibold">
+                Top 10 Divisions
+              </CardTitle>
+              <CardDescription className="font-normal">
+                Showing the top 10 division for the current month
+              </CardDescription>
+            </div>
+            <div className="flex items-center gap-2">
+              <DatePickerMonthYear value={selectedTop10DivisionDate} onChange={setSelectedTop10DivisionDate} />
+            </div>
+          </CardHeader>
+          <CardContent className="grid grid-cols-2 gap-8">
+            <div className="flex flex-col gap-1">
+              {sortedDivisions.slice(0, 5).map((division, index) => {
+                return (
+                  <div
+                    key={division.name}
+                    className="relative flex items-center justify-between px-2 py-1.5 transition-all hover:bg-primary/10"
+                  >
+                    <div
+                      style={{ backgroundColor: division.fill }}
+                      className="relative z-10 flex items-center justify-center w-6 h-6 rounded-full text-white text-xs font-medium flex-shrink-0"
+                    >
+                      {index + 1}
+                    </div>
+
+                    <div className="relative z-10 flex-1 px-2 text-sm font-medium text-foreground truncate">
+                      {division.name}
+                    </div>
+
+                    <div className="relative z-10 text-sm font-semibold text-primary">
+                      {division.sales.toLocaleString()}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="flex flex-col gap-1.5">
+              {sortedDivisions.slice(5, 10).map((division, index) => {
+                return (
+                  <div
+                    key={division.name}
+                    className="relative flex items-center justify-between px-2 py-1.5 transition-all hover:bg-primary/10"
+                  >
+
+                    <div
+                      style={{ backgroundColor: division.fill }}
+                      className="relative z-10 flex items-center justify-center w-6 h-6 rounded-full text-white text-xs font-medium flex-shrink-0"
+                    >
+                      {index + 6}
+                    </div>
+
+                    <div className="relative z-10 flex-1 px-2 text-sm font-medium text-foreground truncate">
+                      {division.name}
+                    </div>
+
+                    <div className="relative z-10 text-sm font-semibold text-primary">
+                      {division.sales.toLocaleString()}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
       <Card className="overflow-x-auto rounded-lg gap-0 shadow-none">
         <CardHeader className="flex items-center justify-between pt-3 pb-6 border-b">
