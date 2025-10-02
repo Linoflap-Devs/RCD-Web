@@ -39,7 +39,7 @@ import { Input } from "../ui/input";
 import { useEffect, useState } from "react";
 import { useDebounce } from "@/hooks/use-debounce";
 import { ComissionForecastsItem, getCollectionForecasr } from "@/services/commissions-forecast/commissionsforecast.api";
-import DatePickerDate from "../../components/ui/datepicker";
+import { MonthYearPicker } from "../ui/monthyearpicker";
 
 interface BuyerData {
   buyer: string;
@@ -517,7 +517,7 @@ export function CollectionForecastDashboard({
             </CardDescription>
           </div>
           <div className="flex items-center gap-2">
-            <DatePickerDate value={selectedCommissionForecast} onChange={setSelectedCommissionForecast} />
+            <MonthYearPicker value={selectedCommissionForecast} onChange={setSelectedCommissionForecast} />
           </div>
         </CardHeader>
         <CardContent className="overflow-y-auto">
