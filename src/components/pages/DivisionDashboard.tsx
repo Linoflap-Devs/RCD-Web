@@ -31,14 +31,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../components/ui/select";
-import { useState } from "react";
-import { ChartBar, Search, Table } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ChartBar, FileChartColumnIncreasingIcon, Search, SquareMousePointer, Table, TargetIcon } from "lucide-react";
 import DatePickerMonthYear from "../../components/ui/datepicker";
 import { DataTable } from "../ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { Input } from "../ui/input";
-import { DivisionSalesItem, SalesTargetItem, Top10DivisionsItem } from "@/services/dashboard/dashboard.api";
+import { DivisionSalesItem, SalesTargetItem } from "@/services/dashboard/dashboard.api";
 import { useDebounce } from "@/hooks/use-debounce";
+import { getTop10Divisions, Top10DivisionsItem, Top10DivisionsResponse } from "@/services/divisions/division.api";
+import DatePickerDate from "../../components/ui/datepicker";
 
 const columnsSalesItem: ColumnDef<DivisionSalesItem>[] = [
   {
@@ -113,13 +115,43 @@ interface DivisionDashboardProps {
 }
 
 export function DivisionDashboard({
-  top10Division,
+  //top10Division,
   DivisionSales,
   TotalSalesTarget
 }: DivisionDashboardProps) {
   const [view, setView] = useState("chart");
   const [searchTerm, setSearchTerm] = useState("");
+  const [divisionLoading, setDivisionLoading] = useState(false);
+  const [divisionError, setDivisionError] = useState<string | null>(null);
+  const [Top10DivisionData, setTop10DivisionData] = useState<Top10DivisionsItem[]>([]);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
 
+  useEffect(() => {
+    if (!selectedDate) return;
+
+    setDivisionLoading(true);
+    setDivisionError(null);
+
+    const formatted = selectedDate.toISOString().split("T")[0]; // yyyy-mm-dd
+
+    getTop10Divisions(formatted)
+      .then((res) => {
+        if (res.success) {
+          setTop10DivisionData(res.data);
+        } else {
+          console.error("Failed to fetch top 10 divisions data:", res.message);
+        }
+      })
+      .catch((err) => {
+        console.error("Error fetching top 10 divisions data:", err);
+        setDivisionError(err.message || "An error occured.");
+      })
+      .finally(() => {
+        setDivisionLoading(false);
+      });
+  }, [selectedDate]);
+
+  console.log('top 10 division data: ', Top10DivisionData);
   console.log(DivisionSales);
 
   const colors = [
@@ -127,7 +159,7 @@ export function DivisionDashboard({
     "#76B041", "#FAA43A", "#F4D35E", "#C6AC8F", "#8D99AE"
   ];
 
-  const top10Divisions = (top10Division ?? []).map((d, index) => ({
+  const top10Divisions = (Top10DivisionData ?? []).map((d, index) => ({ // Parameter 'index' implicitly has an 'any' type.ts(7006) 
     name: d.Division,
     sales: d.CurrentMonth,
     fill: colors[index % colors.length],
@@ -168,8 +200,10 @@ export function DivisionDashboard({
     return regex.test(division);
   });
 
+  //console.log(TotalSalesTarget);
+
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-stretch">
         <Card className="col-span-4 rounded-md border bg-white shadow-none">
           <CardHeader className="flex items-center justify-between py-1 border-b">
@@ -182,7 +216,7 @@ export function DivisionDashboard({
               </CardDescription>
             </div>
             <div className="flex items-center gap-2">
-              <DatePickerMonthYear />
+              <DatePickerMonthYear value={selectedDate} onChange={setSelectedDate} />
             </div>
           </CardHeader>
           <CardContent className="grid grid-cols-2 gap-8">
@@ -242,35 +276,44 @@ export function DivisionDashboard({
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 items-stretch">
-        <Card className="rounded-lg border flex flex-col justify-center shadow-none">
-          <CardContent className="flex flex-col gap-2">
-            <div className="space-y-1">
-              <div className="text-2xl font-bold tracking-tight flex items-center">
-                <span>{TotalSalesTarget?.TotalTargetMonth.toLocaleString() ?? 0}</span>
+        <Card className="bg-white border flex flex-col justify-center shadow-none rounded-md">
+          <CardContent>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center justify-center w-15 h-14 rounded-sm text-primary">
+                <TargetIcon className="h-8 w-8" />
               </div>
-              <div className="text-sm text-muted-foreground">Total Sales Target</div>
+              <div className="flex flex-col space-y-1">
+                <div className="text-2xl font-semibold tracking-tight">{TotalSalesTarget?.TotalCurrentMonth.toLocaleString() ?? 0}</div>
+                <div className="text-xs text-muted-foreground">Total Sales Target</div>
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="rounded-lg border flex flex-col justify-center shadow-none">
-          <CardContent className="flex flex-col gap-2">
-            <div className="space-y-1">
-              <div className="text-2xl font-bold tracking-tight flex items-center">
-                <span>{TotalSalesTarget?.TotalCurrentMonth.toLocaleString() ?? 0}</span>
+        <Card className="bg-white border flex flex-col justify-center shadow-none rounded-md">
+          <CardContent>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center justify-center w-15 h-14 rounded-sm text-primary">
+                <FileChartColumnIncreasingIcon className="h-8 w-8" />
               </div>
-              <div className="text-sm text-muted-foreground">Total Actual</div>
+              <div className="flex flex-col space-y-1">
+                <div className="text-2xl font-semibold tracking-tight">{TotalSalesTarget?.TotalCurrentMonth.toLocaleString() ?? 0}</div>
+                <div className="text-xs text-muted-foreground">Total Actual Target</div>
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-[#76B041] rounded-lg border flex flex-col justify-center shadow-none">
-          <CardContent className="flex flex-col gap-2">
-            <div className="space-y-1">
-              <div className="text-2xl font-bold text-white tracking-tight flex items-center">
-                <span>{TotalSalesTarget?.TotalReachPercent.toLocaleString() ?? 0}</span>
+        <Card className="bg-[#76B041] border flex flex-col justify-center shadow-none rounded-md">
+          <CardContent>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center justify-center w-15 h-14 rounded-sm text-white">
+                <SquareMousePointer className="h-8 w-8" />
               </div>
-              <div className="text-sm text-white">Total Reach</div>
+              <div className="flex flex-col space-y-1">
+                <div className="text-2xl font-semibold tracking-tight text-white">{TotalSalesTarget?.TotalReachPercent.toLocaleString() ?? 0}</div>
+                <div className="text-xs text-white">Total Reach</div>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -287,7 +330,7 @@ export function DivisionDashboard({
             </CardDescription>
           </div>
           <div className="flex items-center gap-2">
-            <DatePickerMonthYear />
+            {/* <DatePickerDate value={selectedDate} onChange={setSelectedDate}/> */}
           </div>
         </CardHeader>
         <CardContent className="h-64 min-w-[800px]">

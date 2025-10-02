@@ -26,7 +26,7 @@ import {
 import { ChartBar, Table, User } from "lucide-react";
 import { useState } from "react";
 import DatePickerMonthYear from "../../components/ui/datepicker";
-import { Top10SalesPersonsItem, Top10UnitManagersItem } from "@/services/dashboard/dashboard.api";
+import { DeveloperSalesItem, Top10SalesPersonsItem, Top10UnitManagersItem } from "@/services/dashboard/dashboard.api";
 import { formattedName } from "@/hooks/use-formattedname";
 
 const chartData = Array.from({ length: 20 }, (_, i) => ({
@@ -45,14 +45,16 @@ const chartConfig = {
 interface TeamSalesProps {
   Top10SalesPersons?: Top10SalesPersonsItem[];
   Top10UnitManagers?: Top10UnitManagersItem[];
+  DeveloperSales?: DeveloperSalesItem[];
 }
 
 export function TeamDashboard({
   Top10SalesPersons,
-  Top10UnitManagers
+  Top10UnitManagers,
+  DeveloperSales,
 }: TeamSalesProps) {
   const [view, setView] = useState("chart");
-
+  console.log(DeveloperSales);
   const colors = [
     "#D75C3C", "#F28E2B", "#FFBE0B", "#E15759", "#FF9F1C",
     "#76B041", "#FAA43A", "#F4D35E", "#C6AC8F", "#8D99AE"
@@ -79,7 +81,7 @@ export function TeamDashboard({
   }));
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4 items-stretch">
         <Card className="rounded-lg border shadow-none bg-white gap-3">
           <CardHeader className="flex items-center justify-between gap-2 py-2">

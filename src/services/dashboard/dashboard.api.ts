@@ -20,7 +20,7 @@ export interface DivisionSalesItem {
     CurrentYear: number;
 }
 
-export interface Top10DivisionsItem {
+export interface Top10DashboardDivisionsItem {
     Division: string;
     CurrentMonth: number; // sales
 }
@@ -92,10 +92,15 @@ export interface DownpaymentPercentItem {
     TotalPaidPercent: number;
 }
 
+export interface DeveloperSalesItem {
+    DeveloperName: string;
+    NetTotalTCP: number;
+}
+
 export interface DashboardItem {
     KPI: KPIItem;
     DivisionSales: DivisionSalesItem[];
-    Top10Divisions: Top10DivisionsItem[];
+    Top10Divisions: Top10DashboardDivisionsItem[];
     Top10SalesPersons: Top10SalesPersonsItem[];
     Top10UnitManagers: Top10UnitManagersItem[];
     Top10ForecastBuyers: Top10ForecastBuyersItem[];
@@ -103,6 +108,7 @@ export interface DashboardItem {
     CommissionForecast: CommissionForecastItem[];
     SalesTarget: SalesTargetItem;
     DownpaymentPercent: DownpaymentPercentItem;
+    DeveloperSales: DeveloperSalesItem[];
 }
 
 export interface DashboardResponse {

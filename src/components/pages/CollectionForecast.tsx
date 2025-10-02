@@ -237,7 +237,7 @@ export function CollectionForecastDashboard({
   ];
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 items-stretch">
         <Card className="rounded-lg border shadow-none bg-white">
           <CardHeader className="flex items-center gap-2">
