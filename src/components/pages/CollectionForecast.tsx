@@ -27,10 +27,8 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "../../components/ui/chart";
-import DatePickerMonthYear from "../../components/ui/datepicker";
 import {
   CommissionForecastByYearMonthItem,
-  CommissionForecastItem,
   DownpaymentPercentItem,
   Top10ForecastBuyersItem
 } from "@/services/dashboard/dashboard.api";
@@ -38,8 +36,10 @@ import { DataTable } from "../ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { Search } from "lucide-react";
 import { Input } from "../ui/input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDebounce } from "@/hooks/use-debounce";
+import { ComissionForecastsItem, getCollectionForecasr } from "@/services/commissions-forecast/commissionsforecast.api";
+import DatePickerDate from "../../components/ui/datepicker";
 
 interface BuyerData {
   buyer: string;
@@ -69,7 +69,7 @@ const chartConfigNetForecast = {
   },
 };
 
-export const forecastColumns: ColumnDef<CommissionForecastItem>[] = [
+export const forecastColumns: ColumnDef<ComissionForecastsItem>[] = [
   // {
   //   accessorKey: "rowno",
   //   header: "#",
@@ -177,22 +177,51 @@ export const forecastColumns: ColumnDef<CommissionForecastItem>[] = [
 interface CollectionForecastProps {
   Top10ForecastBuyers?: Top10ForecastBuyersItem[];
   CommissionForecastByYearMonth?: CommissionForecastByYearMonthItem[];
-  CommissionForecast?: CommissionForecastItem[];
+  //CommissionForecast?: CommissionForecastItem[];
   DownpaymentPercent?: DownpaymentPercentItem;
 }
 
 export function CollectionForecastDashboard({
   Top10ForecastBuyers,
   CommissionForecastByYearMonth,
-  CommissionForecast,
+  //CommissionForecast,
   DownpaymentPercent
 }: CollectionForecastProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearch = useDebounce(searchTerm, 400);
+  const [commissionsForecastLoading, setCommissionsForecastLoading] = useState(false);
+  const [commissionsForecastError, setCommissionsForecastError] = useState(null);
+  const [commissionsforecastData, setCommissionsForecastData] = useState<ComissionForecastsItem[]>([])
+  const [selectedCommissionForecast, setSelectedCommissionForecast] = useState<Date | undefined>(new Date());
+
+  useEffect(() => {
+    if (!selectedCommissionForecast) return;
+
+    setCommissionsForecastLoading(true);
+    setCommissionsForecastError(null);
+
+    const formatted = selectedCommissionForecast.toISOString().split("T")[0]; // yyyy-mm-dd
+
+    getCollectionForecasr(formatted)
+      .then((res) => {
+        if (res.success) {
+          setCommissionsForecastData(res.data);
+        } else {
+          console.error("Failed to fetch top 10 unit manager data:", res.message);
+        }
+      })
+      .catch((err) => {
+        console.error("Error fetching top 10 unit manager data:", err);
+        setCommissionsForecastError(err.message || "An error occured.");
+      })
+      .finally(() => {
+        setCommissionsForecastLoading(false);
+      });
+  }, [selectedCommissionForecast]);
 
   const regex = new RegExp(debouncedSearch, "i");
 
-  const filteredForecast = CommissionForecast?.filter((item) => {
+  const filteredForecast = commissionsforecastData?.filter((item) => {
     const fullName = item.BuyersName ?? "";
     const rowno = item.rowno?.toString() ?? "";
     const projectName = item.ProjectName ?? "";
@@ -488,7 +517,7 @@ export function CollectionForecastDashboard({
             </CardDescription>
           </div>
           <div className="flex items-center gap-2">
-            <DatePickerMonthYear />
+            <DatePickerDate value={selectedCommissionForecast} onChange={setSelectedCommissionForecast} />
           </div>
         </CardHeader>
         <CardContent className="overflow-y-auto">
