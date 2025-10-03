@@ -6,7 +6,6 @@ import {
 } from "lucide-react"
 import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"
-
 import {
   Sidebar,
   SidebarContent,
@@ -19,27 +18,20 @@ import { getHomeRoutes } from "@/routes/homeRoutes"
 import { usePathname, useRouter } from "next/navigation"
 import { logoutUser } from "@/services/auth/auth.api"
 import { toast } from "./ui/use-toast"
-
-const data = {
-  user: {
-    name: "Administrator",
-    email: "admin@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  teams: [
-    {
-      name: "RCD",
-      logo: GalleryVerticalEnd,
-      plan: "Reality Marketing Corp",
-    },
-  ],
-}
+import { useAuth } from "@/store/useAuth"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname()
   const router = useRouter()
   const userType = 1
   const groups = getHomeRoutes(pathname, userType ?? 0)
+  const { user, logout } = useAuth();
+
+  // fallback
+  const displayUser = user ?? {
+    userName: "Guest",
+    position: "Unknown",
+  }
 
   const handleLogout = async () => {
     try {
@@ -54,15 +46,23 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       description: `Successfully logged out.`,
     });
     
-    //logout(); // Zustand
-    localStorage.removeItem("username");
+    logout(); // Zustand
+    sessionStorage.removeItem("username");
     router.push("/");
   };
 
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <TeamSwitcher
+          teams={[
+            {
+              name: "RCD",
+              logo: GalleryVerticalEnd,
+              plan: "Reality Marketing Corp",
+            },
+          ]}
+        />
       </SidebarHeader>
       <SidebarContent>
         <NavMain
@@ -70,7 +70,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} onLogout={handleLogout} />
+        <NavUser
+          user={{
+            name: displayUser.userName ?? "No Name",
+            email: displayUser.position?.toLowerCase() ?? "No Position",
+            avatar: "/avatars/shadcn.jpg",
+          }}
+          onLogout={handleLogout} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
