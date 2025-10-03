@@ -281,7 +281,7 @@ export function TeamDashboard({
           <div className="flex flex-1 flex-col justify-center gap-1 sm:pb-0">
             <CardTitle className="text-primary">
               Developer Sales{" "}
-              <span className="text-muted-foreground">(26 out of 40)</span>
+              {/* <span className="text-muted-foreground">(26 out of 40)</span> */}
             </CardTitle>
             <CardDescription>
               Showing the developer sales for the current month.
@@ -344,7 +344,7 @@ export function TeamDashboard({
                 />
 
                 <Area
-                  type="natural"
+                  type="basis"
                   dataKey="sales"
                   stroke="var(--chart-2)"
                   fill="var(--chart-2)"

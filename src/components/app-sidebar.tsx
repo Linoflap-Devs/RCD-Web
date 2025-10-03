@@ -19,6 +19,7 @@ import {
 import { TeamSwitcher } from "./team-switcher"
 import { getHomeRoutes } from "@/routes/homeRoutes"
 import { usePathname, useRouter } from "next/navigation"
+import { logoutUser } from "@/services/auth/auth.api"
 
 const data = {
   user: {
@@ -41,18 +42,30 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const userType = 1
   const groups = getHomeRoutes(pathname, userType ?? 0)
 
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+
+    //logout(); // Zustand
+    localStorage.removeItem("username");
+    router.push("/");
+  };
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain 
+        <NavMain
           groups={groups}
         />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={data.user} onLogout={handleLogout} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

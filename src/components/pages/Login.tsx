@@ -10,7 +10,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { LoginResponse, loginUser } from "@/services/auth/auth.api";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AxiosError } from "axios";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -23,7 +26,9 @@ const formSchema = z.object({
 });
 
 export default function Login() {
+  const router = useRouter();
   const [isLoading, setLoading] = useState(false);
+  const [isErrorMessage, setErrorMessage] = useState<string | null>(null)
   const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -37,13 +42,36 @@ export default function Login() {
   // Handle submit
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
-    console.log("Login values:", values);
+    setErrorMessage("");
 
-    // TODO: Replace with API call
-    setTimeout(() => {
+    try {
+      const response: LoginResponse = await loginUser(values);
+      console.log("login response", response);
+
+      if (response.success) {
+        sessionStorage.setItem("username", response.data.username);
+        router.push("/dashboard");
+      } else {
+        setErrorMessage(response.message || "Invalid Credentiials, please try again.");
+      }
+    } catch (error: unknown) {
+      const axiosError = error as AxiosError;
+      if (axiosError?.response?.status === 401) {
+        setErrorMessage(
+          "Invalid credentials, please check your email and password."
+        );
+      } else if (axiosError?.response?.status === 500) {
+        setErrorMessage(
+          "Internal server error. Please try again later or contact support."
+        );
+      } else {
+        setErrorMessage(
+          "An unexpected error occurred. Please try again later."
+        );
+      }
+    } finally {
       setLoading(false);
-      alert("Logged in!");
-    }, 1000);
+    }
   }
 
   return (
@@ -72,7 +100,7 @@ export default function Login() {
                     <div className="relative">
                       <Input
                         type="text"
-                        placeholder="m@example.com"
+                        placeholder="Enter Username"
                         {...field}
                         className={` ${fieldState.error
                           ? "border-red-500 ring-red-500 focus-visible:ring-red-200 focus-visible:border-red-500"
@@ -86,7 +114,7 @@ export default function Login() {
               )}
             />
           </div>
-          
+
           <div className="grid gap-3">
             {/* Password */}
             <FormField
@@ -113,8 +141,8 @@ export default function Login() {
                       placeholder="Enter password"
                       {...field}
                       className={`${fieldState.error
-                          ? "border-red-500 ring-red-500 focus-visible:ring-red-200 focus-visible:border-red-500"
-                          : ""
+                        ? "border-red-500 ring-red-500 focus-visible:ring-red-200 focus-visible:border-red-500"
+                        : ""
                         }`}
                     />
                   </FormControl>
@@ -124,7 +152,11 @@ export default function Login() {
               )}
             />
           </div>
-          <Button type="submit" className="w-full" >
+          <Button 
+            type="submit" 
+            className="w-full"
+            disabled={isLoading}
+          >
             {isLoading ? "Logging in..." : "Log in"}
           </Button>
         </div>

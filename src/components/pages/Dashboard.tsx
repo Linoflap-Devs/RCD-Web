@@ -57,9 +57,7 @@ export default function Dashboard() {
     day: "numeric",
     year: "numeric",
   });
-
-  console.log(formattedDate);
-
+  
   return (
     <div className="h-full w-full px-2 space-y-4">
       {/* <div className="mb-6 flex justify-between">

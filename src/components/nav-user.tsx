@@ -33,15 +33,16 @@ import {
 
 export function NavUser({
   user,
+  onLogout
 }: {
   user: {
     name: string
     email: string
     avatar: string
   }
+  onLogout: () => void;
 }) {
   const { isMobile } = useSidebar()
-
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -92,8 +93,8 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOut />
+            <DropdownMenuItem onClick={onLogout}>
+              <LogOut className="mr-2 h-4 w-4" />
               Log out
             </DropdownMenuItem>
           </DropdownMenuContent>
