@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { toast } from "../ui/use-toast";
 
 const formSchema = z.object({
   username: z.string().min(1, "Please enter username"),
@@ -48,8 +49,15 @@ export default function Login() {
       const response: LoginResponse = await loginUser(values);
       console.log("login response", response);
 
+      toast({
+        title: "Login Successful",
+        variant: "success",
+        description: `Welcome back, ${response.data.username}!`,
+      });
+
       if (response.success) {
         sessionStorage.setItem("username", response.data.username);
+
         router.push("/dashboard");
       } else {
         setErrorMessage(response.message || "Invalid Credentiials, please try again.");

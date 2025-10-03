@@ -16,14 +16,14 @@ export interface LoginResponse {
 
 export const loginUser = async (data: LoginData): Promise<LoginResponse> => {
   const response = await axiosInstance.post<LoginResponse>("/auth/login-employee", data);
-  console.log(response);
+  //console.log(response);
   return response.data;
 };
 
 export const logoutUser = async (): Promise<void> => {
   try {
     const response = await axiosInstance.delete("/auth/logout-employee");
-    console.log("Logout response:", response.data);
+    //console.log("Logout response:", response.data);
   } catch (error) {
     console.error("Logout error:", error);
   }
