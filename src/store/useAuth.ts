@@ -20,7 +20,7 @@ type AuthState = {
 
 export const useAuth = create<AuthState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       user: null,
       isUserValid: false,
       loading: true,
@@ -34,13 +34,17 @@ export const useAuth = create<AuthState>()(
           initialized: true,
         }),
 
-      logout: () =>
+      logout: () => {
         set({
           user: null,
           isUserValid: false,
           loading: false,
           initialized: true,
-        }),
+        });
+        // Clear persisted storage
+        localStorage.removeItem("auth-storage"); 
+        // or: useAuth.persist.clearStorage()
+      },
 
       setLoading: (loading) => set({ loading }),
 
@@ -49,7 +53,6 @@ export const useAuth = create<AuthState>()(
     {
       name: "auth-storage", // key for localStorage
       partialize: (state) => ({
-        // only persist these
         user: state.user,
         isUserValid: state.isUserValid,
       }),
