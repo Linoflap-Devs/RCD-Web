@@ -29,7 +29,21 @@ export const logoutUser = async (): Promise<void> => {
   }
 };
 
-export const getCurrentUser = async (): Promise<{ Email: string; UserType: number }> => {
-  const response = await axiosInstance.get("/auth/current-user");
+export interface CurrentUserResponse {
+  success: boolean;
+  data: UserItem;
+  message: string;
+}
+
+export interface UserItem {
+    userName?: string;
+    branch?: number;
+    position?: string;
+}
+
+export const getCurrentUser = async (): Promise<UserItem> => {
+  const response = await axiosInstance.get<CurrentUserResponse>("/auth/web/current-user", {
+  });
+  //console.log("Axios current-user response:", response.data);
   return response.data.data;
 };

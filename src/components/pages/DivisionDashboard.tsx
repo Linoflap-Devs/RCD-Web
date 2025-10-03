@@ -16,12 +16,10 @@ import {
   CartesianGrid,
   AreaChart,
   Area,
-  LabelList,
 } from "recharts";
 import {
   ChartConfig,
   ChartContainer,
-  ChartTooltip,
   ChartTooltipContent,
 } from "../../components/ui/chart";
 import {

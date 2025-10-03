@@ -231,8 +231,7 @@ export function CollectionForecastDashboard({
   });
 
   const colors = [
-    "#D75C3C", "#F28E2B", "#FFBE0B", "#E15759", "#FF9F1C",
-    "#76B041", "#FAA43A", "#F4D35E", "#C6AC8F", "#8D99AE"
+    "#F28E2B"
   ];
 
   const chartDataForecastBuyers: BuyerData[] =
@@ -443,7 +442,7 @@ export function CollectionForecastDashboard({
         <CardHeader className="flex items-center gap-2">
           <div className="flex flex-1 flex-col justify-center gap-1 sm:pb-0">
             <CardTitle className="text-primary">
-              Reservation Date vs Net Contract Price
+              Reservation Date and Net Contract Price
             </CardTitle>
             <CardDescription>
               Showing the the forecasted net contracts across reservation dates.
@@ -453,7 +452,7 @@ export function CollectionForecastDashboard({
         <CardContent className="pt-6 pb-0">
           <ChartContainer
             config={chartConfigNetForecast}
-            className="aspect-auto h-54 w-full"
+            className="aspect-auto h-70 w-full"
           >
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={forecastMonthlyData}>

@@ -10,7 +10,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { LoginResponse, loginUser } from "@/services/auth/auth.api";
+import { getCurrentUser, LoginResponse, loginUser } from "@/services/auth/auth.api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
@@ -18,6 +18,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { toast } from "../ui/use-toast";
+import { useAuth } from "@/store/useAuth";
 
 const formSchema = z.object({
   username: z.string().min(1, "Please enter username"),
@@ -49,14 +50,26 @@ export default function Login() {
       const response: LoginResponse = await loginUser(values);
       //console.log("login response", response);
 
-      toast({
-        title: "Login Successful",
-        variant: "success",
-        description: `Welcome back, ${response.data.username}!`,
-      });
-
       if (response.success) {
-        sessionStorage.setItem("username", response.data.username);
+        toast({
+          title: "Login Successful",
+          variant: "success",
+          description: `Welcome back, ${response.data.username}!`,
+        });
+
+        //sessionStorage.setItem("username", response.data.username);
+
+        try {
+          const currentUser = await getCurrentUser();
+          //console.log("Fetched currentUser:", currentUser);
+
+          if (currentUser) {
+            useAuth.getState().setUser(currentUser);
+            //console.log("Zustand store user:", useAuth.getState().user);
+          }
+        } catch (err) {
+          console.error("Error fetching current user:", err);
+        }
 
         router.push("/dashboard");
       } else {
@@ -175,8 +188,8 @@ export default function Login() {
               )}
             />
           </div>
-          <Button 
-            type="submit" 
+          <Button
+            type="submit"
             className="w-full"
             disabled={isLoading}
           >

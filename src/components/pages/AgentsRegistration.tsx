@@ -31,7 +31,6 @@ type ApproveButtonProps = {
   AgentID: number | null
   onApprove: (AgentRegistrationID: number, AgentID?: number) => Promise<void>
   children?: React.ReactNode
-  Experience?: ExperienceItem[]; // <- array!
 }
 
 function ApproveAgentDialog({
