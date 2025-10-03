@@ -20,6 +20,7 @@ import { TeamSwitcher } from "./team-switcher"
 import { getHomeRoutes } from "@/routes/homeRoutes"
 import { usePathname, useRouter } from "next/navigation"
 import { logoutUser } from "@/services/auth/auth.api"
+import { toast } from "./ui/use-toast"
 
 const data = {
   user: {
@@ -49,6 +50,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       console.error("Logout failed:", error);
     }
 
+    toast({
+      title: "Login Successful",
+      variant: "default",
+      description: `Successfully logged out.`,
+    });
+    
     //logout(); // Zustand
     localStorage.removeItem("username");
     router.push("/");

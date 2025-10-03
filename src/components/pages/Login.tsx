@@ -47,7 +47,7 @@ export default function Login() {
 
     try {
       const response: LoginResponse = await loginUser(values);
-      console.log("login response", response);
+      //console.log("login response", response);
 
       toast({
         title: "Login Successful",
@@ -68,14 +68,29 @@ export default function Login() {
         setErrorMessage(
           "Invalid credentials, please check your email and password."
         );
+        toast({
+          title: "Error",
+          variant: "destructive",
+          description: `Invalid credentials, please check your email and password.`,
+        });
       } else if (axiosError?.response?.status === 500) {
         setErrorMessage(
           "Internal server error. Please try again later or contact support."
         );
+        toast({
+          title: "Error",
+          variant: "destructive",
+          description: `Internal server error. Please try again later or contact support.`,
+        });
       } else {
         setErrorMessage(
           "An unexpected error occurred. Please try again later."
         );
+        toast({
+          title: "Error",
+          variant: "destructive",
+          description: `An unexpected error occurred. Please try again later.`,
+        });
       }
     } finally {
       setLoading(false);
