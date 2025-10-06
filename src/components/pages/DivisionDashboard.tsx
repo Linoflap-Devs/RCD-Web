@@ -209,7 +209,7 @@ export function DivisionDashboard({
 
   const sortedDivisions = [...top10Divisions].sort((a, b) => b.sales - a.sales);
   const totalDivisions = (DivisionSales ?? []).flatMap(item => item.Division ?? []).length;
-  
+
   const debouncedSearch = useDebounce(searchTerm, 400);
 
   const regex = new RegExp(debouncedSearch, "i");
@@ -291,7 +291,7 @@ export function DivisionDashboard({
             </Select>
           </div>
         </CardHeader>
-        <CardContent className="h-75 min-w-[800px]">
+        <CardContent className="h-90 min-w-[800px]">
           <ChartContainer
             className="h-full w-full"
             config={{
@@ -454,24 +454,26 @@ export function DivisionDashboard({
               Division Sales <span className="text-muted-foreground">({totalDivisions})</span>
             </CardTitle>
             <CardDescription>
-              Showing the division sales.
+              Showing the division sales
             </CardDescription>
           </div>
 
           <div className="flex items-center gap-2">
-            <Select
-              value={selectGranularityDivisionSales}
-              onValueChange={(val) => setSelectGranularityDivisionSales(val as "monthly" | "quarterly" | "yearly")}
-            >
-              <SelectTrigger className="w-[150px]">
-                <SelectValue placeholder="Select Granularity" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="monthly">Monthly</SelectItem>
-                <SelectItem value="quarterly">Quarterly</SelectItem>
-                <SelectItem value="yearly">Yearly</SelectItem>
-              </SelectContent>
-            </Select>
+            {view === "chart" &&
+              <Select
+                value={selectGranularityDivisionSales}
+                onValueChange={(val) => setSelectGranularityDivisionSales(val as "monthly" | "quarterly" | "yearly")}
+              >
+                <SelectTrigger className="w-[150px]">
+                  <SelectValue placeholder="Select Granularity" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="monthly">Monthly</SelectItem>
+                  <SelectItem value="quarterly">Quarterly</SelectItem>
+                  <SelectItem value="yearly">Yearly</SelectItem>
+                </SelectContent>
+              </Select>
+            }
 
             <div className="inline-flex bg-white border rounded-xl p-[3px] h-9">
               <button
@@ -497,7 +499,7 @@ export function DivisionDashboard({
         </CardHeader>
 
         {view === "chart" ? (
-          <CardContent className="h-75 min-w-[800px]">
+          <CardContent className="h-90 min-w-[800px]">
             <ChartContainer
               className="h-full w-full"
               config={{
@@ -507,7 +509,7 @@ export function DivisionDashboard({
             >
               <AreaChart
                 data={divisionSalesData}
-                margin={{ top: 40, right: 20, left: 0, bottom: 50 }}
+                margin={{ top: 40, right: 20, left: 20, bottom: 50 }}
               >
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
                 <XAxis

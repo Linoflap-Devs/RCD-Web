@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardDescription, CardTitle } from "../../components/ui/card";
 import { Badge } from "../../components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs";
-import { Building, Coins, FolderClosed, FolderKanban, Users } from "lucide-react";
+import { BanknoteArrowUp, Building, CirclePercent, Coins, FolderClosed, FolderKanban, Users, UsersRound } from "lucide-react";
 import { useEffect, useState } from "react";
 import { DashboardItem, getDashboardWeb } from "@/services/dashboard/dashboard.api";
 import { DivisionDashboard } from "./DivisionDashboard";
@@ -222,7 +222,7 @@ export default function Dashboard() {
           onValueChange={handleTabChange}
           className="w-full border-none"
         >
-          <div className="mt-5 flex items-center space-x-4 px-3 py-1">
+          {/* <div className="mt-5 flex items-center space-x-4 px-3 py-1">
             <FolderKanban className="w-6 h-6 text-primary mt-1" />
             <div>
               <CardTitle className="text-lg font-semibold">
@@ -232,9 +232,9 @@ export default function Dashboard() {
                 Showing analytic reports on a variety of topics
               </CardDescription>
             </div>
-          </div>
+          </div> */}
 
-          <div className="flex items-center justify-start mb-4 pt-2 border-b">
+          <div className="flex items-center justify-start mb-4 pt-3 border-b">
             <TabsList className="w-auto bg-transparent border-none p-0 flex justify-between space-x-4 text-sm">
               <TabsTrigger value="divisions">
                 {/* <CirclePercent className="h-4 w-4 mr-0.5" />  */}

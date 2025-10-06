@@ -532,7 +532,7 @@ export function CollectionForecastDashboard({
           <div className="flex flex-1 flex-col justify-center gap-1 pb-3 sm:pb-0">
             <CardTitle>Data Collection Forecast Overview</CardTitle>
             <CardDescription>
-              Showing the tabular history of all collection forecasts.
+              Showing the tabular history of all collection forecasts
             </CardDescription>
           </div>
           <div className="flex items-center gap-2">

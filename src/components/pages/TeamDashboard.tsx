@@ -27,8 +27,14 @@ import { ChartBar, Table, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { DeveloperSalesItem } from "@/services/dashboard/dashboard.api";
 import { formattedName } from "@/hooks/use-formattedname";
-import { getTop10SalesPersons, Top10SalesPersonItem } from "@/services/sales-person/salesperson.api";
-import { getTop10UnitManagers, Top10UnitManagerItem } from "@/services/unit-managers/unitmanagers.api";
+import {
+  getTop10SalesPersons,
+  Top10SalesPersonItem,
+} from "@/services/sales-person/salesperson.api";
+import {
+  getTop10UnitManagers,
+  Top10UnitManagerItem,
+} from "@/services/unit-managers/unitmanagers.api";
 import { MonthYearPicker } from "../ui/monthyearpicker";
 
 const chartConfig = {
@@ -48,17 +54,25 @@ interface TeamSalesProps {
 export function TeamDashboard({
   DeveloperSales,
   Top10SalesPerson,
-  Top10UnitManager
+  Top10UnitManager,
 }: TeamSalesProps) {
   const [view, setView] = useState("chart");
   const [salesPersonLoading, setSalesPersonLoading] = useState(false);
   const [salesPersonError, setSalesPersonError] = useState<string | null>(null);
   const [unitManagersLoading, setUnitManagerLoading] = useState(false);
   const [unitManagerError, setUnitManagerError] = useState<string | null>(null);
-  const [Top10SalesPersonData, setTop10SalesPersonData] = useState<Top10SalesPersonItem[]>([]);
-  const [selectedTop10SalesPersons, setSelectedTop10SalesPersons] = useState<Date | undefined>(new Date());
-  const [Top10UnitManagersData, setTop10UnitManagersData] = useState<Top10UnitManagerItem[]>([]);
-  const [selectedTop10UnitManagers, setSelectedTop10UnitManagers] = useState<Date | undefined>(new Date());
+  const [Top10SalesPersonData, setTop10SalesPersonData] = useState<
+    Top10SalesPersonItem[]
+  >([]);
+  const [selectedTop10SalesPersons, setSelectedTop10SalesPersons] = useState<
+    Date | undefined
+  >(new Date());
+  const [Top10UnitManagersData, setTop10UnitManagersData] = useState<
+    Top10UnitManagerItem[]
+  >([]);
+  const [selectedTop10UnitManagers, setSelectedTop10UnitManagers] = useState<
+    Date | undefined
+  >(new Date());
 
   useEffect(() => {
     if (!selectedTop10SalesPersons) return;
@@ -73,7 +87,10 @@ export function TeamDashboard({
         if (res.success) {
           setTop10SalesPersonData(res.data);
         } else {
-          console.error("Failed to fetch top 10 salesperson data:", res.message);
+          console.error(
+            "Failed to fetch top 10 salesperson data:",
+            res.message
+          );
         }
       })
       .catch((err) => {
@@ -98,7 +115,10 @@ export function TeamDashboard({
         if (res.success) {
           setTop10UnitManagersData(res.data);
         } else {
-          console.error("Failed to fetch top 10 unit manager data:", res.message);
+          console.error(
+            "Failed to fetch top 10 unit manager data:",
+            res.message
+          );
         }
       })
       .catch((err) => {
@@ -111,27 +131,35 @@ export function TeamDashboard({
   }, [selectedTop10UnitManagers]);
 
   const colors = [
-    "#D75C3C", "#F28E2B", "#FFBE0B", "#E15759", "#FF9F1C",
-    "#76B041", "#FAA43A", "#F4D35E", "#C6AC8F", "#8D99AE"
+    "#D75C3C",
+    "#F28E2B",
+    "#FFBE0B",
+    "#E15759",
+    "#FF9F1C",
+    "#76B041",
+    "#FAA43A",
+    "#F4D35E",
+    "#C6AC8F",
+    "#8D99AE",
   ];
 
-  const chartDataSalesPersons = ((Top10SalesPersonData?.length ?? 0) > 0
-    ? Top10SalesPersonData
-    : Top10SalesPerson
-  )?.map((p, idx) => ({
-    name: p.AgentName,
-    value: p.CurrentMonth,
-    fill: colors[idx % colors.length],
-  })) ?? [];
+  const chartDataSalesPersons =
+    ((Top10SalesPersonData?.length ?? 0) > 0
+      ? Top10SalesPersonData
+      : Top10SalesPerson
+    )?.map((p, idx) => ({
+      name: p.AgentName,
+      value: p.CurrentMonth,
+      fill: colors[idx % colors.length],
+    })) ?? [];
 
-  const chartDataDeveloperSales =
-    (DeveloperSales ?? [])
-      //.slice(0, 10) // limit to first 20
-      .map((p, idx) => ({
-        developer: p.DeveloperName,
-        sales: p.NetTotalTCP,
-        fill: colors[idx % colors.length], // loop if >10
-      }));
+  const chartDataDeveloperSales = (DeveloperSales ?? [])
+    //.slice(0, 10) // limit to first 20
+    .map((p, idx) => ({
+      developer: p.DeveloperName,
+      sales: p.NetTotalTCP,
+      fill: colors[idx % colors.length], // loop if >10
+    }));
 
   const maxIndex = chartDataSalesPersons.reduce(
     (maxIdx, curr, idx, arr) => (curr.value > arr[maxIdx].value ? idx : maxIdx),
@@ -140,14 +168,15 @@ export function TeamDashboard({
 
   const [activeIndex, setActiveIndex] = useState<number | null>(maxIndex);
 
-  const topManagers = ((Top10UnitManagersData?.length ?? 0) > 0
-    ? Top10UnitManagersData
-    : Top10UnitManager
-  )?.map((p, idx) => ({
-    name: p.AgentName,
-    value: p.CurrentMonth,
-    // fill: colors[idx % colors.length], // optional
-  })) ?? [];
+  const topManagers =
+    ((Top10UnitManagersData?.length ?? 0) > 0
+      ? Top10UnitManagersData
+      : Top10UnitManager
+    )?.map((p, idx) => ({
+      name: p.AgentName,
+      value: p.CurrentMonth,
+      fill: colors[idx % colors.length], // optional
+    })) ?? [];
 
   return (
     <div className="space-y-4">
@@ -155,15 +184,14 @@ export function TeamDashboard({
         <Card className="rounded-lg border shadow-none bg-white gap-3">
           <CardHeader className="flex items-center justify-between gap-2 py-2 border-b">
             <div className="flex flex-1 flex-col justify-center gap-1 sm:pb-0">
-              <CardTitle>
-                Top 10 Sales Persons
-              </CardTitle>
-              <CardDescription>
-                Showing the top 10 sales person
-              </CardDescription>
+              <CardTitle>Top 10 Sales Persons</CardTitle>
+              <CardDescription>Showing the top 10 sales person</CardDescription>
             </div>
             <div className="flex items-center gap-2">
-              <MonthYearPicker value={selectedTop10SalesPersons} onChange={setSelectedTop10SalesPersons} />
+              <MonthYearPicker
+                value={selectedTop10SalesPersons}
+                onChange={setSelectedTop10SalesPersons}
+              />
             </div>
           </CardHeader>
 
@@ -187,7 +215,6 @@ export function TeamDashboard({
                     outerRadius={90}
                     paddingAngle={2}
                     labelLine={false}
-                    label
                     activeIndex={activeIndex ?? undefined}
                     activeShape={(props: SectorProps) => (
                       <Sector
@@ -221,7 +248,7 @@ export function TeamDashboard({
                     />
                     {index + 1}. {formattedName(dev.name)}
                   </span>
-                  <span className="text-gray-600">
+                  <span className="text-primary font-semibold">
                     {dev.value.toLocaleString()}
                   </span>
                 </div>
@@ -233,15 +260,16 @@ export function TeamDashboard({
         <Card className="rounded-lg border shadow-none bg-white">
           <CardHeader className="flex items-center justify-between gap-2 py-3 border-b">
             <div className="flex flex-1 flex-col justify-center gap-1 sm:pb-0">
-              <CardTitle>
-                Top 10 Unit Managers
-              </CardTitle>
+              <CardTitle>Top 10 Unit Managers</CardTitle>
               <CardDescription>
                 Showing the top 10 unit managers
               </CardDescription>
             </div>
             <div className="flex items-center gap-2">
-              <MonthYearPicker value={selectedTop10UnitManagers} onChange={setSelectedTop10UnitManagers} />
+              <MonthYearPicker
+                value={selectedTop10UnitManagers}
+                onChange={setSelectedTop10UnitManagers}
+              />
             </div>
           </CardHeader>
 
@@ -253,21 +281,27 @@ export function TeamDashboard({
                   className="flex items-center justify-between"
                 >
                   <div className="flex items-center gap-4">
-                    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-gray-200 text-xs font-regular">
+                    <span
+                      className="flex h-7 w-7 items-center justify-center rounded-full text-xs text-white font-regular"
+                      style={{ backgroundColor: manager.fill }} // use the fill color
+                    >
                       {index + 1}
                     </span>
+
                     <div className="flex flex-col gap-1">
                       <span className="text-sm text-gray-700">
                         {formattedName(manager.name)}
                       </span>
                       <div className="h-1 w-64 bg-gray-200 rounded-full mt-1">
                         <div
-                          className="h-1.5 rounded-full bg-primary"
+                          className="h-1.5 rounded-full"
                           style={{
-                            width: `${(manager.value /
-                              Math.max(...topManagers.map((m) => m.value))) *
+                            width: `${
+                              (manager.value /
+                                Math.max(...topManagers.map((m) => m.value))) *
                               100
-                              }%`,
+                            }%`,
+                            backgroundColor: manager.fill, // optional: match bar with circle
                           }}
                         />
                       </div>
@@ -299,19 +333,21 @@ export function TeamDashboard({
           <div className="flex items-center gap-2">
             <div className="inline-flex bg-white border rounded-xl p-[3px] h-9">
               <button
-                className={`flex items-center gap-1 px-3 py-1 text-sm font-medium rounded-md transition-colors ${view === "chart"
-                  ? "bg-primary text-white shadow-sm"
-                  : "text-muted-foreground hover:bg-gray-50"
-                  }`}
+                className={`flex items-center gap-1 px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+                  view === "chart"
+                    ? "bg-primary text-white shadow-sm"
+                    : "text-muted-foreground hover:bg-gray-50"
+                }`}
                 onClick={() => setView("chart")}
               >
                 <ChartBar className="w-3 h-3" />
               </button>
               <button
-                className={`flex items-center gap-1 px-3 py-1 text-sm font-medium rounded-md transition-colors ${view === "table"
-                  ? "bg-primary text-white shadow-sm"
-                  : "text-muted-foreground hover:bg-gray-50"
-                  }`}
+                className={`flex items-center gap-1 px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+                  view === "table"
+                    ? "bg-primary text-white shadow-sm"
+                    : "text-muted-foreground hover:bg-gray-50"
+                }`}
                 onClick={() => setView("table")}
               >
                 <Table className="w-3 h-3" />
@@ -324,9 +360,12 @@ export function TeamDashboard({
           <CardContent className="pt-6 pb-0 min-w-[800px]">
             <ChartContainer
               config={chartConfig}
-              className="aspect-auto h-110 w-full"
+              className="aspect-auto h-90 w-full"
             >
-              <AreaChart data={chartDataDeveloperSales} margin={{ top: 15, right: 20, left: 0, bottom: 70 }}>
+              <AreaChart
+                data={chartDataDeveloperSales}
+                margin={{ top: 15, right: 20, left: 0, bottom: 70 }}
+              >
                 <CartesianGrid strokeDasharray="3 3" />
 
                 {/* X-axis is developer names */}
