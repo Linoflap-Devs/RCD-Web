@@ -177,7 +177,7 @@ export default function AgentsRegistrations() {
               <div className="space-y-0.5">
                 <h2 className="text-2xl font-semibold tracking-tight">Agents Registration List</h2>
                 <p className="text-sm text-muted-foreground">
-                  List of agents awaiting approval.
+                  List of agents awaiting approval
                 </p>
               </div>
               <div className="flex flex-col md:flex-row justify-between items-center">

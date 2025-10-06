@@ -156,22 +156,22 @@ export const forecastColumns: ColumnDef<ComissionForecastsItem>[] = [
     header: "Forecast DP % Paid",
     cell: ({ row }) => `${row.getValue("ForeCastPercentDPPaid") ?? 0}%`,
   },
-  // {
-  //   accessorKey: "DPStartSchedule",
-  //   header: "DP Start",
-  //   cell: ({ row }) => {
-  //     const date = row.getValue("DPStartSchedule") as string | null;
-  //     return date ? new Date(date).toLocaleDateString() : "N/A";
-  //   },
-  // },
-  // {
-  //   accessorKey: "EndDP",
-  //   header: "DP End",
-  //   cell: ({ row }) => {
-  //     const date = row.getValue("EndDP") as string | null;
-  //     return date ? new Date(date).toLocaleDateString() : "N/A";
-  //   },
-  // },
+  {
+    accessorKey: "DPStartSchedule",
+    header: "DP Start",
+    cell: ({ row }) => {
+      const date = row.getValue("DPStartSchedule") as string | null;
+      return date ? new Date(date).toLocaleDateString() : "N/A";
+    },
+  },
+  {
+    accessorKey: "EndDP",
+    header: "DP End",
+    cell: ({ row }) => {
+      const date = row.getValue("EndDP") as string | null;
+      return date ? new Date(date).toLocaleDateString() : "N/A";
+    },
+  },
 ];
 
 interface CollectionForecastProps {

@@ -208,7 +208,7 @@ export default function AgentApprovalDialog({
           <Input
             type="text"
             placeholder="Search all agents by name, contact, or ID..."
-            className="w-full mt-2.5"
+            className="bg-white w-full mt-2.5"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />

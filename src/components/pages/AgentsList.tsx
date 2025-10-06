@@ -195,7 +195,7 @@ export default function AgentsList() {
               <div className="space-y-0.5">
                 <h2 className="text-2xl font-semibold tracking-tight">Agents</h2>
                 <p className="text-sm text-muted-foreground">
-                  List of all agents.
+                  List of all agents
                 </p>
               </div>
               <div className="flex flex-col md:flex-row justify-between items-center">
