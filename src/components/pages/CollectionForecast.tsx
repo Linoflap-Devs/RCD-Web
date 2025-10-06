@@ -30,7 +30,7 @@ import {
 import {
   CommissionForecastByYearMonthItem,
   DownpaymentPercentItem,
-  Top10ForecastBuyersItem
+  Top10ForecastBuyersItem,
 } from "@/services/dashboard/dashboard.api";
 import { DataTable } from "../ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
@@ -38,7 +38,10 @@ import { Search } from "lucide-react";
 import { Input } from "../ui/input";
 import { useEffect, useState } from "react";
 import { useDebounce } from "@/hooks/use-debounce";
-import { ComissionForecastsItem, getCollectionForecast } from "@/services/commissions-forecast/commissionsforecast.api";
+import {
+  ComissionForecastsItem,
+  getCollectionForecast,
+} from "@/services/commissions-forecast/commissionsforecast.api";
 import { MonthYearPicker } from "../ui/monthyearpicker";
 
 interface BuyerData {
@@ -86,10 +89,8 @@ export const forecastColumns: ColumnDef<ComissionForecastsItem>[] = [
     cell: ({ row }) => {
       const buyersName = row.getValue("BuyersName") as String;
 
-      return (
-        <div className="font-semibold">{buyersName}</div>
-      )
-    }
+      return <div className="font-semibold">{buyersName}</div>;
+    },
   },
   // {
   //   accessorKey: "ProjectName",
@@ -185,14 +186,20 @@ export function CollectionForecastDashboard({
   Top10ForecastBuyers,
   CommissionForecastByYearMonth,
   CommissionForecast,
-  DownpaymentPercent
+  DownpaymentPercent,
 }: CollectionForecastProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearch = useDebounce(searchTerm, 400);
-  const [commissionsForecastLoading, setCommissionsForecastLoading] = useState(false);
-  const [commissionsForecastError, setCommissionsForecastError] = useState(null);
-  const [commissionsforecastData, setCommissionsForecastData] = useState<ComissionForecastsItem[]>([])
-  const [selectedCommissionForecast, setSelectedCommissionForecast] = useState<Date | undefined>(new Date());
+  const [commissionsForecastLoading, setCommissionsForecastLoading] =
+    useState(false);
+  const [commissionsForecastError, setCommissionsForecastError] =
+    useState(null);
+  const [commissionsforecastData, setCommissionsForecastData] = useState<
+    ComissionForecastsItem[]
+  >([]);
+  const [selectedCommissionForecast, setSelectedCommissionForecast] = useState<
+    Date | undefined
+  >(new Date());
 
   useEffect(() => {
     if (!selectedCommissionForecast) return;
@@ -207,7 +214,10 @@ export function CollectionForecastDashboard({
         if (res.success) {
           setCommissionsForecastData(res.data);
         } else {
-          console.error("Failed to fetch top 10 unit manager data:", res.message);
+          console.error(
+            "Failed to fetch top 10 unit manager data:",
+            res.message
+          );
         }
       })
       .catch((err) => {
@@ -221,33 +231,33 @@ export function CollectionForecastDashboard({
 
   const regex = new RegExp(debouncedSearch, "i");
 
-  const filteredForecast = ((commissionsforecastData?.length ?? 0) > 0
-    ? commissionsforecastData
-    : CommissionForecast
-  )?.filter((item) => {
-    const fullName = item.BuyersName ?? "";
-    const rowno = item.rowno?.toString() ?? "";
-    const projectName = item.ProjectName ?? "";
-    const division = item.Division ?? "";
+  const filteredForecast =
+    ((commissionsforecastData?.length ?? 0) > 0
+      ? commissionsforecastData
+      : CommissionForecast
+    )?.filter((item) => {
+      const fullName = item.BuyersName ?? "";
+      const rowno = item.rowno?.toString() ?? "";
+      const projectName = item.ProjectName ?? "";
+      const division = item.Division ?? "";
 
-    return (
-      regex.test(fullName) ||
-      regex.test(rowno) ||
-      regex.test(projectName) ||
-      regex.test(division)
-    );
-  }) ?? [];
+      return (
+        regex.test(fullName) ||
+        regex.test(rowno) ||
+        regex.test(projectName) ||
+        regex.test(division)
+      );
+    }) ?? [];
 
-  const colors = [
-    "#F8BB21"
-  ];
+  const colors = ["#F8BB21"];
 
-  const chartDataForecastBuyers: BuyerData[] =
-    (Top10ForecastBuyers ?? []).map((b, idx) => ({
+  const chartDataForecastBuyers: BuyerData[] = (Top10ForecastBuyers ?? []).map(
+    (b, idx) => ({
       buyer: b.BuyersName,
       value: b.NetTotalTCP,
       fill: colors[idx % colors.length],
-    }));
+    })
+  );
 
   const forecastMonthlyData =
     CommissionForecastByYearMonth?.flatMap((yearData) =>
@@ -267,7 +277,7 @@ export function CollectionForecastDashboard({
     {
       name: "DP Paid",
       dpPaid: DownpaymentPercent?.TotalPaidPercent ?? 0, // cap bar
-      actualDP: DownpaymentPercent?.TotalPaid ?? 0,         // for labels/tooltip
+      actualDP: DownpaymentPercent?.TotalPaid ?? 0, // for labels/tooltip
       maxDP: DownpaymentPercent?.TotalForecast ?? 0,
     },
   ];
@@ -276,81 +286,78 @@ export function CollectionForecastDashboard({
     <div className="space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 items-stretch">
         <Card className="rounded-lg border shadow-none bg-white">
-          <CardHeader className="flex items-center gap-2">
+          <CardHeader className="flex items-center justify-between pt-3 pb-6 border-b">
             <div className="flex flex-1 flex-col justify-center gap-1 sm:pb-0">
-              <CardTitle className="text-primary">
-                DP Paid Progress
-              </CardTitle>
+              <CardTitle>DP Paid Progress</CardTitle>
               <CardDescription>
                 Showing the average forecasted DP paid
               </CardDescription>
             </div>
           </CardHeader>
-
           <CardContent className="flex justify-center items-center">
             <ChartContainer config={chartConfig} className="aspect-square h-50">
-              <ResponsiveContainer height="100%" width="100%" className="mt-3">
-                <RadialBarChart
-                  data={chartDataDP}
-                  startAngle={180}
-                  endAngle={0}
-                  innerRadius="60%"
-                  outerRadius="100%"
-                  barSize={35}
-                >
-                  <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
-                    <Label
-                      content={({ viewBox }) => {
-                        if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                          const formatAmount = (num: number) =>
-                            (num / 1_000_000).toFixed(2) + "M";
+              <RadialBarChart
+                data={chartDataDP}
+                startAngle={180}
+                endAngle={0}
+                innerRadius="60%"
+                outerRadius="100%"
+                barSize={35}
+              >
+                <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
+                  <Label
+                    content={({ viewBox }) => {
+                      if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                        const formatAmount = (num: number) =>
+                          (num / 1_000_000).toFixed(2) + "M";
 
-                          return (
-                            <text
+                        return (
+                          <text
+                            x={viewBox.cx}
+                            y={viewBox.cy}
+                            textAnchor="middle"
+                            dominantBaseline="middle"
+                          >
+                            <tspan
                               x={viewBox.cx}
-                              y={viewBox.cy}
-                              textAnchor="middle"
-                              dominantBaseline="middle"
+                              y={(viewBox.cy || 0) - 8}
+                              className="fill-foreground text-lg font-bold"
                             >
-                              <tspan
-                                x={viewBox.cx}
-                                y={(viewBox.cy || 0) - 8}
-                                className="fill-foreground text-lg font-bold"
-                              >
-                                {chartDataDP[0].dpPaid.toFixed(2)}%
-                              </tspan>
+                              {chartDataDP[0].dpPaid.toFixed(2)}%
+                            </tspan>
 
-                              <tspan
-                                x={viewBox.cx}
-                                y={(viewBox.cy || 0) + 20}
-                                className="fill-muted-foreground text-sm"
-                              >
-                                {`${formatAmount(chartDataDP[0].actualDP)} / ${formatAmount(chartDataDP[0].maxDP)}`}
-                              </tspan>
+                            <tspan
+                              x={viewBox.cx}
+                              y={(viewBox.cy || 0) + 20}
+                              className="fill-muted-foreground text-sm"
+                            >
+                              {`${formatAmount(
+                                chartDataDP[0].actualDP
+                              )} / ${formatAmount(chartDataDP[0].maxDP)}`}
+                            </tspan>
 
-                              <tspan
-                                x={viewBox.cx}
-                                y={(viewBox.cy || 0) + 40}
-                                className="fill-muted-foreground text-sm"
-                              >
-                                Forecasted DP Paid
-                              </tspan>
-                            </text>
-                          );
-                        }
-                        return null;
-                      }}
-                    />
-                  </PolarRadiusAxis>
-                  <RadialBar
-                    dataKey="dpPaid"
-                    cornerRadius={10}
-                    fill={
-                      chartDataDP[0].dpPaid > 100 ? "#ef4444" : "var(--chart-2)"
-                    }
+                            <tspan
+                              x={viewBox.cx}
+                              y={(viewBox.cy || 0) + 40}
+                              className="fill-muted-foreground text-sm"
+                            >
+                              Forecasted DP Paid
+                            </tspan>
+                          </text>
+                        );
+                      }
+                      return null;
+                    }}
                   />
-                </RadialBarChart>
-              </ResponsiveContainer>
+                </PolarRadiusAxis>
+                <RadialBar
+                  dataKey="dpPaid"
+                  cornerRadius={10}
+                  fill={
+                    chartDataDP[0].dpPaid > 100 ? "#ef4444" : "var(--chart-2)"
+                  }
+                />
+              </RadialBarChart>
             </ChartContainer>
           </CardContent>
           <CardFooter className="flex-col items-start gap-2 text-sm pt-2">
@@ -363,20 +370,22 @@ export function CollectionForecastDashboard({
             </div>
             <div className="text-muted-foreground leading-none">
               Current progress is{" "}
-              <span className="font-semibold">{chartDataDP[0].dpPaid.toFixed(2)}%</span>{" "}
+              <span className="font-semibold">
+                {chartDataDP[0].dpPaid.toFixed(2)}%
+              </span>{" "}
               ({(chartDataDP[0].actualDP / 1_000_000).toFixed(2)}M) out of{" "}
-              <span className="font-semibold">{(chartDataDP[0].maxDP / 1_000_000).toFixed(2)}M</span>{" "}
+              <span className="font-semibold">
+                {(chartDataDP[0].maxDP / 1_000_000).toFixed(2)}M
+              </span>{" "}
               forecasted.
             </div>
           </CardFooter>
         </Card>
 
         <Card className="col-span-2 rounded-lg border shadow-none bg-white">
-          <CardHeader className="flex items-center gap-2">
+          <CardHeader className="flex items-center justify-between pt-3 pb-6 border-b">
             <div className="flex flex-1 flex-col justify-center gap-1 sm:pb-0">
-              <CardTitle className="text-primary">
-                Top 10 Buyer Contribution / Forecast
-              </CardTitle>
+              <CardTitle>Top 10 Buyer Contribution / Forecast</CardTitle>
               <CardDescription>
                 Showing the top buyers by forecasted net contracts
               </CardDescription>
@@ -446,15 +455,19 @@ export function CollectionForecastDashboard({
         </Card>
       </div>
 
-      <Card className="rounded-lg border shadow-none bg-white">
-        <CardHeader className="flex items-center gap-2">
+      <Card className="overflow-x-auto rounded-lg gap-0 shadow-none">
+        <CardHeader className="flex items-center justify-between pt-3 pb-6 border-b">
           <div className="flex flex-1 flex-col justify-center gap-1 sm:pb-0">
-            <CardTitle className="text-primary">
-              Reservation Date and Net Contract Price
-            </CardTitle>
+            <CardTitle>Reservation Date and Net Contract Price</CardTitle>
             <CardDescription>
               Showing the the forecasted net contracts across reservation dates.
             </CardDescription>
+          </div>
+          <div className="flex items-center gap-2">
+            <MonthYearPicker
+              value={selectedCommissionForecast}
+              onChange={setSelectedCommissionForecast}
+            />
           </div>
         </CardHeader>
         <CardContent className="pt-6 pb-0">
@@ -513,18 +526,20 @@ export function CollectionForecastDashboard({
           </ChartContainer>
         </CardContent>
       </Card>
-      <Card className="rounded-lg border shadow-none bg-white">
-        <CardHeader className="flex items-center justify-between gap-2">
-          <div className="flex flex-1 flex-col justify-center gap-1 sm:pb-0">
-            <CardTitle className="text-primary">
-              Data Collection Forecast Overview
-            </CardTitle>
+
+      <Card className="overflow-x-auto rounded-lg gap-0 shadow-none">
+        <CardHeader className="flex items-center justify-between pt-3 pb-6 border-b">
+          <div className="flex flex-1 flex-col justify-center gap-1 pb-3 sm:pb-0">
+            <CardTitle>Data Collection Forecast Overview</CardTitle>
             <CardDescription>
               Showing the tabular history of all collection forecasts.
             </CardDescription>
           </div>
           <div className="flex items-center gap-2">
-            <MonthYearPicker value={selectedCommissionForecast} onChange={setSelectedCommissionForecast} />
+            <MonthYearPicker
+              value={selectedCommissionForecast}
+              onChange={setSelectedCommissionForecast}
+            />
           </div>
         </CardHeader>
         <CardContent className="overflow-y-auto">

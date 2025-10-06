@@ -20,7 +20,7 @@ export default function Dashboard() {
   const [dashboardData, setDashboardData] = useState<DashboardItem | undefined>(undefined);
   const [error, setError] = useState<string | null>(null);
 
-  //console.log(dashboardData);
+  console.log(dashboardData);
 
   useEffect(() => {
     setLoading(true);
@@ -229,7 +229,7 @@ export default function Dashboard() {
                 Data Analytics and Reports
               </CardTitle>
               <CardDescription className="text-sm text-muted-foreground">
-                Showing analytic reports on a variety of topics.
+                Showing analytic reports on a variety of topics
               </CardDescription>
             </div>
           </div>

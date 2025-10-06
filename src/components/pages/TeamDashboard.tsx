@@ -153,9 +153,9 @@ export function TeamDashboard({
     <div className="space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4 items-stretch">
         <Card className="rounded-lg border shadow-none bg-white gap-3">
-          <CardHeader className="flex items-center justify-between gap-2 py-2">
+          <CardHeader className="flex items-center justify-between gap-2 py-2 border-b">
             <div className="flex flex-1 flex-col justify-center gap-1 sm:pb-0">
-              <CardTitle className="text-primary">
+              <CardTitle>
                 Top 10 Sales Persons
               </CardTitle>
               <CardDescription>
@@ -231,9 +231,9 @@ export function TeamDashboard({
         </Card>
 
         <Card className="rounded-lg border shadow-none bg-white">
-          <CardHeader className="flex items-center justify-between gap-2 py-3">
+          <CardHeader className="flex items-center justify-between gap-2 py-3 border-b">
             <div className="flex flex-1 flex-col justify-center gap-1 sm:pb-0">
-              <CardTitle className="text-primary">
+              <CardTitle>
                 Top 10 Unit Managers
               </CardTitle>
               <CardDescription>
@@ -286,9 +286,9 @@ export function TeamDashboard({
       </div>
 
       <Card className="overflow-x-auto rounded-lg shadow-none">
-        <CardHeader className="flex items-center justify-between gap-2 ">
+        <CardHeader className="flex items-center justify-between gap-2 border-b">
           <div className="flex flex-1 flex-col justify-center gap-1 sm:pb-0">
-            <CardTitle className="text-primary">
+            <CardTitle>
               Developer Sales{" "}
               {/* <span className="text-muted-foreground">(26 out of 40)</span> */}
             </CardTitle>

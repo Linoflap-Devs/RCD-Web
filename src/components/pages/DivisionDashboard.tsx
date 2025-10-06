@@ -306,7 +306,7 @@ export function DivisionDashboard({
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
               <XAxis
                 dataKey="name"
-                tickLine={true}
+                tickLine={false}
                 interval={0}
                 angle={-35}
                 textAnchor="end"
