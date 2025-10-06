@@ -110,7 +110,7 @@ export default function AgentApprovalDialog({
         new Date(agent.Birthdate).toISOString().split("T")[0] ===
         new Date(selectedAgent.Birthdate).toISOString().split("T")[0];
 
-      return sameName;
+      return sameName || sameBirthdate;
     });
   }, [agents, selectedAgent]);
 
@@ -188,20 +188,25 @@ export default function AgentApprovalDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[900px] p-8">
+      <DialogContent className="sm:max-w-[950px] p-8">
         <DialogHeader>
-          <DialogTitle className="text-center text-2xl font-semibold text-primary">
-            Agent Approval
+          <DialogTitle className="text-center text-2xl text-gray-800 leading-none">
+            <span className="block text-sm text-gray-500 mb-1 tracking-wide">
+             Account Approval
+            </span>
+            <span className="text-primary font-semibold">
+              {selectedAgent.FirstName} {selectedAgent.LastName}
+            </span>
           </DialogTitle>
         </DialogHeader>
 
         {/* Search Field */}
         <div className="items-center mt-2">
-          <h3 className="text-md font-medium text-gray-700">
+          {/* <h3 className="text-md font-medium text-gray-700">
             {duplicateAgents.length > 0 && !search
               ? `Possible Duplicate Agent Records for: ${selectedAgent.FirstName} ${selectedAgent.LastName}`
               : "Search Agents"}
-          </h3>
+          </h3> */}
           <Input
             type="text"
             placeholder="Search all agents by name, contact, or ID..."
