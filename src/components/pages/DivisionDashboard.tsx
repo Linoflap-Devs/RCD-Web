@@ -229,7 +229,7 @@ export function DivisionDashboard({
                 <TargetIcon className="h-8 w-8" />
               </div>
               <div className="flex flex-col space-y-1">
-                <div className="text-2xl font-semibold tracking-tight">{TotalSalesTarget?.TotalCurrentMonth.toLocaleString() ?? 0}</div>
+                <div className="text-2xl font-semibold tracking-tight">{TotalSalesTarget?.TotalTargetMonth.toLocaleString() ?? 0}</div>
                 <div className="text-xs text-muted-foreground">Total Sales Target</div>
               </div>
             </div>
