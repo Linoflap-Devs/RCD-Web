@@ -34,6 +34,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   }
 
   const handleLogout = async () => {
+    //console.log("Logging out...");
+    sessionStorage.setItem("loggingOut", "true");
+
     try {
       await logoutUser();
     } catch (error) {
@@ -41,14 +44,22 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     }
 
     toast({
-      title: "Login Successful",
+      title: "Logout Successful",
       variant: "default",
-      description: `Successfully logged out.`,
+      description: "Successfully logged out.",
     });
-    
-    logout(); // Zustand
-    sessionStorage.removeItem("username");
-    router.push("/");
+
+    // Delay redirect slightly to ensure sessionStorage is updated
+    setTimeout(() => {
+      router.push("/");
+    }, 100);
+
+    // Clear storage AFTER redirect
+    setTimeout(() => {
+      logout();
+      sessionStorage.removeItem("auth-storage");
+      sessionStorage.removeItem("loggingOut");
+    }, 600);
   };
 
   return (

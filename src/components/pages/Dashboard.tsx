@@ -105,7 +105,7 @@ export default function Dashboard() {
           <Card className="bg-white border flex flex-col justify-center shadow-none rounded-md">
             <CardContent>
               <div className="flex items-center gap-4">
-                <div className="flex items-center justify-center w-15 h-14 rounded-sm bg-primary text-white border">
+                <div className="flex items-center justify-center w-15 h-14 rounded-md bg-primary text-white border border-transparent">
                   <Users className="h-6 w-6" />
                 </div>
                 <div className="flex flex-col space-y-1">
@@ -119,7 +119,7 @@ export default function Dashboard() {
           <Card className="bg-white border flex flex-col justify-center shadow-none not-user-invalid:rounded-md">
             <CardContent>
               <div className="flex items-center gap-4">
-                <div className="flex items-center justify-center w-15 h-14 rounded-sm bg-[#F28E2B] text-white border">
+                <div className="flex items-center justify-center w-15 h-14 rounded-md bg-[#F28E2B] text-white border border-transparent">
                   <Building className="h-6 w-6" />
                 </div>
                 <div className="flex flex-col space-y-1">
@@ -133,7 +133,7 @@ export default function Dashboard() {
           <Card className="bg-white border flex flex-col justify-center shadow-none rounded-md">
             <CardContent>
               <div className="flex items-center gap-4">
-                <div className="flex items-center justify-center w-15 h-14 rounded-sm bg-[#FFBE0B] text-white border">
+                <div className="flex items-center justify-center w-15 h-14 rounded-md bg-[#FFBE0B] text-white border border-transparent">
                   <FolderClosed className="h-6 w-6" />
                 </div>
                 <div className="flex flex-col space-y-1">
@@ -147,7 +147,7 @@ export default function Dashboard() {
           <Card className="bg-white border flex flex-col justify-center shadow-none rounded-md">
             <CardContent>
               <div className="flex items-center gap-4">
-                <div className="flex items-center justify-center w-15 h-14 rounded-sm bg-[#76B041] text-white border">
+                <div className="flex items-center justify-center w-15 h-14 rounded-md bg-[#76B041] text-white border border-transparent">
                   <Coins className="h-6 w-6" />
                 </div>
                 <div className="flex flex-col space-y-1">

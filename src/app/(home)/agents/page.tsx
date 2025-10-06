@@ -1,9 +1,10 @@
+import AccessGuard from "@/components/pages/AccessGuard";
 import AgentsList from "@/components/pages/AgentsList";
 
 export default function Page() {
-    return (
-        <>
-            <AgentsList />
-        </>
-    )
+  return (
+    <AccessGuard>
+      <AgentsList />
+    </AccessGuard>
+  );
 }

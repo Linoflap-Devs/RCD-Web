@@ -147,9 +147,7 @@ export default function AgentsList() {
 
     fetchAgents();
   }, []);
-
-  console.log(agents);
-
+  
   const regex = new RegExp(debouncedSearch, "i");
 
   const filteredAgents = agents.filter((agent) => {
