@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/table";
 import { useState } from "react";
 import { DataTablePagination } from "./data-table-pagination";
+import { cn } from "@/lib/utils"; // for conditional classNames (optional helper)
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -31,7 +32,11 @@ interface DataTableProps<TData, TValue> {
   hideHeader?: boolean;
   rowSelection?: Record<string, boolean>;
   onRowSelectionChange?: (selection: Record<string, boolean>) => void;
-  selectedRowIds?: Record<string, boolean>; // for checkbox
+  selectedRowIds?: Record<string, boolean>;
+  /** NEW: fired when a row is clicked */
+  onRowClick?: (row: TData) => void;
+  /** NEW: returns custom class for row (for highlighting) */
+  getRowClassName?: (row: TData) => string;
 }
 
 export function DataTable<TData, TValue>({
@@ -41,12 +46,15 @@ export function DataTable<TData, TValue>({
   pageSize = 10,
   hideHeader = false,
   onRowSelectionChange,
-  selectedRowIds = {}, // for checkbox
+  selectedRowIds = {},
+  onRowClick,
+  getRowClassName,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+
   const handleRowSelectionChange = (updater: any) => {
     const newSelection =
       typeof updater === "function" ? updater(rowSelection) : updater;
@@ -56,6 +64,7 @@ export function DataTable<TData, TValue>({
       onRowSelectionChange(newSelection);
     }
   };
+
   const table = useReactTable({
     data,
     columns,
@@ -73,7 +82,7 @@ export function DataTable<TData, TValue>({
       columnVisibility,
       rowSelection,
     },
-    getRowId: (row: any) => row.crewCode,
+    getRowId: (row: any) => row.crewCode ?? row.id ?? JSON.stringify(row),
     initialState: {
       pagination: {
         pageSize,
@@ -90,21 +99,19 @@ export function DataTable<TData, TValue>({
               <TableHeader>
                 {table.getHeaderGroups().map((headerGroup) => (
                   <TableRow key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => {
-                      return (
-                        <TableHead
-                          key={header.id}
-                          className="bg-sidebar text-muted-foreground border-none font-semibold text-sm sm:text-sm py-2 sm:py-2 text-justify whitespace-nowrap"
-                        >
-                          {header.isPlaceholder
-                            ? null
-                            : flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                              )}
-                        </TableHead>
-                      );
-                    })}
+                    {headerGroup.headers.map((header) => (
+                      <TableHead
+                        key={header.id}
+                        className="bg-sidebar text-muted-foreground border-none font-semibold text-sm sm:text-sm py-2 sm:py-2 text-justify whitespace-nowrap"
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                      </TableHead>
+                    ))}
                   </TableRow>
                 ))}
               </TableHeader>
@@ -115,12 +122,16 @@ export function DataTable<TData, TValue>({
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
-                    className="h-8 sm:h-8 hover:bg-muted/20"
+                    onClick={() => onRowClick?.(row.original)}
+                    className={cn(
+                      "h-8 sm:h-8 hover:bg-muted/20 cursor-pointer transition-colors",
+                      getRowClassName?.(row.original)
+                    )}
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell
                         key={cell.id}
-                        className="py-2 sm:py-2 text-justify text-xs"
+                        className="py-2 sm:py-3 text-justify text-xs"
                       >
                         {flexRender(
                           cell.column.columnDef.cell,

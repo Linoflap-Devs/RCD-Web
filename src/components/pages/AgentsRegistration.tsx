@@ -11,65 +11,9 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Input } from "../../components/ui/input";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { AgentsItem, AgentsRegisItem, approveAgent, ExperienceItem, getAgents, getAgentsRegistrations } from "@/services/agents/agents.api";
+import { AgentsItem, AgentsRegisItem, getAgents, getAgentsRegistrations } from "@/services/agents/agents.api";
 import { useDebounce } from "@/hooks/use-debounce";
-import { toast } from "@/components/ui/use-toast";
-
-type ApproveButtonProps = {
-  AgentRegistrationID: number
-  AgentID: number | null
-  onApprove: (AgentRegistrationID: number, AgentID?: number) => Promise<void>
-  children?: React.ReactNode
-}
-
-function ApproveAgentDialog({
-  AgentRegistrationID,
-  AgentID,
-  onApprove,
-  children,
-}: ApproveButtonProps) {
-  return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
-        {children ?? (
-          <button className="text-sm text-green-600 hover:underline">
-            Approve
-          </button>
-        )}
-      </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            Do you want to approve agent with ID{" "}
-            <span className="font-semibold">{AgentRegistrationID} , {AgentID}</span>?
-            This action cannot be undone.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction
-            className="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded-md transition-colors duration-200"
-            onClick={() => onApprove(AgentRegistrationID, AgentID ?? undefined)}
-          >
-            Approve
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
-  )
-}
+import AgentApprovalDialog from "../dialogs/AgentApprovalDialog";
 
 export default function AgentsRegistrations() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -78,24 +22,8 @@ export default function AgentsRegistrations() {
   const [error, setError] = useState<string | null>(null);
   const debouncedSearch = useDebounce(searchTerm, 400);
   const [agents, setAgents] = useState<AgentsItem[]>([]); // to compare
-
-  const handleApprove = async (AgentRegistrationID: number, AgentID?: number) => {
-    try {
-      await approveAgent(AgentRegistrationID, AgentID)
-      toast({
-        title: "Approved!",
-        variant: "success",
-        description: "The agent has been successfully approved."
-      })
-    } catch (error) {
-      console.error("Error approving agent:", error)
-      toast({
-        title: "Error!",
-        variant: "destructive",
-        description: "There was an error approving the agent."
-      })
-    }
-  }
+  const [viewselectedAgents, setviewSelectedAgents] = useState(false);
+  const [selectedAgent, setSelectedAgent] = useState<any>(null);
 
   useEffect(() => {
     const fetchAgentsRegis = async () => {
@@ -107,8 +35,13 @@ export default function AgentsRegistrations() {
           getAgentsRegistrations(),
         ]);
 
+        const unverifiedAgents = agentsRegisRes.data.filter(
+          (agent: any) => agent.IsVerified !== 1
+        );
+
         setAgents(agentsRes.data);
         setAgentsRegis(agentsRegisRes.data);
+        //setAgentsRegis(unverifiedAgents);
       } catch (err: any) {
         setError(err.message || "Failed to fetch agents registration list.");
       } finally {
@@ -118,9 +51,6 @@ export default function AgentsRegistrations() {
 
     fetchAgentsRegis();
   }, []);
-
-  //console.log(agentsRegis);
-  //console.log(agents);
 
   const regex = new RegExp(debouncedSearch, "i");
 
@@ -146,32 +76,32 @@ export default function AgentsRegistrations() {
       ),
       cell: ({ row }) => <div className="text-xs">{row.getValue("AgentRegistrationID")}</div>,
     },
-  {
-    accessorFn: (row) => `${row.FirstName} ${row.MiddleName || ""} ${row.LastName}`,
-    id: "FullName",
-    header: "Agent Name",
-    cell: ({ row }) => {
-      const fullName = row.getValue("FullName") as string;
-      const firstLetter = fullName.charAt(0).toUpperCase();
-      const gender = row.original.Gender;
+    {
+      accessorFn: (row) => `${row.FirstName} ${row.MiddleName || ""} ${row.LastName}`,
+      id: "FullName",
+      header: "Agent Name",
+      cell: ({ row }) => {
+        const fullName = row.getValue("FullName") as string;
+        const firstLetter = fullName.charAt(0).toUpperCase();
+        const gender = row.original.Gender;
 
-      const bgColor =
-        gender === "Male"
-          ? "bg-blue-200"
-          : gender === "Female"
-            ? "bg-red-200"
-            : "bg-gray-200";
+        const bgColor =
+          gender === "Male"
+            ? "bg-blue-200"
+            : gender === "Female"
+              ? "bg-red-200"
+              : "bg-gray-200";
 
-      return (
-        <div className="flex items-center space-x-2">
-          <div className={`w-6 h-6 rounded-full ${bgColor} flex items-center justify-center text-gray-600 text-xs font-medium`}>
-            {firstLetter}
+        return (
+          <div className="flex items-center space-x-2">
+            <div className={`w-6 h-6 rounded-full ${bgColor} flex items-center justify-center text-gray-600 text-xs font-medium`}>
+              {firstLetter}
+            </div>
+            <div className="text-xs font-semibold ml-1">{fullName.toLocaleUpperCase()}</div>
           </div>
-          <div className="text-xs font-semibold ml-1">{fullName.toLocaleUpperCase()}</div>
-        </div>
-      );
+        );
+      },
     },
-  },
     {
       accessorKey: "Email",
       header: "Email",
@@ -191,33 +121,19 @@ export default function AgentsRegistrations() {
       id: "actions",
       header: () => <div className="text-center w-full"></div>,
       cell: ({ row }) => {
-        const { AgentRegistrationID, FirstName, MiddleName, LastName } = row.original;
-
-        const normalizeName = (name: string) =>
-          name.replace(/\s+/g, " ").trim().toLowerCase();
+        const agentsRegis = row.original;
         
-        const fullName = normalizeName(`${FirstName} ${MiddleName ?? ""} ${LastName}`);
-
-        const matchedAgent = agents.find(agent => {
-          const agentFullName = normalizeName(`${agent.FirstName} ${agent.MiddleName ?? ""} ${agent.LastName}`);
-          return agentFullName === fullName;
-        });
-
-        const AgentID = matchedAgent?.AgentID ?? null;
-        //console.log("AgentID:", AgentID);
-
         return (
           <div className="flex justify-center">
-            <ApproveAgentDialog
-              AgentRegistrationID={AgentRegistrationID}
-              onApprove={handleApprove}
-              AgentID={AgentID}
+            <span className="inline-flex items-center px-2 py-0.5 text-xs font-semibold text-green-800 bg-green-200 rounded-full shadow-sm hover:bg-green-300 hover:scale-105 transition-all duration-200 cursor-pointer"
+              onClick={() => {
+                setSelectedAgent(row.original);
+                setviewSelectedAgents(true);
+              }}
             >
-            <span className="inline-flex items-center px-2 py-0.5 text-xs font-semibold text-green-800 bg-green-200 rounded-full shadow-sm hover:bg-green-300 hover:scale-105 transition-all duration-200 cursor-pointer">
               <CheckCircle2 className="h-3 w-3 mr-1" />
               Approve
             </span>
-            </ApproveAgentDialog>
           </div>
         )
       }
@@ -276,7 +192,6 @@ export default function AgentsRegistrations() {
                     />
                   </div>
                 </div>
-                {/* can filter here */}
               </div>
               {loading ? (
                 <div className="flex justify-center items-center h-40 gap-2 text-muted-foreground">
@@ -296,6 +211,15 @@ export default function AgentsRegistrations() {
           </div>
         </div>
       </div>
+
+      {selectedAgent && viewselectedAgents && (
+        <AgentApprovalDialog
+          open={viewselectedAgents}
+          selectedAgent={selectedAgent}
+          agents={agents}
+          onOpenChange={setviewSelectedAgents}
+        />        
+      )}
     </>
   );
 }
