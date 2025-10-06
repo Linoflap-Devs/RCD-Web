@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "../ui/use-toast";
 
-/** confirmation dialog for approval */
+/** Confirmation dialog for approval */
 function ApproveAgentDialog({
   AgentRegistrationID,
   AgentID,
@@ -58,9 +58,7 @@ function ApproveAgentDialog({
               </>
             ) : (
               <>as a new agent?</>
-            )}
-            <br />
-            This action cannot be undone.
+            )} {""} This action cannot be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -188,7 +186,7 @@ export default function AgentApprovalDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[950px] p-8">
+      <DialogContent className="sm:max-w-[900px] p-8">
         <DialogHeader>
           <DialogTitle className="text-center text-2xl text-gray-800 leading-none">
             <span className="block text-sm text-gray-500 mb-1 tracking-wide">

@@ -20,7 +20,7 @@ export default function Dashboard() {
   const [dashboardData, setDashboardData] = useState<DashboardItem | undefined>(undefined);
   const [error, setError] = useState<string | null>(null);
 
-  console.log(dashboardData);
+  //console.log(dashboardData);
 
   useEffect(() => {
     setLoading(true);

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { CardContent } from '@/components/ui/card';
 import { AlertCircle } from 'lucide-react';
 
 export default function NotFound() {
@@ -12,7 +12,7 @@ export default function NotFound() {
         <CardContent>
           <div className="flex flex-col items-center gap-4">
             <AlertCircle className="h-12 w-12 text-destructive" />
-            <h1 className="text-3xl font-bold">404 - Page Not Found</h1>
+            <h1 className="text-2xl font-bold">404 - Page Not Found</h1>
             <p className="text-sm text-muted-foreground">
               The page you are looking for does not exist.
             </p>

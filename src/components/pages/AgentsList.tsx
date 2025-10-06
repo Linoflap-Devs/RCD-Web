@@ -202,11 +202,11 @@ export default function AgentsList() {
               </div>
               <div className="flex flex-col md:flex-row justify-between items-center">
                 <div className="flex flex-col md:flex-row items-center gap-3">
-                  <div className="relative rounded-lg">
-                    <Search className="absolute left-2 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
+                  <div className="bg-white relative rounded-lg w-64 sm:w-80">
+                    <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                     <Input
                       placeholder="Search..."
-                      className="pl-7 text-xs sm:text-sm h-8 w-90"
+                      className="pl-10 text-sm sm:text-base h-9"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
