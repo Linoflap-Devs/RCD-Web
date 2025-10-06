@@ -19,6 +19,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { toast } from "../ui/use-toast";
 import { useAuth } from "@/store/useAuth";
+import Link from "next/link";
 
 const formSchema = z.object({
   username: z.string().min(1, "Please enter username"),
@@ -164,12 +165,12 @@ export default function Login() {
                     >
                       Password
                     </FormLabel>
-                    <a
+                    {/* <a
                       href="#"
                       className="text-sm underline-offset-4 hover:underline"
                     >
                       Forgot your password?
-                    </a>
+                    </a> */}
                   </div>
                   <FormControl>
                     <Input
@@ -198,9 +199,9 @@ export default function Login() {
         </div>
         <div className="text-center text-sm">
           Don&apos;t have an account?{" "}
-          <a href="#" className="underline underline-offset-4">
+          <Link href="/register" className="underline underline-offset-4">
             Sign up
-          </a>
+          </Link>
         </div>
       </form>
     </Form>

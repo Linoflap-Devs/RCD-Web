@@ -47,3 +47,25 @@ export const getCurrentUser = async (): Promise<UserItem> => {
   //console.log("Axios current-user response:", response.data);
   return response.data.data;
 };
+
+export interface AddEmployeePayload {
+  userCode: string;
+  userName: string;
+  empName: string;
+  password: string;
+  role: string;
+  branchID:  number;
+}
+
+export interface EmployeeResponse {
+  success: boolean;
+  data: UserItem;
+  message: string;
+}
+
+export const registerEmployee = async (payload: AddEmployeePayload): Promise<EmployeeResponse> => {
+  const response = await axiosInstance.post<EmployeeResponse>("/auth/register-employee", payload);
+  return response.data;
+}
+
+
