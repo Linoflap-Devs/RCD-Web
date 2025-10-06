@@ -42,11 +42,13 @@ const chartConfig = {
 interface TeamSalesProps {
   DeveloperSales?: DeveloperSalesItem[];
   Top10SalesPerson?: Top10SalesPersonItem[];
+  Top10UnitManager?: Top10UnitManagerItem[];
 }
 
 export function TeamDashboard({
   DeveloperSales,
-  Top10SalesPerson
+  Top10SalesPerson,
+  Top10UnitManager
 }: TeamSalesProps) {
   const [view, setView] = useState("chart");
   const [salesPersonLoading, setSalesPersonLoading] = useState(false);
@@ -138,11 +140,14 @@ export function TeamDashboard({
 
   const [activeIndex, setActiveIndex] = useState<number | null>(maxIndex);
 
-  const topManagers = (Top10UnitManagersData ?? []).map((p, idx) => ({
+  const topManagers = ((Top10UnitManagersData?.length ?? 0) > 0
+    ? Top10UnitManagersData
+    : Top10UnitManager
+  )?.map((p, idx) => ({
     name: p.AgentName,
     value: p.CurrentMonth,
-    //fill: colors[idx % colors.length], // loop if >10
-  }));
+    // fill: colors[idx % colors.length], // optional
+  })) ?? [];
 
   return (
     <div className="space-y-4">
