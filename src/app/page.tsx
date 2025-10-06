@@ -27,6 +27,7 @@ export default function Home() {
           className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
           fill
           priority
+          sizes="23"
         />
       </div>
     </div>

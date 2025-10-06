@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardDescription, CardTitle } from "../../components/ui/card";
 import { Badge } from "../../components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs";
-import { BanknoteArrowUp, Building, CirclePercent, Coins, FolderClosed, Users, UsersRound } from "lucide-react";
+import { BanknoteArrowUp, Building, CirclePercent, Coins, FolderClosed, FolderKanban, Users, UsersRound } from "lucide-react";
 import { useEffect, useState } from "react";
 import { DashboardItem, getDashboardWeb } from "@/services/dashboard/dashboard.api";
 import { DivisionDashboard } from "./DivisionDashboard";
@@ -19,6 +19,8 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [dashboardData, setDashboardData] = useState<DashboardItem | undefined>(undefined);
   const [error, setError] = useState<string | null>(null);
+
+  console.log(dashboardData);
 
   useEffect(() => {
     setLoading(true);
@@ -221,7 +223,7 @@ export default function Dashboard() {
           className="w-full border-none"
         >
           <div className="mt-5 flex items-center space-x-4 px-3 py-1">
-            {/* <FolderKanban className="w-6 h-6 text-primary mt-1" /> */}
+            <FolderKanban className="w-6 h-6 text-primary mt-1" />
             <div>
               <CardTitle className="text-lg font-semibold">
                 Data Analytics and Reports
@@ -235,13 +237,16 @@ export default function Dashboard() {
           <div className="flex items-center justify-start mb-4 pt-2 border-b">
             <TabsList className="w-auto bg-transparent border-none p-0 flex justify-between space-x-4 text-sm">
               <TabsTrigger value="divisions">
-                <CirclePercent className="h-4 w-4 mr-0.5" /> Division Sales
+                {/* <CirclePercent className="h-4 w-4 mr-0.5" />  */}
+                Division Sales
               </TabsTrigger>
               <TabsTrigger value="team">
-                <UsersRound className="h-4 w-4 mr-0.5" /> Team Sales
+                {/* <UsersRound className="h-4 w-4 mr-0.5" />  */}
+                Team Sales
               </TabsTrigger>
               <TabsTrigger value="forecast">
-                <BanknoteArrowUp className="h-4 w-4 mr-0.5" /> Collection Forecast
+                {/* <BanknoteArrowUp className="h-4 w-4 mr-0.5" />  */}
+                Collection Forecast
               </TabsTrigger>
             </TabsList>
           </div>
@@ -251,11 +256,14 @@ export default function Dashboard() {
               loading={loading}
               DivisionSales={dashboardData?.DivisionSales}
               TotalSalesTarget={dashboardData?.SalesTarget}
+              
             />
           </TabsContent>
           <TabsContent value="team">
             <TeamDashboard
               DeveloperSales={dashboardData?.DeveloperSales}
+
+
             />
           </TabsContent>
           <TabsContent value="forecast">

@@ -288,7 +288,7 @@ export default function AgentsRegistrations() {
               //     <p className="text-muted-foreground">No results found.</p>
               //   </div>
               ) : (
-                <div className="bg-white rounded-md pb-3">
+                <div className="rounded-md pb-3">
                   <DataTable columns={agentColumns} pageSize={10} data={filteredAgents} />
                 </div>
               )}

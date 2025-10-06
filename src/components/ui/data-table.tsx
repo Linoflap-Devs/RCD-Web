@@ -83,7 +83,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <>
-      <div className="rounded-md border">
+      <div className="bg-white rounded-md border p-2">
         <div className="rounded-lg scrollbar-hide">
           <Table>
             {!hideHeader && (

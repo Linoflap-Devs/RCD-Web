@@ -287,7 +287,7 @@ export function DivisionDashboard({
             </Select>
           </div>
         </CardHeader>
-        <CardContent className="h-64 min-w-[800px]">
+        <CardContent className="h-75 min-w-[800px]">
           <ChartContainer
             className="h-full w-full"
             config={{
@@ -297,12 +297,12 @@ export function DivisionDashboard({
           >
             <BarChart
               data={targetSalesData}
-              margin={{ top: 40, right: 20, left: 0, bottom: 0 }}
+              margin={{ top: 40, right: 20, left: 0, bottom: 40 }}
             >
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
               <XAxis
-                dataKey="division"
-                tickLine={false}
+                dataKey="name"
+                tickLine={true}
                 interval={0}
                 angle={-35}
                 textAnchor="end"
@@ -316,7 +316,7 @@ export function DivisionDashboard({
 
                   return (
                     <div className="bg-white p-2 rounded shadow-lg border border-gray-200">
-                      <div className="font-semibold mb-2">{data.division}</div>
+                      <div className="font-semibold mb-2">{data.name}</div>
 
                       {/* Target */}
                       <div className="flex items-center gap-2 mb-1">
