@@ -76,7 +76,7 @@ export default function AccessGuard({ allowedTypes = [], children }: AccessGuard
     }
   }, [router, allowedTypes]);
 
-  if (checkingStorage || loading || !initialized) {
+  if (checkingStorage) {
     return (
       <div className="min-h-screen flex justify-center items-center">
         <Loader className="animate-spin h-8 w-8 text-primary" />

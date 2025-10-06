@@ -188,7 +188,7 @@ export default function AgentApprovalDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[900px] p-8">
         <DialogHeader>
-          <DialogTitle className="text-center text-2xl text-gray-800 leading-none">
+          <DialogTitle className="text-center text-xl text-gray-800 leading-none">
             <span className="block text-sm text-gray-500 mb-1 tracking-wide">
              Account Approval
             </span>

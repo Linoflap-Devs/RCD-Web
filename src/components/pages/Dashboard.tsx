@@ -256,7 +256,7 @@ export default function Dashboard() {
               loading={loading}
               DivisionSales={dashboardData?.DivisionSales}
               TotalSalesTarget={dashboardData?.SalesTarget}
-              
+              top10Division={dashboardData?.Top10Divisions}
             />
           </TabsContent>
           <TabsContent value="team">

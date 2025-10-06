@@ -108,10 +108,11 @@ interface DivisionDashboardProps {
   loading: boolean;
   DivisionSales?: DivisionSalesItem[];
   TotalSalesTarget?: SalesTargetItem;
+  top10Division?: Top10DivisionsItem[];
 }
 
 export function DivisionDashboard({
-  //top10Division,
+  top10Division,
   DivisionSales,
   TotalSalesTarget
 }: DivisionDashboardProps) {
@@ -197,9 +198,15 @@ export function DivisionDashboard({
     "#76B041", "#FAA43A", "#F4D35E", "#C6AC8F", "#8D99AE"
   ];
 
-  const top10Divisions = (Top10DivisionData ?? []).map((d, index) => ({
-    name: d.Division,
-    sales: d.CurrentMonth,
+  const top10Divisions = (Top10DivisionData && Top10DivisionData.length > 0
+    ? Top10DivisionData
+    : [
+        // fallback data (optional)
+        { Division: "No Data", CurrentMonth: 0 },
+      ]
+  ).map((d, index) => ({
+    name: d.Division ?? "Unknown Division",
+    sales: d.CurrentMonth ?? 0,
     fill: colors[index % colors.length],
   }));
 
