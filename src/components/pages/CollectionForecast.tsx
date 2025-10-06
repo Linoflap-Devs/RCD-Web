@@ -231,7 +231,7 @@ export function CollectionForecastDashboard({
   });
 
   const colors = [
-    "#F28E2B"
+    "#F8BB21"
   ];
 
   const chartDataForecastBuyers: BuyerData[] =

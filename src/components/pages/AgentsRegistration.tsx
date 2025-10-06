@@ -40,8 +40,8 @@ export default function AgentsRegistrations() {
         );
 
         setAgents(agentsRes.data);
-        setAgentsRegis(agentsRegisRes.data);
-        //setAgentsRegis(unverifiedAgents);
+        //setAgentsRegis(agentsRegisRes.data);
+        setAgentsRegis(unverifiedAgents);
       } catch (err: any) {
         setError(err.message || "Failed to fetch agents registration list.");
       } finally {

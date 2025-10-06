@@ -35,7 +35,7 @@ export function DataTablePagination<TData>({
           value={String(table.getState().pagination.pageSize)}
           onValueChange={(value) => table.setPageSize(Number(value))}
         >
-          <SelectTrigger className="h-8 w-[70px]">
+          <SelectTrigger className="h-8 w-[70px] bg-white">
             <SelectValue placeholder={table.getState().pagination.pageSize} />
           </SelectTrigger>
           <SelectContent>
@@ -56,7 +56,7 @@ export function DataTablePagination<TData>({
 
         <div className="flex items-center gap-1.5 sm:gap-2">
           <Button
-            variant="outline"
+            variant="cleanwhite"
             size="icon"
             onClick={() => table.setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}
@@ -65,7 +65,7 @@ export function DataTablePagination<TData>({
             <ChevronsLeft className="h-4 w-4" />
           </Button>
           <Button
-            variant="outline"
+            variant="cleanwhite"
             size="icon"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
@@ -74,7 +74,7 @@ export function DataTablePagination<TData>({
             <ChevronLeft className="h-4 w-4" />
           </Button>
           <Button
-            variant="outline"
+            variant="cleanwhite"
             size="icon"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
@@ -83,7 +83,7 @@ export function DataTablePagination<TData>({
             <ChevronRight className="h-4 w-4" />
           </Button>
           <Button
-            variant="outline"
+            variant="cleanwhite"
             size="icon"
             onClick={() => table.setPageIndex(totalPages - 1)}
             disabled={!table.getCanNextPage()}

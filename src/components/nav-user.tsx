@@ -43,6 +43,8 @@ export function NavUser({
   onLogout: () => void;
 }) {
   const { isMobile } = useSidebar()
+  const userName = user.name.slice(0, 2).toUpperCase();
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -54,7 +56,7 @@ export function NavUser({
             >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback className="rounded-lg">RCD</AvatarFallback>
+                <AvatarFallback className="rounded-lg mr-1">{userName}</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">{user.name}</span>
