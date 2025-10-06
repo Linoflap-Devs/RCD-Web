@@ -270,7 +270,7 @@ export default function Dashboard() {
             <CollectionForecastDashboard
               Top10ForecastBuyers={dashboardData?.Top10ForecastBuyers}
               CommissionForecastByYearMonth={dashboardData?.CommissionForecastByYearMonth}
-              //CommissionForecast={dashboardData?.CommissionForecast}
+              CommissionForecast={dashboardData?.CommissionForecast}
               DownpaymentPercent={dashboardData?.DownpaymentPercent}
             />
           </TabsContent>

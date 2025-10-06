@@ -29,7 +29,7 @@ export interface CollectionForecastResponse {
     message?: string;
 }
 
-export const getCollectionForecasr = async (date: string): Promise<CollectionForecastResponse> => {
+export const getCollectionForecast = async (date: string): Promise<CollectionForecastResponse> => {
     const response = await axiosInstance.get<CollectionForecastResponse>("/commissions/forecast", {
         params: {
             date,

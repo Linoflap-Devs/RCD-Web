@@ -38,7 +38,7 @@ import { Search } from "lucide-react";
 import { Input } from "../ui/input";
 import { useEffect, useState } from "react";
 import { useDebounce } from "@/hooks/use-debounce";
-import { ComissionForecastsItem, getCollectionForecasr } from "@/services/commissions-forecast/commissionsforecast.api";
+import { ComissionForecastsItem, getCollectionForecast } from "@/services/commissions-forecast/commissionsforecast.api";
 import { MonthYearPicker } from "../ui/monthyearpicker";
 
 interface BuyerData {
@@ -177,14 +177,14 @@ export const forecastColumns: ColumnDef<ComissionForecastsItem>[] = [
 interface CollectionForecastProps {
   Top10ForecastBuyers?: Top10ForecastBuyersItem[];
   CommissionForecastByYearMonth?: CommissionForecastByYearMonthItem[];
-  //CommissionForecast?: CommissionForecastItem[];
+  CommissionForecast?: ComissionForecastsItem[];
   DownpaymentPercent?: DownpaymentPercentItem;
 }
 
 export function CollectionForecastDashboard({
   Top10ForecastBuyers,
   CommissionForecastByYearMonth,
-  //CommissionForecast,
+  CommissionForecast,
   DownpaymentPercent
 }: CollectionForecastProps) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -202,7 +202,7 @@ export function CollectionForecastDashboard({
 
     const formatted = selectedCommissionForecast.toISOString().split("T")[0]; // yyyy-mm-dd
 
-    getCollectionForecasr(formatted)
+    getCollectionForecast(formatted)
       .then((res) => {
         if (res.success) {
           setCommissionsForecastData(res.data);
@@ -221,14 +221,22 @@ export function CollectionForecastDashboard({
 
   const regex = new RegExp(debouncedSearch, "i");
 
-  const filteredForecast = commissionsforecastData?.filter((item) => {
+  const filteredForecast = ((commissionsforecastData?.length ?? 0) > 0
+    ? commissionsforecastData
+    : CommissionForecast
+  )?.filter((item) => {
     const fullName = item.BuyersName ?? "";
     const rowno = item.rowno?.toString() ?? "";
     const projectName = item.ProjectName ?? "";
     const division = item.Division ?? "";
 
-    return regex.test(fullName) || regex.test(rowno) || regex.test(projectName) || regex.test(division);
-  });
+    return (
+      regex.test(fullName) ||
+      regex.test(rowno) ||
+      regex.test(projectName) ||
+      regex.test(division)
+    );
+  }) ?? [];
 
   const colors = [
     "#F8BB21"
