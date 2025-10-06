@@ -198,17 +198,14 @@ export function DivisionDashboard({
     "#76B041", "#FAA43A", "#F4D35E", "#C6AC8F", "#8D99AE"
   ];
 
-  const top10Divisions = (Top10DivisionData && Top10DivisionData.length > 0
+  const top10Divisions = ((Top10DivisionData?.length ?? 0) > 0
     ? Top10DivisionData
-    : [
-        // fallback data (optional)
-        { Division: "No Data", CurrentMonth: 0 },
-      ]
-  ).map((d, index) => ({
-    name: d.Division ?? "Unknown Division",
-    sales: d.CurrentMonth ?? 0,
+    : top10Division
+  )?.map((d, index) => ({
+    name: d.Division,
+    sales: d.CurrentMonth,
     fill: colors[index % colors.length],
-  }));
+  })) ?? [];
 
   const sortedDivisions = [...top10Divisions].sort((a, b) => b.sales - a.sales);
   const totalDivisions = (DivisionSales ?? []).flatMap(item => item.Division ?? []).length;

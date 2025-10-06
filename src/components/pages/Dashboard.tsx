@@ -262,8 +262,7 @@ export default function Dashboard() {
           <TabsContent value="team">
             <TeamDashboard
               DeveloperSales={dashboardData?.DeveloperSales}
-
-
+              Top10SalesPerson={dashboardData?.Top10SalesPersons}
             />
           </TabsContent>
           <TabsContent value="forecast">

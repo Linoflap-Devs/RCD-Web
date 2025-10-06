@@ -41,10 +41,12 @@ const chartConfig = {
 
 interface TeamSalesProps {
   DeveloperSales?: DeveloperSalesItem[];
+  Top10SalesPerson?: Top10SalesPersonItem[];
 }
 
 export function TeamDashboard({
   DeveloperSales,
+  Top10SalesPerson
 }: TeamSalesProps) {
   const [view, setView] = useState("chart");
   const [salesPersonLoading, setSalesPersonLoading] = useState(false);
@@ -111,12 +113,14 @@ export function TeamDashboard({
     "#76B041", "#FAA43A", "#F4D35E", "#C6AC8F", "#8D99AE"
   ];
 
-  const chartDataSalesPersons =
-    (Top10SalesPersonData ?? []).map((p, idx) => ({
-      name: p.AgentName,
-      value: p.CurrentMonth,
-      fill: colors[idx % colors.length], // loop if >10
-    }));
+  const chartDataSalesPersons = ((Top10SalesPersonData?.length ?? 0) > 0
+    ? Top10SalesPersonData
+    : Top10SalesPerson
+  )?.map((p, idx) => ({
+    name: p.AgentName,
+    value: p.CurrentMonth,
+    fill: colors[idx % colors.length],
+  })) ?? [];
 
   const chartDataDeveloperSales =
     (DeveloperSales ?? [])
