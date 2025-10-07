@@ -23,7 +23,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { ChartBar, Table, User } from "lucide-react";
+import { ChartBar, Search, Table, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { DeveloperSalesItem } from "@/services/dashboard/dashboard.api";
 import { formattedName } from "@/hooks/use-formattedname";
@@ -36,6 +36,10 @@ import {
   Top10UnitManagerItem,
 } from "@/services/unit-managers/unitmanagers.api";
 import { MonthYearPicker } from "../ui/monthyearpicker";
+import { Input } from "../ui/input";
+import { DataTable } from "../ui/data-table";
+import { useDebounce } from "@/hooks/use-debounce";
+import { ColumnDef } from "@tanstack/react-table";
 
 const chartConfig = {
   sales: {
@@ -51,28 +55,45 @@ interface TeamSalesProps {
   Top10UnitManager?: Top10UnitManagerItem[];
 }
 
+const columnDeveloperSales: ColumnDef<DeveloperSalesItem>[] = [
+  {
+    accessorKey: "DeveloperName",
+    header: () => <div className="text-justify">Developer Name</div>,
+    cell: ({ row }) => (
+      <div className="text-justify">{row.getValue("DeveloperName")}</div>
+    ),
+  },
+  {
+    accessorKey: "NetTotalTCP",
+    header: () => <div className="text-justify">Net Total TCP</div>,
+    cell: ({ row }) => {
+      const rawValue = row.getValue("NetTotalTCP") as number | string | null;
+
+      const formattedValue =
+        typeof rawValue === "number"
+          ? rawValue.toLocaleString("en-US", { minimumFractionDigits: 2 })
+          : rawValue ?? "";
+
+      return <div className="text-justify">{String(formattedValue)}</div>;
+    },
+  }
+];
+
 export function TeamDashboard({
   DeveloperSales,
   Top10SalesPerson,
   Top10UnitManager,
 }: TeamSalesProps) {
   const [view, setView] = useState("chart");
+  const [searchTerm, setSearchTerm] = useState("");
   const [salesPersonLoading, setSalesPersonLoading] = useState(false);
   const [salesPersonError, setSalesPersonError] = useState<string | null>(null);
   const [unitManagersLoading, setUnitManagerLoading] = useState(false);
   const [unitManagerError, setUnitManagerError] = useState<string | null>(null);
-  const [Top10SalesPersonData, setTop10SalesPersonData] = useState<
-    Top10SalesPersonItem[]
-  >([]);
-  const [selectedTop10SalesPersons, setSelectedTop10SalesPersons] = useState<
-    Date | undefined
-  >(new Date());
-  const [Top10UnitManagersData, setTop10UnitManagersData] = useState<
-    Top10UnitManagerItem[]
-  >([]);
-  const [selectedTop10UnitManagers, setSelectedTop10UnitManagers] = useState<
-    Date | undefined
-  >(new Date());
+  const [Top10SalesPersonData, setTop10SalesPersonData] = useState<Top10SalesPersonItem[]>([]);
+  const [selectedTop10SalesPersons, setSelectedTop10SalesPersons] = useState<Date | undefined>(new Date());
+  const [Top10UnitManagersData, setTop10UnitManagersData] = useState<Top10UnitManagerItem[]>([]);
+  const [selectedTop10UnitManagers, setSelectedTop10UnitManagers] = useState<Date | undefined>(new Date());
 
   useEffect(() => {
     if (!selectedTop10SalesPersons) return;
@@ -177,6 +198,15 @@ export function TeamDashboard({
       value: p.CurrentMonth,
       fill: colors[idx % colors.length], // optional
     })) ?? [];
+
+  const debouncedSearch = useDebounce(searchTerm, 400);
+  const regex = new RegExp(debouncedSearch, "i");
+
+  const filteredDeveloperSales = DeveloperSales?.filter((item) => {
+    const developer = item.DeveloperName ?? "";
+    const value = item.NetTotalTCP != null ? item.NetTotalTCP.toLocaleString() : "";
+    return regex.test(developer) || regex.test(String(value));
+  });
 
   return (
     <div className="space-y-4">
@@ -296,11 +326,10 @@ export function TeamDashboard({
                         <div
                           className="h-1.5 rounded-full"
                           style={{
-                            width: `${
-                              (manager.value /
+                            width: `${(manager.value /
                                 Math.max(...topManagers.map((m) => m.value))) *
                               100
-                            }%`,
+                              }%`,
                             backgroundColor: manager.fill, // optional: match bar with circle
                           }}
                         />
@@ -333,21 +362,19 @@ export function TeamDashboard({
           <div className="flex items-center gap-2">
             <div className="inline-flex bg-white border rounded-xl p-[3px] h-9">
               <button
-                className={`flex items-center gap-1 px-3 py-1 text-sm font-medium rounded-md transition-colors ${
-                  view === "chart"
+                className={`flex items-center gap-1 px-3 py-1 text-sm font-medium rounded-md transition-colors ${view === "chart"
                     ? "bg-primary text-white shadow-sm"
                     : "text-muted-foreground hover:bg-gray-50"
-                }`}
+                  }`}
                 onClick={() => setView("chart")}
               >
                 <ChartBar className="w-3 h-3" />
               </button>
               <button
-                className={`flex items-center gap-1 px-3 py-1 text-sm font-medium rounded-md transition-colors ${
-                  view === "table"
+                className={`flex items-center gap-1 px-3 py-1 text-sm font-medium rounded-md transition-colors ${view === "table"
                     ? "bg-primary text-white shadow-sm"
                     : "text-muted-foreground hover:bg-gray-50"
-                }`}
+                  }`}
                 onClick={() => setView("table")}
               >
                 <Table className="w-3 h-3" />
@@ -403,8 +430,21 @@ export function TeamDashboard({
             </ChartContainer>
           </CardContent>
         ) : (
-          <CardContent className="overflow-x-auto">
-            {/* Table component */}
+          <CardContent className="overflow-x-auto mt-2">
+            <div className="flex flex-col md:flex-row justify-between items-center">
+              <div className="flex flex-col md:flex-row items-center gap-3 mt-3 mb-4">
+                <div className="relative rounded-lg">
+                  <Search className="absolute left-2 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
+                  <Input
+                    placeholder="Search..."
+                    className="pl-7 text-xs sm:text-sm h-8 w-90"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
+              </div>
+            </div>
+            <DataTable data={filteredDeveloperSales ?? []} columns={columnDeveloperSales} />
           </CardContent>
         )}
       </Card>

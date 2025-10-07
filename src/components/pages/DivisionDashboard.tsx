@@ -211,7 +211,6 @@ export function DivisionDashboard({
   const totalDivisions = (DivisionSales ?? []).flatMap(item => item.Division ?? []).length;
 
   const debouncedSearch = useDebounce(searchTerm, 400);
-
   const regex = new RegExp(debouncedSearch, "i");
 
   const filteredDivisionSales = DivisionSales?.filter((item) => {
