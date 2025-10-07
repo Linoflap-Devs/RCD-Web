@@ -74,7 +74,7 @@ const columnDeveloperSales: ColumnDef<DeveloperSalesItem>[] = [
           ? rawValue.toLocaleString("en-US", { minimumFractionDigits: 2 })
           : rawValue ?? "";
 
-      return <div className="text-justify">{String(formattedValue)}</div>;
+      return <div className="text-justify text-md font-bold">{String(formattedValue)}</div>;
     },
   }
 ];

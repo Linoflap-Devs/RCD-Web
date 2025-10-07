@@ -9,7 +9,6 @@ import {
   PolarRadiusAxis,
   RadialBar,
   RadialBarChart,
-  ResponsiveContainer,
   XAxis,
   YAxis,
 } from "recharts";
@@ -190,10 +189,16 @@ export function CollectionForecastDashboard({
 }: CollectionForecastProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearch = useDebounce(searchTerm, 400);
-  const [commissionsForecastLoading, setCommissionsForecastLoading] = useState(false);
-  const [commissionsForecastError, setCommissionsForecastError] = useState(null);
-  const [commissionsforecastData, setCommissionsForecastData] = useState<ComissionForecastsItem[]>([]);
-  const [selectedCommissionForecast, setSelectedCommissionForecast] = useState<Date | undefined>(new Date());
+  const [commissionsForecastLoading, setCommissionsForecastLoading] =
+    useState(false);
+  const [commissionsForecastError, setCommissionsForecastError] =
+    useState(null);
+  const [commissionsforecastData, setCommissionsForecastData] = useState<
+    ComissionForecastsItem[]
+  >([]);
+  const [selectedCommissionForecast, setSelectedCommissionForecast] = useState<
+    Date | undefined
+  >(new Date());
 
   useEffect(() => {
     if (!selectedCommissionForecast) return;
@@ -463,54 +468,50 @@ export function CollectionForecastDashboard({
             config={chartConfigNetForecast}
             className="aspect-auto h-70 w-full"
           >
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={forecastMonthlyData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis
-                  dataKey="month"
-                  tickFormatter={(date) =>
-                    new Date(date + "-01").toLocaleDateString("en-US", {
-                      month: "short",
-                      year: "numeric",
-                    })
-                  }
-                />
+            <LineChart data={forecastMonthlyData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis
+                dataKey="month"
+                tickFormatter={(date) =>
+                  new Date(date + "-01").toLocaleDateString("en-US", {
+                    month: "short",
+                    year: "numeric",
+                  })
+                }
+              />
 
-                {/* Y-axis formats into millions */}
-                <YAxis
-                  tickFormatter={(value) =>
-                    `₱${(value / 1_000_000).toFixed(1)}M`
-                  }
-                />
+              {/* Y-axis formats into millions */}
+              <YAxis
+                tickFormatter={(value) => `₱${(value / 1_000_000).toFixed(1)}M`}
+              />
 
-                <ChartTooltip
-                  content={
-                    <ChartTooltipContent
-                      nameKey="netContractPrice"
-                      labelFormatter={(value) =>
-                        new Date(value + "-01").toLocaleDateString("en-US", {
-                          month: "long",
-                          year: "numeric",
-                        })
-                      }
-                    />
-                  }
-                />
+              <ChartTooltip
+                content={
+                  <ChartTooltipContent
+                    nameKey="netContractPrice"
+                    labelFormatter={(value) =>
+                      new Date(value + "-01").toLocaleDateString("en-US", {
+                        month: "long",
+                        year: "numeric",
+                      })
+                    }
+                  />
+                }
+              />
 
-                <Legend />
+              <Legend />
 
-                {/* Line */}
-                <Line
-                  type="monotone"
-                  dataKey="netContractPrice"
-                  stroke="var(--chart-2)"
-                  strokeWidth={2}
-                  dot={{ r: 4 }} // visible dots
-                  activeDot={{ r: 6 }} // bigger dot on hover
-                  name="Net Contract Price"
-                />
-              </LineChart>
-            </ResponsiveContainer>
+              {/* Line */}
+              <Line
+                type="monotone"
+                dataKey="netContractPrice"
+                stroke="var(--chart-2)"
+                strokeWidth={2}
+                dot={{ r: 4 }} // visible dots
+                activeDot={{ r: 6 }} // bigger dot on hover
+                name="Net Contract Price"
+              />
+            </LineChart>
           </ChartContainer>
         </CardContent>
       </Card>

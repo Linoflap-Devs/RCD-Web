@@ -173,26 +173,24 @@ export default function AgentsRegistrations() {
       `}</style>
         <div className="h-full overflow-hidden">
           <div className="p-2 sm:py-0 flex flex-col space-y-4 sm:space-y-4 h-full">
-            <div className="flex flex-col space-y-5 sm:space-y-5 min-h-full">
-              <div className="space-y-0.5">
+            <div className="flex flex-col space-y-5 sm:space-y-4 min-h-full">
+              <div className="space-y-0.5 mb-5">
                 <h2 className="text-2xl font-semibold tracking-tight">Agents Registration List</h2>
                 <p className="text-sm text-muted-foreground">
                   List of agents awaiting approval
                 </p>
               </div>
-              <div className="flex flex-col md:flex-row justify-between items-center">
-                <div className="flex flex-col md:flex-row items-center gap-3">
-                  <div className="bg-white relative rounded-lg w-64 sm:w-80">
+                <div className="flex flex-col md:flex-row items-center gap-3 w-full">
+                  <div className="bg-white relative rounded-lg w-full">
                     <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                     <Input
                       placeholder="Search..."
-                      className="pl-10 text-sm sm:text-base h-9"
+                      className="pl-10 text-sm sm:text-base h-9 w-full"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
                   </div>
                 </div>
-              </div>
               {loading ? (
                 <div className="flex justify-center items-center h-40 gap-2 text-muted-foreground">
                   <Loader className="h-5 w-5 animate-spin" />

@@ -399,16 +399,16 @@ export function DivisionDashboard({
                   >
                     <div
                       style={{ backgroundColor: division.fill }}
-                      className="relative z-10 flex items-center justify-center w-6 h-6 rounded-full text-white text-xs font-medium flex-shrink-0"
+                      className="relative flex items-center justify-center w-6 h-6 rounded-full text-white text-xs font-medium flex-shrink-0"
                     >
                       {index + 1}
                     </div>
 
-                    <div className="relative z-10 flex-1 px-2 text-sm font-medium text-foreground truncate">
+                    <div className="relative flex-1 px-2 text-sm font-medium text-foreground truncate">
                       {division.name}
                     </div>
 
-                    <div className="relative z-10 text-sm font-semibold text-primary">
+                    <div className="relative text-sm font-bold text-primary">
                       {division.sales.toLocaleString()}
                     </div>
                   </div>
@@ -434,7 +434,7 @@ export function DivisionDashboard({
                       {division.name}
                     </div>
 
-                    <div className="relative z-10 text-sm font-semibold text-primary">
+                    <div className="relative z-10 text-sm font-bold text-primary">
                       {division.sales.toLocaleString()}
                     </div>
                   </div>
