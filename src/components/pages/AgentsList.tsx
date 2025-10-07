@@ -31,19 +31,19 @@ import { AgentsItem, getAgents } from "@/services/agents/agents.api";
 import { useDebounce } from "@/hooks/use-debounce";
 
 const agentColumns: ColumnDef<AgentsItem>[] = [
-  // {
-  //   accessorKey: "AgentID",
-  //   header: ({ column }) => (
-  //     <Button
-  //       variant="ghost"
-  //       onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-  //     >
-  //       ID
-  //       <ChevronsUpDown className="ml-1 h-4 w-4" />
-  //     </Button>
-  //   ),
-  //   cell: ({ row }) => <div className="text-sm">{row.getValue("AgentID")}</div>,
-  // },
+  {
+    accessorKey: "AgentID",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        ID
+        <ChevronsUpDown className="ml-1 h-4 w-4" />
+      </Button>
+    ),
+    cell: ({ row }) => <div className="text-sm">{row.getValue("AgentID")}</div>,
+  },
   {
     accessorKey: "AgentCode",
     header: "Agent Code",
@@ -202,7 +202,7 @@ export default function AgentsList() {
           <div className="p-2 sm:py-0 flex flex-col space-y-4 sm:space-y-4 h-full">
             <div className="flex flex-col space-y-5 sm:space-y-4 min-h-full">
               <div className="space-y-0.5 mb-5">
-                <h2 className="text-2xl font-semibold tracking-tight">Agents</h2>
+                <h2 className="text-2xl font-semibold tracking-tight">Agents List</h2>
                 <p className="text-sm text-muted-foreground">
                   List of all agents
                 </p>

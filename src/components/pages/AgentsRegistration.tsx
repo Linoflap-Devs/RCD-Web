@@ -52,6 +52,8 @@ export default function AgentsRegistrations() {
     fetchAgentsRegis();
   }, []);
 
+  console.log(agentsRegis);
+
   const regex = new RegExp(debouncedSearch, "i");
 
   const filteredAgents = agentsRegis.filter((agent) => {

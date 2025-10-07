@@ -102,7 +102,7 @@ export function DataTable<TData, TValue>({
                     {headerGroup.headers.map((header) => (
                       <TableHead
                         key={header.id}
-                        className="bg-sidebar text-muted-foreground border-none font-semibold text-sm sm:text-sm py-2 sm:py-2 text-justify whitespace-nowrap"
+                        className="bg-sidebar text-muted-foreground border-none font-semibold text-sm sm:text-sm py-2.5 sm:py-2.5 text-justify whitespace-nowrap"
                       >
                         {header.isPlaceholder
                           ? null
