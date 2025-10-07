@@ -463,12 +463,6 @@ export function CollectionForecastDashboard({
               Showing the the forecasted net contracts across reservation dates.
             </CardDescription>
           </div>
-          <div className="flex items-center gap-2">
-            <MonthYearPicker
-              value={selectedCommissionForecast}
-              onChange={setSelectedCommissionForecast}
-            />
-          </div>
         </CardHeader>
         <CardContent className="pt-6 pb-0">
           <ChartContainer
