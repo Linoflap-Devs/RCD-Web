@@ -529,7 +529,7 @@ export function CollectionForecastDashboard({
 
       <Card className="overflow-x-auto rounded-lg gap-0 shadow-none">
         <CardHeader className="flex items-center justify-between pt-3 pb-6 border-b">
-          <div className="flex flex-1 flex-col justify-center gap-1 pb-3 sm:pb-0">
+          <div className="flex flex-1 flex-col justify-center gap-1 pb-3">
             <CardTitle>Data Collection Forecast Overview</CardTitle>
             <CardDescription>
               Showing the tabular history of all collection forecasts
@@ -544,7 +544,7 @@ export function CollectionForecastDashboard({
         </CardHeader>
         <CardContent className="overflow-y-auto">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex flex-col md:flex-row items-center gap-3 mt-3 mb-4">
+            <div className="flex flex-col md:flex-row items-center gap-3 mt-8 mb-4">
               <div className="relative rounded-lg">
                 <Search className="absolute left-2 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
                 <Input
