@@ -94,7 +94,6 @@ export function TeamDashboard({
   const [selectedTop10SalesPersons, setSelectedTop10SalesPersons] = useState<Date | undefined>(new Date());
   const [Top10UnitManagersData, setTop10UnitManagersData] = useState<Top10UnitManagerItem[]>([]);
   const [selectedTop10UnitManagers, setSelectedTop10UnitManagers] = useState<Date | undefined>(new Date());
-  console.log(DeveloperSales);
 
   useEffect(() => {
     if (!selectedTop10SalesPersons) return;

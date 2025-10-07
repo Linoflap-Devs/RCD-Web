@@ -15,14 +15,14 @@ import {
   TabsTrigger,
 } from "../../components/ui/tabs";
 import {
-  BanknoteArrowUp,
   Building,
-  CirclePercent,
-  Coins,
   FolderClosed,
-  FolderKanban,
   Users,
   UsersRound,
+  BanknoteArrowUp,
+  CirclePercent,
+  Coins,
+  FolderKanban,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
@@ -39,9 +39,7 @@ export default function Dashboard() {
   const router = useRouter();
   const activeTab = searchParams.get("tab") || "divisions";
   const [loading, setLoading] = useState(false);
-  const [dashboardData, setDashboardData] = useState<DashboardItem | undefined>(
-    undefined
-  );
+  const [dashboardData, setDashboardData] = useState<DashboardItem | undefined>(undefined);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -83,7 +81,7 @@ export default function Dashboard() {
   });
 
   return (
-    <div className="h-full w-full px-2 space-y-4 pt-4">
+    <div className="h-full w-full px-2 space-y-4 pt-2">
       {/* <div className="mb-6 flex justify-between">
         <div className="">
           <div className="text-xl font-bold">Hello, System Administrator</div>
@@ -260,7 +258,7 @@ export default function Dashboard() {
           </Card>
 
           {/* horizontal line */}
-         <hr className="border-t border-gray-300 w-auto my-3" />
+         <hr className="border-t border-gray-300 w-auto my-3 mx-4" />
           
           <Card className="bg-transparent border-none flex flex-col justify-center shadow-none">
             <CardContent>
@@ -377,9 +375,7 @@ export default function Dashboard() {
           <TabsContent value="forecast">
             <CollectionForecastDashboard
               Top10ForecastBuyers={dashboardData?.Top10ForecastBuyers}
-              CommissionForecastByYearMonth={
-                dashboardData?.CommissionForecastByYearMonth
-              }
+              CommissionForecastByYearMonth={dashboardData?.CommissionForecastByYearMonth}
               CommissionForecast={dashboardData?.CommissionForecast}
               DownpaymentPercent={dashboardData?.DownpaymentPercent}
             />

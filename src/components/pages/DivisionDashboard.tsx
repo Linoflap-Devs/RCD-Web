@@ -120,7 +120,6 @@ export function DivisionDashboard({
   const [searchTerm, setSearchTerm] = useState("");
   const [divisionLoading, setDivisionLoading] = useState(false);
   const [divisionError, setDivisionError] = useState<string | null>(null);
-
   const [Top10DivisionData, setTop10DivisionData] = useState<Top10DivisionsItem[]>([]);
   const [selectedTop10DivisionDate, setSelectedTop10DivisionDate] = useState<Date | undefined>(new Date());
   const [selectGranularityDivisionSales, setSelectGranularityDivisionSales] = useState<"monthly" | "quarterly" | "yearly">("monthly");

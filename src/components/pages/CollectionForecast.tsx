@@ -190,16 +190,10 @@ export function CollectionForecastDashboard({
 }: CollectionForecastProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearch = useDebounce(searchTerm, 400);
-  const [commissionsForecastLoading, setCommissionsForecastLoading] =
-    useState(false);
-  const [commissionsForecastError, setCommissionsForecastError] =
-    useState(null);
-  const [commissionsforecastData, setCommissionsForecastData] = useState<
-    ComissionForecastsItem[]
-  >([]);
-  const [selectedCommissionForecast, setSelectedCommissionForecast] = useState<
-    Date | undefined
-  >(new Date());
+  const [commissionsForecastLoading, setCommissionsForecastLoading] = useState(false);
+  const [commissionsForecastError, setCommissionsForecastError] = useState(null);
+  const [commissionsforecastData, setCommissionsForecastData] = useState<ComissionForecastsItem[]>([]);
+  const [selectedCommissionForecast, setSelectedCommissionForecast] = useState<Date | undefined>(new Date());
 
   useEffect(() => {
     if (!selectedCommissionForecast) return;
