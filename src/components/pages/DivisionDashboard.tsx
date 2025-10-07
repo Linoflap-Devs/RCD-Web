@@ -257,7 +257,7 @@ export function DivisionDashboard({
                 <SquareMousePointer className="h-8 w-8" />
               </div>
               <div className="flex flex-col space-y-1">
-                <div className="text-2xl font-semibold tracking-tight text-white">{TotalSalesTarget?.TotalReachPercent.toLocaleString() ?? 0}</div>
+                <div className="text-2xl font-semibold tracking-tight text-white">{TotalSalesTarget?.TotalReachPercent.toLocaleString() ?? 0} %</div>
                 <div className="text-xs text-white">Total Reach</div>
               </div>
             </div>
