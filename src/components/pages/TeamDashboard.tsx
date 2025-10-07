@@ -430,7 +430,7 @@ export function TeamDashboard({
             </ChartContainer>
           </CardContent>
         ) : (
-          <CardContent className="overflow-x-auto mt-2">
+          <CardContent className="overflow-x-auto mt-1">
             <div className="flex flex-col md:flex-row justify-between items-center">
               <div className="flex flex-col md:flex-row items-center gap-3 mt-3 mb-4">
                 <div className="relative rounded-lg">
