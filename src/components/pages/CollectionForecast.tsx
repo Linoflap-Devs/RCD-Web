@@ -42,6 +42,7 @@ import {
   getCollectionForecast,
 } from "@/services/commissions-forecast/commissionsforecast.api";
 import { MonthYearPicker } from "../ui/monthyearpicker";
+import { Badge } from "../ui/badge";
 
 interface BuyerData {
   buyer: string;
@@ -71,24 +72,165 @@ const chartConfigNetForecast = {
   },
 };
 
+const colors = [
+  "#B33A22", // vivid deep red
+  "#D46B0C", // vibrant orange
+  "#DFA800", // rich golden yellow
+  "#C24145", // lively crimson
+  "#E07C10", // warm amber
+  "#5C8E32", // fresh deep green
+  "#D47A10", // golden orange
+  "#D4B126", // strong mustard
+  "#9B8266", // warm taupe brown
+  "#5E6F84", // steel gray-blue
+];
+
 export const forecastColumns: ColumnDef<ComissionForecastsItem>[] = [
-  // {
-  //   accessorKey: "rowno",
-  //   header: "#",
-  //   cell: ({ row }) => row.getValue("rowno") ?? "-",
-  // },
   {
     accessorKey: "DeveloperName",
     header: "Developer",
-    cell: ({ row }) => row.getValue("DeveloperName") ?? "N/A",
+    cell: ({ row }) => (
+      <div className="font-medium text-gray-800">
+        {row.getValue("DeveloperName") ?? "N/A"}
+      </div>
+    ),
   },
   {
     accessorKey: "BuyersName",
     header: "Buyer’s Name",
     cell: ({ row }) => {
-      const buyersName = row.getValue("BuyersName") as String;
-
-      return <div className="font-semibold">{buyersName}</div>;
+      const buyersName = row.getValue("BuyersName") as string;
+      return <div className="font-semibold text-gray-900">{buyersName}</div>;
+    },
+  },
+  {
+    accessorKey: "ReservationDate",
+    header: "Reservation Date",
+    cell: ({ row }) => {
+      const date = row.getValue("ReservationDate") as string | null;
+      return (
+        <div className="text-gray-700">
+          {date ? new Date(date).toLocaleDateString() : "N/A"}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "DPPercentPaid",
+    header: "DP % Paid",
+    cell: ({ row }) => {
+      const value = row.getValue("DPPercentPaid") as number;
+      const color =
+        value >= 80
+          ? colors[5] // green for high %
+          : value >= 50
+          ? colors[2] // yellow
+          : colors[0]; // red for low %
+      return (
+        <Badge
+          style={{
+            backgroundColor: `${color}22`,
+            color: color,
+            border: `1px solid ${color}80`,
+          }}
+          className="px-3 py-1 text-xs font-semibold rounded-full shadow-sm"
+        >
+          {value ? `${value}%` : "0%"}
+        </Badge>
+      );
+    },
+  },
+  {
+    accessorKey: "NetTotalTCP",
+    header: "Net TCP",
+    cell: ({ row }) => {
+      const value = row.getValue("NetTotalTCP") as number;
+      return (
+        <Badge
+          style={{
+            backgroundColor: `${colors[9]}22`,
+            color: colors[9],
+            border: `1px solid ${colors[9]}80`,
+          }}
+          className="px-3 py-1 text-xs font-semibold rounded-full shadow-sm"
+        >
+          {value ? value.toLocaleString() : "0"}
+        </Badge>
+      );
+    },
+  },
+  {
+    accessorKey: "PercentRelease",
+    header: "Release %",
+    cell: ({ row }) => {
+      const value = row.getValue("PercentRelease") as number;
+      const color =
+        value >= 80
+          ? colors[5]
+          : value >= 50
+          ? colors[2]
+          : colors[1];
+      return (
+        <Badge
+          style={{
+            backgroundColor: `${color}22`,
+            color: color,
+            border: `1px solid ${color}80`,
+          }}
+          className="px-3 py-1 text-xs font-semibold rounded-full shadow-sm"
+        >
+          {value ? `${value}%` : "0%"}
+        </Badge>
+      );
+    },
+  },
+  {
+    accessorKey: "ForeCastPercentDPPaid",
+    header: "Forecast DP % Paid",
+    cell: ({ row }) => {
+      const value = row.getValue("ForeCastPercentDPPaid") as number;
+      const color =
+        value >= 80
+          ? colors[5]
+          : value >= 50
+          ? colors[2]
+          : colors[0];
+      return (
+        <Badge
+          style={{
+            backgroundColor: `${color}22`,
+            color: color,
+            border: `1px solid ${color}80`,
+          }}
+          className="px-3 py-1 text-xs font-semibold rounded-full shadow-sm"
+        >
+          {value ? `${value}%` : "0%"}
+        </Badge>
+      );
+    },
+  },
+  {
+    accessorKey: "DPStartSchedule",
+    header: "DP Start",
+    cell: ({ row }) => {
+      const date = row.getValue("DPStartSchedule") as string | null;
+      return (
+        <div className="text-gray-700">
+          {date ? new Date(date).toLocaleDateString() : "N/A"}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "EndDP",
+    header: "DP End",
+    cell: ({ row }) => {
+      const date = row.getValue("EndDP") as string | null;
+      return (
+        <div className="text-gray-700">
+          {date ? new Date(date).toLocaleDateString() : "N/A"}
+        </div>
+      );
     },
   },
   // {
@@ -101,14 +243,6 @@ export const forecastColumns: ColumnDef<ComissionForecastsItem>[] = [
   //   header: "Division",
   //   cell: ({ row }) => row.getValue("Division") ?? "N/A",
   // },
-  {
-    accessorKey: "ReservationDate",
-    header: "Reservation Date",
-    cell: ({ row }) => {
-      const date = row.getValue("ReservationDate") as string | null;
-      return date ? new Date(date).toLocaleDateString() : "N/A";
-    },
-  },
   // {
   //   accessorKey: "DownPayment",
   //   header: "Down Payment",
@@ -125,11 +259,6 @@ export const forecastColumns: ColumnDef<ComissionForecastsItem>[] = [
   //       ? (row.getValue("DPPaid") as number).toLocaleString()
   //       : "0",
   // },
-  {
-    accessorKey: "DPPercentPaid",
-    header: "DP % Paid",
-    cell: ({ row }) => `${row.getValue("DPPercentPaid") ?? 0}%`,
-  },
   // {
   //   accessorKey: "MonthlyDP",
   //   header: "Monthly DP",
@@ -138,40 +267,6 @@ export const forecastColumns: ColumnDef<ComissionForecastsItem>[] = [
   //       ? (row.getValue("MonthlyDP") as number).toLocaleString()
   //       : "0",
   // },
-  {
-    accessorKey: "NetTotalTCP",
-    header: "Net TCP",
-    cell: ({ row }) =>
-      row.getValue("NetTotalTCP")
-        ? (row.getValue("NetTotalTCP") as number).toLocaleString()
-        : "0",
-  },
-  {
-    accessorKey: "PercentRelease",
-    header: "Release %",
-    cell: ({ row }) => `${row.getValue("PercentRelease") ?? 0}%`,
-  },
-  {
-    accessorKey: "ForeCastPercentDPPaid",
-    header: "Forecast DP % Paid",
-    cell: ({ row }) => `${row.getValue("ForeCastPercentDPPaid") ?? 0}%`,
-  },
-  {
-    accessorKey: "DPStartSchedule",
-    header: "DP Start",
-    cell: ({ row }) => {
-      const date = row.getValue("DPStartSchedule") as string | null;
-      return date ? new Date(date).toLocaleDateString() : "N/A";
-    },
-  },
-  {
-    accessorKey: "EndDP",
-    header: "DP End",
-    cell: ({ row }) => {
-      const date = row.getValue("EndDP") as string | null;
-      return date ? new Date(date).toLocaleDateString() : "N/A";
-    },
-  },
 ];
 
 interface CollectionForecastProps {

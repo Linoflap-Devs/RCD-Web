@@ -38,62 +38,194 @@ import { DivisionSalesItem, SalesTargetItem } from "@/services/dashboard/dashboa
 import { useDebounce } from "@/hooks/use-debounce";
 import { getTop10Divisions, Top10DivisionsItem } from "@/services/divisions/division.api";
 import { MonthYearPicker } from "../ui/monthyearpicker";
+import { Badge } from "@/components/ui/badge";
 
-const columnsSalesItem: ColumnDef<DivisionSalesItem>[] = [
+const colors = [
+  "#B33A22", // vivid deep red
+  "#D46B0C", // vibrant orange
+  "#DFA800", // rich golden yellow
+  "#C24145", // lively crimson
+  "#E07C10", // warm amber
+  "#5C8E32", // fresh deep green
+  "#D47A10", // golden orange
+  "#D4B126", // strong mustard
+  "#9B8266", // warm taupe brown
+  "#5E6F84", // steel gray-blue
+];
+
+export const columnsSalesItem: ColumnDef<DivisionSalesItem>[] = [
   {
     accessorKey: "Division",
-    header: () => <div className="text-justify">Division</div>,
+    header: () => <div className="text-left font-semibold">Division</div>,
     cell: ({ row }) => (
-      <div className="text-justify">{row.getValue("Division")}</div>
+      <div className="text-left font-medium text-gray-800">
+        {row.getValue("Division")}
+      </div>
     ),
   },
   {
     accessorKey: "CurrentMonth",
-    header: () => <div className="text-justify">CurrentMonth</div>,
-    cell: ({ row }) =>
-      row.getValue("CurrentMonth")
-        ? (row.getValue("CurrentMonth") as number).toLocaleString()
-        : "0",
+    header: () => <div className="text-center font-semibold">Current Month</div>,
+    cell: ({ row }) => {
+      const value = row.getValue("CurrentMonth") as number;
+      return (
+        <div className="text-center">
+          {value > 0 ? (
+            <Badge
+              style={{
+                backgroundColor: `${colors[0]}33`, // 20% opacity but slightly richer
+                color: colors[0],
+                border: `1px solid ${colors[0]}99`,
+              }}
+              className="px-3 py-1 text-xs font-semibold rounded-full shadow-sm hover:shadow-md transition-all duration-150"
+            >
+              {value.toLocaleString()}
+            </Badge>
+          ) : (
+            <Badge className="px-3 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-500">
+              0
+            </Badge>
+          )}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "CurrentMonthLastYear",
-    header: () => <div className="text-justify">Current Month Last Year</div>,
-    cell: ({ row }) =>
-      row.getValue("CurrentMonthLastYear")
-        ? (row.getValue("CurrentMonthLastYear") as number).toLocaleString()
-        : "0",
+    header: () => (
+      <div className="text-center font-semibold">Current Month Last Year</div>
+    ),
+    cell: ({ row }) => {
+      const value = row.getValue("CurrentMonthLastYear") as number;
+      return (
+        <div className="text-center">
+          {value > 0 ? (
+            <Badge
+              style={{
+                backgroundColor: `${colors[1]}33`,
+                color: colors[1],
+                border: `1px solid ${colors[1]}99`,
+              }}
+              className="px-3 py-1 text-xs font-semibold rounded-full shadow-sm hover:shadow-md transition-all duration-150"
+            >
+              {value.toLocaleString()}
+            </Badge>
+          ) : (
+            <Badge className="px-3 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-500">
+              0
+            </Badge>
+          )}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "CurrentQuarter",
-    header: () => <div className="text-justify">Current Quarter</div>,
-    cell: ({ row }) =>
-      row.getValue("CurrentQuarter")
-        ? (row.getValue("CurrentQuarter") as number).toLocaleString()
-        : "0",
+    header: () => <div className="text-center font-semibold">Current Quarter</div>,
+    cell: ({ row }) => {
+      const value = row.getValue("CurrentQuarter") as number;
+      return (
+        <div className="text-center">
+          {value > 0 ? (
+            <Badge
+              style={{
+                backgroundColor: `${colors[2]}33`,
+                color: "#7A6100",
+                border: `1px solid ${colors[2]}99`,
+              }}
+              className="px-3 py-1 text-xs font-semibold rounded-full shadow-sm hover:shadow-md transition-all duration-150"
+            >
+              {value.toLocaleString()}
+            </Badge>
+          ) : (
+            <Badge className="px-3 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-500">
+              0
+            </Badge>
+          )}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "LastQuarter",
-    header: () => <div className="text-justify">Last Quarter</div>,
-    cell: ({ row }) =>
-      row.getValue("LastQuarter")
-        ? (row.getValue("LastQuarter") as number).toLocaleString()
-        : "0",
+    header: () => <div className="text-center font-semibold">Last Quarter</div>,
+    cell: ({ row }) => {
+      const value = row.getValue("LastQuarter") as number;
+      return (
+        <div className="text-center">
+          {value > 0 ? (
+            <Badge
+              style={{
+                backgroundColor: `${colors[3]}33`,
+                color: colors[3],
+                border: `1px solid ${colors[3]}99`,
+              }}
+              className="px-3 py-1 text-xs font-semibold rounded-full shadow-sm hover:shadow-md transition-all duration-150"
+            >
+              {value.toLocaleString()}
+            </Badge>
+          ) : (
+            <Badge className="px-3 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-500">
+              0
+            </Badge>
+          )}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "CurrentYear",
-    header: () => <div className="text-justify">Current Year</div>,
-    cell: ({ row }) =>
-      row.getValue("CurrentMonth")
-        ? (row.getValue("CurrentMonth") as number).toLocaleString()
-        : "0",
+    header: () => <div className="text-center font-semibold">Current Year</div>,
+    cell: ({ row }) => {
+      const value = row.getValue("CurrentYear") as number;
+      return (
+        <div className="text-center">
+          {value > 0 ? (
+            <Badge
+              style={{
+                backgroundColor: `${colors[5]}33`,
+                color: colors[5],
+                border: `1px solid ${colors[5]}99`,
+              }}
+              className="px-3 py-1 text-xs font-semibold rounded-full shadow-sm hover:shadow-md transition-all duration-150"
+            >
+              {value.toLocaleString()}
+            </Badge>
+          ) : (
+            <Badge className="px-3 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-500">
+              0
+            </Badge>
+          )}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "LastYear",
-    header: () => <div className="text-justify">Last Year</div>,
-    cell: ({ row }) =>
-      row.getValue("LastYear")
-        ? (row.getValue("LastYear") as number).toLocaleString()
-        : "0",
+    header: () => <div className="text-center font-semibold">Last Year</div>,
+    cell: ({ row }) => {
+      const value = row.getValue("LastYear") as number;
+      return (
+        <div className="text-center">
+          {value > 0 ? (
+            <Badge
+              style={{
+                backgroundColor: `${colors[9]}33`,
+                color: colors[9],
+                border: `1px solid ${colors[9]}99`,
+              }}
+              className="px-3 py-1 text-xs font-semibold rounded-full shadow-sm hover:shadow-md transition-all duration-150"
+            >
+              {value.toLocaleString()}
+            </Badge>
+          ) : (
+            <Badge className="px-3 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-500">
+              0
+            </Badge>
+          )}
+        </div>
+      );
+    },
   },
 ];
 
@@ -191,11 +323,6 @@ export function DivisionDashboard({
           ? d.PercentYear
           : 0,
   })) ?? [];
-
-  const colors = [
-    "#D75C3C", "#F28E2B", "#FFBE0B", "#E15759", "#FF9F1C",
-    "#76B041", "#FAA43A", "#F4D35E", "#C6AC8F", "#8D99AE"
-  ];
 
   const top10Divisions = ((Top10DivisionData?.length ?? 0) > 0
     ? Top10DivisionData
