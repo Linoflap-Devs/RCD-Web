@@ -40,6 +40,7 @@ import { Input } from "../ui/input";
 import { DataTable } from "../ui/data-table";
 import { useDebounce } from "@/hooks/use-debounce";
 import { ColumnDef } from "@tanstack/react-table";
+import { Badge } from "../ui/badge";
 
 const chartConfig = {
   sales: {
@@ -55,29 +56,69 @@ interface TeamSalesProps {
   Top10UnitManager?: Top10UnitManagerItem[];
 }
 
-const columnDeveloperSales: ColumnDef<DeveloperSalesItem>[] = [
+export const columnDeveloperSales: ColumnDef<DeveloperSalesItem>[] = [
   {
     accessorKey: "DeveloperName",
-    header: () => <div className="text-justify">Developer Name</div>,
+    header: () => (
+      <div className="text-justify font-semibold text-gray-800">
+        Developer Name
+      </div>
+    ),
     cell: ({ row }) => (
-      <div className="text-justify">{row.getValue("DeveloperName")}</div>
+      <div className="text-justify text-gray-700 font-medium">
+        {row.getValue("DeveloperName") ?? "N/A"}
+      </div>
     ),
   },
   {
     accessorKey: "NetTotalTCP",
-    header: () => <div className="text-justify">Net Total TCP</div>,
+    header: () => (
+      <div className="text-justify font-semibold text-gray-800">
+        Net Total TCP
+      </div>
+    ),
     cell: ({ row }) => {
       const rawValue = row.getValue("NetTotalTCP") as number | string | null;
-
+      const numericValue =
+        typeof rawValue === "number" ? rawValue : parseFloat(String(rawValue));
       const formattedValue =
-        typeof rawValue === "number"
-          ? rawValue.toLocaleString("en-US", { minimumFractionDigits: 2 })
-          : rawValue ?? "";
+        !isNaN(numericValue) && numericValue !== null
+          ? numericValue.toLocaleString("en-US", { minimumFractionDigits: 2 })
+          : "0.00";
 
-      return <div className="text-justify text-md font-bold">{String(formattedValue)}</div>;
+      let color = "#A0AEC0"; // gray default
+      let note = "No Data";
+
+      if (numericValue > 0 && numericValue < 500_000) {
+        color = "#D75C3C"; // red - low
+        note = "Low";
+      } else if (numericValue >= 500_000 && numericValue < 1_000_000) {
+        color = "#D46B0C"; // yellow - moderate
+        note = "Moderate";
+      } else if (numericValue >= 1_000_000) {
+        color = "#76B041"; // green - high
+        note = "High";
+      }
+
+      return (
+        <div className="flex items-center gap-2">
+          <Badge
+            style={{
+              backgroundColor: color === "#A0AEC0" ? "#EDF2F7" : `${color}22`,
+              color: color,
+              border: `1px solid ${color === "#A0AEC0" ? "#CBD5E0" : `${color}80`}`,
+            }}
+            className="px-3 py-1 text-sm font-semibold rounded-full shadow-sm"
+          >
+            ₱ {formattedValue}
+          </Badge>
+          <span className="text-xs text-gray-600 italic">{note}</span>
+        </div>
+      );
     },
-  }
+  },
 ];
+
 
 export function TeamDashboard({
   DeveloperSales,

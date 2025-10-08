@@ -121,17 +121,21 @@ export const forecastColumns: ColumnDef<ComissionForecastsItem>[] = [
     cell: ({ row }) => {
       const value = row.getValue("DPPercentPaid") as number;
       const color =
-        value >= 80
-          ? colors[5] // green for high %
+        !value || value === 0
+          ? "#A0AEC0" // gray for 0 or empty
+          : value >= 80
+          ? colors[5] // green
           : value >= 50
           ? colors[2] // yellow
-          : colors[0]; // red for low %
+          : colors[0]; // red
+
       return (
         <Badge
           style={{
-            backgroundColor: `${color}22`,
+            backgroundColor:
+              color === "#A0AEC0" ? "#EDF2F7" : `${color}22`, // softer bg for gray
             color: color,
-            border: `1px solid ${color}80`,
+            border: `1px solid ${color === "#A0AEC0" ? "#CBD5E0" : `${color}80`}`,
           }}
           className="px-3 py-1 text-xs font-semibold rounded-full shadow-sm"
         >
@@ -145,12 +149,15 @@ export const forecastColumns: ColumnDef<ComissionForecastsItem>[] = [
     header: "Net TCP",
     cell: ({ row }) => {
       const value = row.getValue("NetTotalTCP") as number;
+      const isZero = !value || value === 0;
+      const color = isZero ? "#A0AEC0" : colors[9];
       return (
         <Badge
           style={{
-            backgroundColor: `${colors[9]}22`,
-            color: colors[9],
-            border: `1px solid ${colors[9]}80`,
+            backgroundColor:
+              color === "#A0AEC0" ? "#EDF2F7" : `${color}22`,
+            color: color,
+            border: `1px solid ${color === "#A0AEC0" ? "#CBD5E0" : `${color}80`}`,
           }}
           className="px-3 py-1 text-xs font-semibold rounded-full shadow-sm"
         >
@@ -165,7 +172,9 @@ export const forecastColumns: ColumnDef<ComissionForecastsItem>[] = [
     cell: ({ row }) => {
       const value = row.getValue("PercentRelease") as number;
       const color =
-        value >= 80
+        !value || value === 0
+          ? "#A0AEC0"
+          : value >= 80
           ? colors[5]
           : value >= 50
           ? colors[2]
@@ -173,9 +182,10 @@ export const forecastColumns: ColumnDef<ComissionForecastsItem>[] = [
       return (
         <Badge
           style={{
-            backgroundColor: `${color}22`,
+            backgroundColor:
+              color === "#A0AEC0" ? "#EDF2F7" : `${color}22`,
             color: color,
-            border: `1px solid ${color}80`,
+            border: `1px solid ${color === "#A0AEC0" ? "#CBD5E0" : `${color}80`}`,
           }}
           className="px-3 py-1 text-xs font-semibold rounded-full shadow-sm"
         >
@@ -190,7 +200,9 @@ export const forecastColumns: ColumnDef<ComissionForecastsItem>[] = [
     cell: ({ row }) => {
       const value = row.getValue("ForeCastPercentDPPaid") as number;
       const color =
-        value >= 80
+        !value || value === 0
+          ? "#A0AEC0"
+          : value >= 80
           ? colors[5]
           : value >= 50
           ? colors[2]
@@ -198,9 +210,10 @@ export const forecastColumns: ColumnDef<ComissionForecastsItem>[] = [
       return (
         <Badge
           style={{
-            backgroundColor: `${color}22`,
+            backgroundColor:
+              color === "#A0AEC0" ? "#EDF2F7" : `${color}22`,
             color: color,
-            border: `1px solid ${color}80`,
+            border: `1px solid ${color === "#A0AEC0" ? "#CBD5E0" : `${color}80`}`,
           }}
           className="px-3 py-1 text-xs font-semibold rounded-full shadow-sm"
         >
@@ -233,40 +246,6 @@ export const forecastColumns: ColumnDef<ComissionForecastsItem>[] = [
       );
     },
   },
-  // {
-  //   accessorKey: "ProjectName",
-  //   header: "Project",
-  //   cell: ({ row }) => row.getValue("ProjectName") ?? "N/A",
-  // },
-  // {
-  //   accessorKey: "Division",
-  //   header: "Division",
-  //   cell: ({ row }) => row.getValue("Division") ?? "N/A",
-  // },
-  // {
-  //   accessorKey: "DownPayment",
-  //   header: "Down Payment",
-  //   cell: ({ row }) =>
-  //     row.getValue("DownPayment")
-  //       ? (row.getValue("DownPayment") as number).toLocaleString()
-  //       : "0",
-  // },
-  // {
-  //   accessorKey: "DPPaid",
-  //   header: "DP Paid",
-  //   cell: ({ row }) =>
-  //     row.getValue("DPPaid")
-  //       ? (row.getValue("DPPaid") as number).toLocaleString()
-  //       : "0",
-  // },
-  // {
-  //   accessorKey: "MonthlyDP",
-  //   header: "Monthly DP",
-  //   cell: ({ row }) =>
-  //     row.getValue("MonthlyDP")
-  //       ? (row.getValue("MonthlyDP") as number).toLocaleString()
-  //       : "0",
-  // },
 ];
 
 interface CollectionForecastProps {
