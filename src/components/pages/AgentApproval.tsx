@@ -182,7 +182,7 @@ export default function AgentApproval() {
       <div className="w-full mx-auto px-2">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card className="rounded-md flex flex-col overflow-hidden border shadow-none md:col-span-1">
-            <CardContent className="flex flex-col items-center text-center overflow-y-auto scrollbar-hide flex-1 p-4">
+            <CardContent className="flex flex-col items-center text-center overflow-y-auto scrollbar-hide flex-1 p-4 pt-2">
               <div className="w-40 h-40 bg-white rounded-md mb-3 flex items-center justify-center overflow-hidden border border-gray-200 shadow-sm">
                 <Image
                   src="/image.png"
@@ -199,17 +199,17 @@ export default function AgentApproval() {
 
               {/* Basic Info */}
               <div className="w-full space-y-3 mb-4 text-left">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
                   <IdCard className="h-4 w-4 text-primary flex-shrink-0" />
-                  <div className="flex-1 min-w-0">
+                  <div className="flex-1 min-w-0 space-y-0.5">
                     <div className="text-xs text-gray-500">Agent Registration ID</div>
                     <div className="text-xs font-medium truncate">22</div>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
                   <User className="h-4 w-4 text-primary flex-shrink-0" />
-                  <div className="flex-1 min-w-0">
+                  <div className="flex-1 min-w-0 space-y-0.5">
                     <div className="text-xs text-gray-500">Employee ID Number</div>
                     <div className="text-xs font-medium truncate">27272</div>
                   </div>
@@ -222,8 +222,8 @@ export default function AgentApproval() {
                   Contact Information
                 </h3>
 
-                <div className="grid grid-cols-1 sm:grid-cols-1 gap-3 text-left">
-                  <div className="flex items-start gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-1 gap-4 text-left">
+                  {/* <div className="flex items-start gap-2">
                     <HouseIcon className="h-4 w-4 text-primary mt-1 flex-shrink-0" />
                     <div className="flex-1 min-w-0">
                       <label className="text-xs text-gray-500">Address</label>
@@ -231,35 +231,29 @@ export default function AgentApproval() {
                         123 Example Street, Makati City
                       </div>
                     </div>
-                  </div>
+                  </div> */}
 
-                  <div className="flex items-start gap-2">
-                    <Mail className="h-4 w-4 text-primary mt-1 flex-shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <label className="text-xs text-gray-500">Email</label>
-                      <div className="text-xs font-medium truncate">
-                        johndoe@gmail.com
-                      </div>
+                  <div className="flex items-center gap-3">
+                    <Mail className="h-4 w-4 text-primary flex-shrink-0" />
+                    <div className="flex-1 min-w-0 space-y-0.5">
+                      <div className="text-xs text-gray-500">Email</div>
+                      <div className="text-xs font-medium truncate"> johndoe@gmail.com</div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-3">
+                    <Contact className="h-4 w-4 text-primary flex-shrink-0" />
+                    <div className="flex-1 min-w-0 space-y-0.5">
+                      <div className="text-xs text-gray-500">Contact Number</div>
+                      <div className="text-xs font-medium truncate">0927 282 8282</div>
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-2">
-                    <Contact className="h-4 w-4 text-primary mt-1 flex-shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <label className="text-xs text-gray-500">Contact Number</label>
-                      <div className="text-xs font-medium truncate">
-                        0927 282 8282
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-2">
-                    <Phone className="h-4 w-4 text-primary mt-1 flex-shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <label className="text-xs text-gray-500">Telephone Number</label>
-                      <div className="text-xs font-medium truncate">
-                        4528289
-                      </div>
+                  <div className="flex items-center gap-3">
+                    <Phone className="h-4 w-4 text-primary flex-shrink-0" />
+                    <div className="flex-1 min-w-0 space-y-0.5">
+                      <div className="text-xs text-gray-500">Telephone Number</div>
+                      <div className="text-xs font-medium truncate">45363738</div>
                     </div>
                   </div>
                 </div>
@@ -301,10 +295,10 @@ export default function AgentApproval() {
               </div>
             </div> */}
             <div className="mt-2">
-              <div className="space-y-0.5 mb-5">
+              <div className="space-y-1 mb-5">
                 <h2 className="text-2xl font-semibold tracking-tight">Agents</h2>
                 <p className="text-sm text-muted-foreground">
-                  Select the existing agent for verification and validation
+                  Select the existing agent for account verification and validation
                 </p>
               </div>
               <Input
