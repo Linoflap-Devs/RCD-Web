@@ -283,7 +283,7 @@ export function TeamDashboard({
                     data={chartDataSalesPersons}
                     dataKey="value"
                     nameKey="name"
-                    innerRadius={1}
+                    innerRadius={40}
                     outerRadius={100}
                     paddingAngle={2}
                     labelLine={false}
@@ -318,7 +318,7 @@ export function TeamDashboard({
                       {column.map((dev, index) => (
                         <div
                           key={dev.name}
-                          className="flex items-center justify-between px-3 py-2"
+                          className="flex items-center justify-between px-3 py-1"
                         >
                           <div className="flex items-center gap-3">
                             <span
@@ -393,8 +393,8 @@ export function TeamDashboard({
                     data={topManagers}
                     dataKey="value"
                     nameKey="name"
-                    innerRadius={1}
-                    outerRadius={100}
+                    innerRadius={40}
+                    outerRadius={90}
                     paddingAngle={2}
                     labelLine={false}
                     activeIndex={activeIndex ?? undefined}
@@ -428,7 +428,7 @@ export function TeamDashboard({
                       {column.map((manager, index) => (
                         <div
                           key={manager.name}
-                          className="flex items-center justify-between px-3 py-2"
+                          className="flex items-center justify-between px-3 py-1"
                         >
                            {/* border-b last:border-none */}
                           <div className="flex items-center gap-3">
