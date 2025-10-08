@@ -275,22 +275,22 @@ export function TeamDashboard({
                     color: "hsl(var(--chart-1))",
                   },
                 }}
-                className="h-full w-full max-w-sm"
+                className="h-full w-full max-w-lg"  // increased max width
               >
-                <PieChart width={300} height={300}>
+                <PieChart width={500} height={500}>  {/* larger chart size */}
                   <Pie
                     data={chartDataSalesPersons}
                     dataKey="value"
                     nameKey="name"
-                    innerRadius={40}
-                    outerRadius={90}
+                    innerRadius={60}   // was 40 — bigger center space
+                    outerRadius={120}  // was 90 — makes the pie much bigger
                     paddingAngle={2}
                     labelLine={false}
                     activeIndex={activeIndex ?? undefined}
                     activeShape={(props: SectorProps) => (
                       <Sector
                         {...props}
-                        outerRadius={(props.outerRadius ?? 0) + 10}
+                        outerRadius={(props.outerRadius ?? 0) + 12} // increase highlight radius slightly
                       />
                     )}
                     onMouseEnter={(_, index) => setActiveIndex(index)}
@@ -305,26 +305,60 @@ export function TeamDashboard({
               </ChartContainer>
             </div>
 
-            {/* List Below */}
-            <div className="grid grid-cols-2 gap-3.5 mt-3">
-              {chartDataSalesPersons.slice(0, 10).map((dev, index) => (
-                <div
-                  key={dev.name}
-                  className="flex items-center justify-between pb-1 text-sm border-b"
-                >
-                  <span className="flex items-center font-regular gap-2 text-gray-700 text-sm">
-                    <span
-                      className="h-3 w-3 rounded-full"
-                      style={{ backgroundColor: dev.fill }}
-                    />
-                    {index + 1}. {formattedName(dev.name)}
-                  </span>
-                  <span className="text-primary font-semibold">
-                    {dev.value.toLocaleString()}
-                  </span>
+            {/* Split into two columns */}
+            {(() => {
+              const leftColumn = chartDataSalesPersons.slice(0, 5);
+              const rightColumn = chartDataSalesPersons.slice(5, 10);
+
+              return (
+                <div className="grid grid-cols-2 gap-x-2 mt-3">
+                  {[leftColumn, rightColumn].map((column, colIndex) => (
+                    <div key={colIndex} className="flex flex-col gap-2">
+                      {column.map((dev, index) => (
+                        <div
+                          key={dev.name}
+                          className="flex items-center justify-between px-3 py-2"
+                        >
+                          <div className="flex items-center gap-3">
+                            <span
+                              className="flex-shrink-0 flex h-6 w-6 items-center justify-center rounded-full text-xs text-white font-medium aspect-square"
+                              style={{ backgroundColor: dev.fill }}
+                            >
+                              {colIndex * 5 + index + 1}
+                            </span>
+
+                            <div className="flex flex-col gap-1 w-full">
+                              <span className="text-sm text-gray-700 font-medium truncate max-w-[150px]">
+                                {formattedName(dev.name)}
+                              </span>
+                              <div className="h-1.5 w-full bg-gray-200 rounded-full mt-1">
+                                <div
+                                  className="h-1.5 rounded-full transition-all duration-300"
+                                  style={{
+                                    width: "200%", // all equal width
+                                    backgroundColor: dev.fill,
+                                    opacity:
+                                      dev.value /
+                                      Math.max(...topManagers.map((m) => m.value)) *
+                                      0.8 +
+                                      0.2, // opacity 0.2–1.0 range
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          </div>
+
+                          <span className="text-gray-600 font-medium text-sm">
+                            {dev.value.toLocaleString()}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              );
+            })()}
+
           </CardContent>
         </Card>
 
@@ -343,86 +377,98 @@ export function TeamDashboard({
           </CardHeader>
 
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Left column (Top 1–5) */}
-              <div className="flex flex-col gap-1.5">
-                {topManagers.slice(0, 5).map((manager, index) => (
-                  <div
-                    key={manager.name}
-                    className="flex items-center justify-between px-3 py-2"
+            <div className="flex justify-center mt-4">
+              <ChartContainer
+                config={{
+                  value: {
+                    label: "Sales",
+                    color: "hsl(var(--chart-1))",
+                  },
+                }}
+                className="h-full w-full max-w-lg"  // increased max width
+              >
+                <PieChart width={500} height={500}>  {/* larger chart size */}
+                  <Pie
+                    data={topManagers}
+                    dataKey="value"
+                    nameKey="name"
+                    innerRadius={60}
+                    outerRadius={120}
+                    paddingAngle={2}
+                    labelLine={false}
+                    activeIndex={activeIndex ?? undefined}
+                    activeShape={(props: SectorProps) => (
+                      <Sector
+                        {...props}
+                        outerRadius={(props.outerRadius ?? 0) + 12}
+                      />
+                    )}
+                    onMouseEnter={(_, index) => setActiveIndex(index)}
+                    onMouseLeave={() => setActiveIndex(maxIndex)} // reset to highest
                   >
-                    <div className="flex items-center gap-3">
-                      <span
-                        className="flex-shrink-0 flex h-6 w-6 items-center justify-center rounded-full text-xs text-white font-medium"
-                        style={{ backgroundColor: manager.fill }}
-                      >
-                        {index + 1}
-                      </span>
-                      <div className="flex flex-col gap-1 w-full">
-                        <span className="text-sm text-gray-700 font-medium truncate max-w-[150px]">
-                          {formattedName(manager.name)}
-                        </span>
-                        <div className="h-1.5 w-full bg-gray-200 rounded-full mt-1">
-                          <div
-                              className="h-1.5 rounded-full transition-all duration-300"
-                              style={{
-                                width: "200%", // all equal width
-                                backgroundColor: manager.fill,
-                                opacity:
-                                  manager.value /
-                                  Math.max(...topManagers.map((m) => m.value)) * 0.8 + 0.2, // 0.2–1.0 range
-                              }}
-                            />
-                          </div>
-                      </div>
-                    </div>
-                    <span className="text-gray-600 font-medium text-sm">
-                      {manager.value.toLocaleString()}
-                    </span>
-                  </div>
-                ))}
-              </div>
-
-              {/* Right column (Top 6–10) */}
-              <div className="flex flex-col gap-1.5">
-                {topManagers.slice(5, 10).map((manager, index) => (
-                  <div
-                    key={manager.name}
-                    className="flex items-center justify-between px-3 py-2"
-                  >
-                    <div className="flex items-center gap-3">
-                      <span
-                        className="flex-shrink-0 flex h-6 w-6 items-center justify-center rounded-full text-xs text-white font-medium"
-                        style={{ backgroundColor: manager.fill }}
-                      >
-                        {index + 1}
-                      </span>
-
-                      <div className="flex flex-col gap-1 w-full">
-                        <span className="text-sm text-gray-700 font-medium truncate max-w-[150px]">
-                          {formattedName(manager.name)}
-                        </span>
-                        <div className="h-1.5 w-full bg-gray-200 rounded-full mt-1">
-                          <div
-                            className="h-1.5 rounded-full transition-all duration-300"
-                            style={{
-                              width: "200%", // all equal width
-                              backgroundColor: manager.fill,
-                              opacity:
-                                manager.value /
-                                Math.max(...topManagers.map((m) => m.value)) * 0.8 + 0.2, // 0.2–1.0 range
-                            }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <span className="text-gray-600 font-medium text-sm">
-                      {manager.value.toLocaleString()}
-                    </span>
-                  </div>
-                ))}
-              </div>
+                    {topManagers.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.fill} />
+                    ))}
+                  </Pie>
+                  <ChartTooltip content={<ChartTooltipContent />} />
+                </PieChart>
+              </ChartContainer>
             </div>
+
+            {/* Split into two columns */}
+            {(() => {
+              const leftColumn = topManagers.slice(0, 5);
+              const rightColumn = topManagers.slice(5, 10);
+
+              return (
+                <div className="grid grid-cols-2 gap-x-2 mt-3">
+                  {[leftColumn, rightColumn].map((column, colIndex) => (
+                    <div key={colIndex} className="flex flex-col gap-2">
+                      {column.map((manager, index) => (
+                        <div
+                          key={manager.name}
+                          className="flex items-center justify-between px-3 py-2"
+                        >
+                          <div className="flex items-center gap-3">
+                            <span
+                              className="flex-shrink-0 flex h-6 w-6 items-center justify-center rounded-full text-xs text-white font-medium aspect-square"
+                              style={{ backgroundColor: manager.fill }}
+                            >
+                              {colIndex * 5 + index + 1}
+                            </span>
+
+                            <div className="flex flex-col gap-1 w-full">
+                              <span className="text-sm text-gray-700 font-medium truncate max-w-[150px]">
+                                {formattedName(manager.name)}
+                              </span>
+                              <div className="h-1.5 w-full bg-gray-200 rounded-full mt-1">
+                                <div
+                                  className="h-1.5 rounded-full transition-all duration-300"
+                                  style={{
+                                    width: "200%", // all equal width
+                                    backgroundColor: manager.fill,
+                                    opacity:
+                                      manager.value /
+                                      Math.max(...topManagers.map((m) => m.value)) *
+                                      0.8 +
+                                      0.2, // opacity 0.2–1.0 range
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          </div>
+
+                          <span className="text-gray-600 font-medium text-sm">
+                            {manager.value.toLocaleString()}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              );
+            })()}
+
           </CardContent>
         </Card>
       </div>
@@ -466,7 +512,7 @@ export function TeamDashboard({
           <CardContent className="pt-6 pb-0 min-w-[800px]">
             <ChartContainer
               config={chartConfig}
-              className="aspect-auto h-100 w-full"
+              className="aspect-auto h-110 w-full"
             >
               <AreaChart
                 data={chartDataDeveloperSales}
