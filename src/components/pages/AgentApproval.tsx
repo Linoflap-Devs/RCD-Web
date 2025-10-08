@@ -5,8 +5,12 @@ import { ChevronLeft, HouseIcon, Mail, Phone, User } from "lucide-react";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import Image from "next/image";
+import { useState } from "react";
 
 export default function AgentApproval() {
+  const [isZoomedID, setIsZoomedID] = useState(false);
+  const [isZoomedSelfie, setIsZoomedSelfie] = useState(false);
+
   return (
     <>
       <div className="flex items-center">
@@ -18,14 +22,14 @@ export default function AgentApproval() {
         <h1 className="text-xl font-semibold">Agent Approval</h1>
       </div>
 
-      <div className="w-full max-w-7xl mx-auto p-2 pt-0">
+      <div className="w-full mx-auto p-2 pt-0">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           <Card className="col-span-2 rounded-md flex flex-col overflow-hidden border shadow-none">
             <CardContent className="flex flex-col items-center text-center overflow-y-auto scrollbar-hide flex-1 p-4">
               {/* Profile Image */}
               <div className="w-40 h-40 bg-white rounded-md mb-3 flex items-center justify-center overflow-hidden border border-gray-200 shadow-sm">
                 <Image
-                  src="/placeholder.png"
+                  src="/image.png"
                   alt="Profile Picture"
                   width={160}
                   height={140}
@@ -91,6 +95,14 @@ export default function AgentApproval() {
                       <div className="text-xs font-medium truncate">0927 282 8282</div>
                     </div>
                   </div>
+
+                  <div className="flex items-start gap-2">
+                    <Phone className="h-4 w-4 text-primary mt-2 flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <label className="text-xs text-gray-500">Telephone Number</label>
+                      <div className="text-xs font-medium truncate">4528289</div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -101,7 +113,12 @@ export default function AgentApproval() {
                 <div className="space-y-5 text-left">
                   <div>
                     <h4 className="text-sm text-gray-600 mb-2">ID Attachment</h4>
-                    <div className="w-full h-48 rounded-md border border-gray-200 bg-gray-50 overflow-hidden">
+
+                    {/* Clickable preview box */}
+                    <div
+                      className="w-full h-50 rounded-md border border-gray-200 bg-gray-50 overflow-hidden cursor-pointer hover:opacity-90 transition"
+                      onClick={() => setIsZoomedID(true)}
+                    >
                       <Image
                         src="/placeholder.png"
                         alt="ID Attachment"
@@ -110,19 +127,72 @@ export default function AgentApproval() {
                         className="object-cover w-full h-full"
                       />
                     </div>
+
+                    {/* Zoom Modal */}
+                    {isZoomedID && (
+                      <div
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/70"
+                        onClick={() => setIsZoomedID(false)}
+                      >
+                        <div className="relative max-w-3xl w-full mx-4">
+                          <Image
+                            src="/placeholder.png"
+                            alt="Zoomed ID Attachment"
+                            width={1200}
+                            height={800}
+                            className="object-contain w-full h-auto rounded-lg shadow-lg"
+                          />
+                          <button
+                            onClick={() => setIsZoomedID(false)}
+                            className="absolute top-3 right-3 bg-white/80 hover:bg-white text-gray-800 rounded-full px-2 py-1 text-xs font-medium shadow"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   <div>
                     <h4 className="text-sm text-gray-600 mb-2">Selfie with ID</h4>
-                    <div className="w-full h-48 rounded-md border border-gray-200 bg-gray-50 overflow-hidden">
+
+                    {/* Clickable preview box */}
+                    <div
+                      className="w-full h-50 rounded-md border border-gray-200 bg-gray-50 overflow-hidden cursor-pointer hover:opacity-90 transition"
+                      onClick={() => setIsZoomedSelfie(true)}
+                    >
                       <Image
                         src="/placeholder.png"
-                        alt="Selfie with ID"
+                        alt="ID Attachment"
                         width={600}
                         height={300}
                         className="object-cover w-full h-full"
                       />
                     </div>
+
+                    {/* Zoom Modal */}
+                    {isZoomedSelfie && (
+                      <div
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/70"
+                        onClick={() => setIsZoomedSelfie(false)}
+                      >
+                        <div className="relative max-w-3xl w-full mx-4">
+                          <Image
+                            src="/placeholder.png"
+                            alt="Zoomed ID Attachment"
+                            width={1200}
+                            height={800}
+                            className="object-contain w-full h-auto rounded-lg shadow-lg"
+                          />
+                          <button
+                            onClick={() => setIsZoomedSelfie(false)}
+                            className="absolute top-3 right-3 bg-white/80 hover:bg-white text-gray-800 rounded-full px-2 py-1 text-xs font-medium shadow"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
