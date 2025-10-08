@@ -220,7 +220,7 @@ export function TeamDashboard({
     .map((p, idx) => ({
       developer: p.DeveloperName,
       sales: p.NetTotalTCP,
-      fill: colors[idx % colors.length], // loop if >10
+      fill: colors[idx % colors.length],
     }));
 
   const maxIndex = chartDataSalesPersons.reduce(
@@ -241,6 +241,7 @@ export function TeamDashboard({
     })) ?? [];
 
   const debouncedSearch = useDebounce(searchTerm, 400);
+
   const regex = new RegExp(debouncedSearch, "i");
 
   const filteredDeveloperSales = DeveloperSales?.filter((item) => {
@@ -267,7 +268,7 @@ export function TeamDashboard({
           </CardHeader>
 
           <CardContent className="flex flex-col gap-4">
-            <div className="flex justify-center mt-4">
+            <div className="flex justify-center">
               <ChartContainer
                 config={{
                   value: {
@@ -275,27 +276,27 @@ export function TeamDashboard({
                     color: "hsl(var(--chart-1))",
                   },
                 }}
-                className="h-full w-full max-w-lg"  // increased max width
+                className="h-full w-full max-w-lg"
               >
-                <PieChart width={500} height={500}>  {/* larger chart size */}
+                <PieChart width={500} height={500}>
                   <Pie
                     data={chartDataSalesPersons}
                     dataKey="value"
                     nameKey="name"
-                    innerRadius={60}   // was 40 — bigger center space
-                    outerRadius={120}  // was 90 — makes the pie much bigger
+                    innerRadius={1}
+                    outerRadius={100}
                     paddingAngle={2}
                     labelLine={false}
                     activeIndex={activeIndex ?? undefined}
                     activeShape={(props: SectorProps) => (
                       <Sector
                         {...props}
-                        outerRadius={(props.outerRadius ?? 0) + 12} // increase highlight radius slightly
+                        outerRadius={(props.outerRadius ?? 0) + 12}
                       />
                     )}
                     onMouseEnter={(_, index) => setActiveIndex(index)}
-                    onMouseLeave={() => setActiveIndex(maxIndex)} // reset to highest
-                  >
+                    onMouseLeave={() => setActiveIndex(maxIndex)}
+                    >
                     {chartDataSalesPersons.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.fill} />
                     ))}
@@ -311,7 +312,7 @@ export function TeamDashboard({
               const rightColumn = chartDataSalesPersons.slice(5, 10);
 
               return (
-                <div className="grid grid-cols-2 gap-x-2 mt-3">
+                <div className="grid grid-cols-2 gap-x-2">
                   {[leftColumn, rightColumn].map((column, colIndex) => (
                     <div key={colIndex} className="flex flex-col gap-2">
                       {column.map((dev, index) => (
@@ -335,7 +336,7 @@ export function TeamDashboard({
                                 <div
                                   className="h-1.5 rounded-full transition-all duration-300"
                                   style={{
-                                    width: "200%", // all equal width
+                                    width: "200%",
                                     backgroundColor: dev.fill,
                                     opacity:
                                       dev.value /
@@ -377,7 +378,7 @@ export function TeamDashboard({
           </CardHeader>
 
           <CardContent>
-            <div className="flex justify-center mt-4">
+            <div className="flex justify-center">
               <ChartContainer
                 config={{
                   value: {
@@ -385,15 +386,15 @@ export function TeamDashboard({
                     color: "hsl(var(--chart-1))",
                   },
                 }}
-                className="h-full w-full max-w-lg"  // increased max width
+                className="h-full w-full max-w-lg"
               >
-                <PieChart width={500} height={500}>  {/* larger chart size */}
+                <PieChart width={500} height={500}>
                   <Pie
                     data={topManagers}
                     dataKey="value"
                     nameKey="name"
-                    innerRadius={60}
-                    outerRadius={120}
+                    innerRadius={1}
+                    outerRadius={100}
                     paddingAngle={2}
                     labelLine={false}
                     activeIndex={activeIndex ?? undefined}
@@ -421,7 +422,7 @@ export function TeamDashboard({
               const rightColumn = topManagers.slice(5, 10);
 
               return (
-                <div className="grid grid-cols-2 gap-x-2 mt-3">
+                <div className="grid grid-cols-2 gap-x-2">
                   {[leftColumn, rightColumn].map((column, colIndex) => (
                     <div key={colIndex} className="flex flex-col gap-2">
                       {column.map((manager, index) => (
@@ -429,6 +430,7 @@ export function TeamDashboard({
                           key={manager.name}
                           className="flex items-center justify-between px-3 py-2"
                         >
+                           {/* border-b last:border-none */}
                           <div className="flex items-center gap-3">
                             <span
                               className="flex-shrink-0 flex h-6 w-6 items-center justify-center rounded-full text-xs text-white font-medium aspect-square"
@@ -445,7 +447,7 @@ export function TeamDashboard({
                                 <div
                                   className="h-1.5 rounded-full transition-all duration-300"
                                   style={{
-                                    width: "200%", // all equal width
+                                    width: "200%",
                                     backgroundColor: manager.fill,
                                     opacity:
                                       manager.value /
