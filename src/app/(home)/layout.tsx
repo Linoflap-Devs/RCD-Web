@@ -45,7 +45,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </Breadcrumb>
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-4 pt-7 px-4">
+        <div className="flex flex-1 flex-col gap-4 p-2 pt-5">
           {children}
         </div>
       </SidebarInset>

@@ -210,7 +210,7 @@ export function TeamDashboard({
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4 items-stretch">
+      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-4 items-stretch">
         <Card className="rounded-lg border shadow-none bg-white gap-3">
           <CardHeader className="flex items-center justify-between gap-2 py-2 border-b">
             <div className="flex flex-1 flex-col justify-center gap-1 sm:pb-0">
@@ -291,9 +291,7 @@ export function TeamDashboard({
           <CardHeader className="flex items-center justify-between gap-2 py-3 border-b">
             <div className="flex flex-1 flex-col justify-center gap-1 sm:pb-0">
               <CardTitle>Top 10 Unit Managers</CardTitle>
-              <CardDescription>
-                Showing the top 10 unit managers
-              </CardDescription>
+              <CardDescription>Showing the top 10 unit managers</CardDescription>
             </div>
             <div className="flex items-center gap-2">
               <MonthYearPicker
@@ -303,49 +301,91 @@ export function TeamDashboard({
             </div>
           </CardHeader>
 
-          <CardContent className="grid grid-cols-1 gap-4">
-            <div className="flex flex-col gap-3">
-              {topManagers.map((manager, index) => (
-                <div
-                  key={manager.name}
-                  className="flex items-center justify-between"
-                >
-                  <div className="flex items-center gap-4">
-                    <span
-                      className="flex h-7 w-7 items-center justify-center rounded-full text-xs text-white font-regular"
-                      style={{ backgroundColor: manager.fill }} // use the fill color
-                    >
-                      {index + 1}
-                    </span>
-
-                    <div className="flex flex-col gap-1">
-                      <span className="text-sm text-gray-700">
-                        {formattedName(manager.name)}
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Left column (Top 1–5) */}
+              <div className="flex flex-col gap-1.5">
+                {topManagers.slice(0, 5).map((manager, index) => (
+                  <div
+                    key={manager.name}
+                    className="flex items-center justify-between px-3 py-1.5"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span
+                        className="flex h-6 w-6 items-center justify-center rounded-full text-xs text-white font-medium"
+                        style={{ backgroundColor: manager.fill }}
+                      >
+                        {index + 1}
                       </span>
-                      <div className="h-1 w-64 bg-gray-200 rounded-full mt-1">
-                        <div
-                          className="h-1.5 rounded-full"
-                          style={{
-                            width: `${(manager.value /
-                                Math.max(...topManagers.map((m) => m.value))) *
-                              100
-                              }%`,
-                            backgroundColor: manager.fill, // optional: match bar with circle
-                          }}
-                        />
+
+                      <div className="flex flex-col gap-1 w-full">
+                        <span className="text-sm text-gray-700 font-medium truncate max-w-[150px]">
+                          {formattedName(manager.name)}
+                        </span>
+                        <div className="h-1 w-full bg-gray-200 rounded-full mt-1">
+                          <div
+                            className="h-1 rounded-full"
+                            style={{
+                              width: `${(manager.value /
+                                  Math.max(...topManagers.map((m) => m.value))) *
+                                100
+                                }%`,
+                              backgroundColor: manager.fill,
+                            }}
+                          />
+                        </div>
                       </div>
                     </div>
+                    <span className="text-gray-600 font-medium text-sm">
+                      {manager.value.toLocaleString()}
+                    </span>
                   </div>
+                ))}
+              </div>
 
-                  {/* Right: Sales */}
-                  <span className="text-gray-600 font-medium">
-                    {manager.value.toLocaleString()}
-                  </span>
-                </div>
-              ))}
+              {/* Right column (Top 6–10) */}
+              <div className="flex flex-col gap-1.5">
+                {topManagers.slice(5, 10).map((manager, index) => (
+                  <div
+                    key={manager.name}
+                    className="flex items-center justify-between px-3 py-1.5"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span
+                        className="flex h-6 w-6 items-center justify-center rounded-full text-xs text-white font-medium"
+                        style={{ backgroundColor: manager.fill }}
+                      >
+                        {index + 6}
+                      </span>
+
+                      <div className="flex flex-col gap-1 w-full">
+                        <span className="text-sm text-gray-700 font-medium truncate max-w-[150px]">
+                          {formattedName(manager.name)}
+                        </span>
+                        <div className="h-1 w-full bg-gray-200 rounded-full mt-1">
+                          <div
+                            className="h-1 rounded-full"
+                            style={{
+                              width: `${(manager.value /
+                                  Math.max(...topManagers.map((m) => m.value))) *
+                                100
+                                }%`,
+                              backgroundColor: manager.fill,
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <span className="text-gray-600 font-medium text-sm">
+                      {manager.value.toLocaleString()}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
           </CardContent>
         </Card>
+
       </div>
 
       <Card className="overflow-x-auto rounded-lg shadow-none">
@@ -363,8 +403,8 @@ export function TeamDashboard({
             <div className="inline-flex bg-white border rounded-xl p-[3px] h-9">
               <button
                 className={`flex items-center gap-1 px-3 py-1 text-sm font-medium rounded-md transition-colors ${view === "chart"
-                    ? "bg-primary text-white shadow-sm"
-                    : "text-muted-foreground hover:bg-gray-50"
+                  ? "bg-primary text-white shadow-sm"
+                  : "text-muted-foreground hover:bg-gray-50"
                   }`}
                 onClick={() => setView("chart")}
               >
@@ -372,8 +412,8 @@ export function TeamDashboard({
               </button>
               <button
                 className={`flex items-center gap-1 px-3 py-1 text-sm font-medium rounded-md transition-colors ${view === "table"
-                    ? "bg-primary text-white shadow-sm"
-                    : "text-muted-foreground hover:bg-gray-50"
+                  ? "bg-primary text-white shadow-sm"
+                  : "text-muted-foreground hover:bg-gray-50"
                   }`}
                 onClick={() => setView("table")}
               >

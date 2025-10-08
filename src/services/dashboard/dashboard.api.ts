@@ -5,8 +5,10 @@ export interface KPIItem {
     totalAgents: number;
     totalProjects: number;
     totalSalesPreviousYear: number;
+    totalSalesCurrentYear: number;
     totalSalesCurrentMonth: number;
     totalSalesLastMonth: number;
+    totalDevelopers: number;
 }
 
 export interface DivisionSalesItem {

@@ -63,9 +63,14 @@ export default function Dashboard() {
       });
   }, []);
 
+  console.log(dashboardData);
+
   const currentMonth = dashboardData?.KPI.totalSalesCurrentMonth ?? 0;
   const lastYearMonth = dashboardData?.KPI?.totalSalesLastMonth ?? 0;
   //const percentage = (currentMonth / lastYearMonth) * 100;
+
+  const currentYear = dashboardData?.KPI.totalSalesCurrentYear ?? 0;
+  const previousYear = dashboardData?.KPI?.totalSalesPreviousYear ?? 0;
 
   const handleTabChange = (value: string) => {
     router.replace(`/dashboard?tab=${value}`);
@@ -184,7 +189,7 @@ export default function Dashboard() {
                 </div>
                 <div className="flex flex-col space-y-1">
                   <div className="text-2xl font-semibold tracking-tight">
-                    {dashboardData?.KPI.totalSalesPreviousYear.toLocaleString() ??
+                    {dashboardData?.KPI.totalDevelopers.toLocaleString() ??
                       0}
                   </div>
                   <div className="text-xs text-muted-foreground">
@@ -273,9 +278,9 @@ export default function Dashboard() {
 
               {(() => {
                 // normalize bar widths (relative to highest value)
-                const maxValue = Math.max(currentMonth, lastYearMonth);
-                const currentWidth = (currentMonth / maxValue) * 100;
-                const previousWidth = (lastYearMonth / maxValue) * 100;
+                const maxValueYear = Math.max(currentYear, previousYear);
+                const currentWidthYear = (currentYear / maxValueYear) * 100;
+                const previousWidthYear = (previousYear / maxValueYear) * 100;
 
                 return (
                   <div className="space-y-5">
@@ -287,13 +292,13 @@ export default function Dashboard() {
                         <span className="h-2 w-2 rounded-full bg-primary/70 mr-1"></span>
                         Sales Current Year:
                         <span className="ml-2 font-medium">
-                          {currentMonth.toLocaleString()}
+                          {currentYear.toLocaleString()}
                         </span>
                       </Badge>
                       <div className="w-full flex rounded-full overflow-hidden">
                         <div
                           className="h-4 bg-primary"
-                          style={{ width: `${currentWidth}%` }}
+                          style={{ width: `${currentWidthYear}%` }}
                         ></div>
                       </div>
                     </div>
@@ -310,7 +315,7 @@ export default function Dashboard() {
                       <div className="w-full flex rounded-full overflow-hidden">
                         <div
                           className="h-4 bg-primary/70"
-                          style={{ width: `${previousWidth}%` }}
+                          style={{ width: `${previousWidthYear}%` }}
                         ></div>
                       </div>
                     </div>

@@ -289,7 +289,7 @@ export function DivisionDashboard({
             </Select>
           </div>
         </CardHeader>
-        <CardContent className="h-90 min-w-[800px]">
+        <CardContent className="h-80 min-w-[800px]">
           <ChartContainer
             className="h-full w-full"
             config={{
@@ -497,7 +497,7 @@ export function DivisionDashboard({
         </CardHeader>
 
         {view === "chart" ? (
-          <CardContent className="h-90 min-w-[800px]">
+          <CardContent className="h-80 min-w-[800px]">
             <ChartContainer
               className="h-full w-full"
               config={{
