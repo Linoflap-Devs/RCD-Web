@@ -349,32 +349,31 @@ export function TeamDashboard({
                 {topManagers.slice(0, 5).map((manager, index) => (
                   <div
                     key={manager.name}
-                    className="flex items-center justify-between px-3 py-1.5"
+                    className="flex items-center justify-between px-3 py-2"
                   >
                     <div className="flex items-center gap-3">
                       <span
-                        className="flex h-6 w-6 items-center justify-center rounded-full text-xs text-white font-medium"
+                        className="flex-shrink-0 flex h-6 w-6 items-center justify-center rounded-full text-xs text-white font-medium"
                         style={{ backgroundColor: manager.fill }}
                       >
                         {index + 1}
                       </span>
-
                       <div className="flex flex-col gap-1 w-full">
                         <span className="text-sm text-gray-700 font-medium truncate max-w-[150px]">
                           {formattedName(manager.name)}
                         </span>
-                        <div className="h-1 w-full bg-gray-200 rounded-full mt-1">
+                        <div className="h-1.5 w-full bg-gray-200 rounded-full mt-1">
                           <div
-                            className="h-1 rounded-full"
-                            style={{
-                              width: `${(manager.value /
-                                  Math.max(...topManagers.map((m) => m.value))) *
-                                100
-                                }%`,
-                              backgroundColor: manager.fill,
-                            }}
-                          />
-                        </div>
+                              className="h-1.5 rounded-full transition-all duration-300"
+                              style={{
+                                width: "200%", // all equal width
+                                backgroundColor: manager.fill,
+                                opacity:
+                                  manager.value /
+                                  Math.max(...topManagers.map((m) => m.value)) * 0.8 + 0.2, // 0.2–1.0 range
+                              }}
+                            />
+                          </div>
                       </div>
                     </div>
                     <span className="text-gray-600 font-medium text-sm">
@@ -389,29 +388,29 @@ export function TeamDashboard({
                 {topManagers.slice(5, 10).map((manager, index) => (
                   <div
                     key={manager.name}
-                    className="flex items-center justify-between px-3 py-1.5"
+                    className="flex items-center justify-between px-3 py-2"
                   >
                     <div className="flex items-center gap-3">
                       <span
-                        className="flex h-6 w-6 items-center justify-center rounded-full text-xs text-white font-medium"
+                        className="flex-shrink-0 flex h-6 w-6 items-center justify-center rounded-full text-xs text-white font-medium"
                         style={{ backgroundColor: manager.fill }}
                       >
-                        {index + 6}
+                        {index + 1}
                       </span>
 
                       <div className="flex flex-col gap-1 w-full">
                         <span className="text-sm text-gray-700 font-medium truncate max-w-[150px]">
                           {formattedName(manager.name)}
                         </span>
-                        <div className="h-1 w-full bg-gray-200 rounded-full mt-1">
+                        <div className="h-1.5 w-full bg-gray-200 rounded-full mt-1">
                           <div
-                            className="h-1 rounded-full"
+                            className="h-1.5 rounded-full transition-all duration-300"
                             style={{
-                              width: `${(manager.value /
-                                  Math.max(...topManagers.map((m) => m.value))) *
-                                100
-                                }%`,
+                              width: "200%", // all equal width
                               backgroundColor: manager.fill,
+                              opacity:
+                                manager.value /
+                                Math.max(...topManagers.map((m) => m.value)) * 0.8 + 0.2, // 0.2–1.0 range
                             }}
                           />
                         </div>
@@ -426,7 +425,6 @@ export function TeamDashboard({
             </div>
           </CardContent>
         </Card>
-
       </div>
 
       <Card className="overflow-x-auto rounded-lg shadow-none">
@@ -468,7 +466,7 @@ export function TeamDashboard({
           <CardContent className="pt-6 pb-0 min-w-[800px]">
             <ChartContainer
               config={chartConfig}
-              className="aspect-auto h-90 w-full"
+              className="aspect-auto h-100 w-full"
             >
               <AreaChart
                 data={chartDataDeveloperSales}
