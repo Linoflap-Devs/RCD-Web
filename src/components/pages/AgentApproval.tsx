@@ -128,19 +128,37 @@ export default function AgentApproval() {
       ),
     },
     {
-      id: "fullName",
-      header: "Full Name",
+      accessorFn: (row) => `${row.FirstName} ${row.MiddleName || ""} ${row.LastName}`,
+      id: "FullName",
+      header: "Agent Name",
       cell: ({ row }) => {
-        const { FirstName, MiddleName, LastName } = row.original;
-        const fullName = [FirstName, MiddleName, LastName]
-          .filter(Boolean)
-          .join(" ");
-        return <span className="text-xs">{fullName}</span>;
+        const fullName = row.getValue("FullName") as string;
+        const firstLetter = fullName.charAt(0).toUpperCase();
+        const gender = row.original.Sex;
+
+        const bgColor =
+          gender === "Male"
+            ? "bg-blue-200"
+            : gender === "Female"
+              ? "bg-red-200"
+              : "bg-gray-200";
+
+        return (
+          <div className="flex items-center space-x-2">
+            <div className={`w-6 h-6 rounded-full ${bgColor} flex items-center justify-center text-gray-600 text-xs font-medium`}>
+              {firstLetter}
+            </div>
+            <div className="text-xs font-semibold ml-1">{fullName.toLocaleUpperCase()}</div>
+          </div>
+        );
       },
     },
     {
       accessorKey: "ContactNumber",
       header: "Contact Number",
+      cell: ({ row }) => (
+        <span className="text-xs">{row.getValue("ContactNumber") || "N/A"}</span>
+      ),
     },
     {
       accessorKey: "Birthdate",
@@ -273,8 +291,8 @@ export default function AgentApproval() {
           </Card>
 
           <div className="md:col-span-3 flex flex-col space-y-5">
-            {/* <div className="flex items-start gap-3 rounded-md border border-primary/30 bg-primary/10 p-4">
-              <Info className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+            {/* <div className="flex items-center gap-3 rounded-md border border-primary/30 bg-primary/10 p-4">
+              <Info className="w-5 h-5 text-primary flex-shrink-0" />
               <div>
                 <p className="text-sm font-semibold text-primary">Note:</p>
                 <p className="text-sm text-primary">
@@ -286,7 +304,7 @@ export default function AgentApproval() {
               <div className="space-y-0.5 mb-5">
                 <h2 className="text-2xl font-semibold tracking-tight">Agents</h2>
                 <p className="text-sm text-muted-foreground">
-                  Select the existing agent for verification and validation.
+                  Select the existing agent for verification and validation
                 </p>
               </div>
               <Input
@@ -303,6 +321,19 @@ export default function AgentApproval() {
                   columns={agentColumns}
                   data={filteredAgents}
                   pageSize={10}
+                  //rowSelection={selectedRowIds}
+                  // onRowSelectionChange={(selection) => {
+                  //   if (activeTab === "promote-crew") {
+                  //     // Only allow selecting one crew at a time
+                  //     const selectedKeys = Object.keys(selection).filter((key) => selection[key]);
+                  //     const limitedSelection = selectedKeys.length > 0
+                  //       ? { [selectedKeys[selectedKeys.length - 1]]: true }
+                  //       : {};
+                  //     setSelectedRowIds(limitedSelection);
+                  //   } else {
+                  //     setSelectedRowIds(selection);
+                  //   }
+                  // }}
                 />
               ) : (
                 <p className="text-gray-500 text-center py-6">
