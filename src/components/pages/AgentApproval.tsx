@@ -1,32 +1,131 @@
 "use client"
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { ChevronLeft, HouseIcon, Mail, Phone, User } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronsUpDown,
+  Contact,
+  HouseIcon,
+  IdCard,
+  Info,
+  Mail,
+  Phone,
+  User,
+} from "lucide-react";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import Image from "next/image";
-import { useState } from "react";
+import { useMemo, useState, useEffect } from "react";
+import { AgentsItem, getAgents } from "@/services/agents/agents.api";
+import { DataTable } from "../ui/data-table";
+import { ColumnDef } from "@tanstack/react-table";
+import { Input } from "../ui/input";
+import { DocumentPreview } from "../ui/document-preview";
 
 export default function AgentApproval() {
   const [isZoomedID, setIsZoomedID] = useState(false);
   const [isZoomedSelfie, setIsZoomedSelfie] = useState(false);
+  const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [agents, setAgents] = useState<AgentsItem[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchAgents = async () => {
+      try {
+        setLoading(true);
+        const res = await getAgents();
+        setAgents(res.data);
+      } catch (err: any) {
+        setError(err.message || "Failed to fetch agents");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAgents();
+  }, []);
+
+  // const duplicateAgents = useMemo(() => {
+  //   return agents.filter((agent) => {
+  //     const sameName =
+  //       agent.FirstName?.trim().toLowerCase() ===
+  //         selectedAgent.FirstName?.trim().toLowerCase() &&
+  //       agent.LastName?.trim().toLowerCase() ===
+  //         selectedAgent.LastName?.trim().toLowerCase();
+
+  //     const sameBirthdate =
+  //       new Date(agent.Birthdate).toISOString().split("T")[0] ===
+  //       new Date(selectedAgent.Birthdate).toISOString().split("T")[0];
+
+  //     return sameName || sameBirthdate;
+  //   });
+  // }, [agents, selectedAgent]);
+
+  // Display logic — show duplicates, or all agents if searching
+  const filteredAgents = useMemo(() => {
+    const baseList =
+      search.trim().length > 0
+        ? agents
+        : agents.length > 0
+          ? agents
+          : agents;
+
+    if (!search.trim()) return baseList;
+
+    const searchLower = search.toLowerCase();
+    return baseList.filter(
+      (a) =>
+        a.FirstName?.toLowerCase().includes(searchLower) ||
+        a.LastName?.toLowerCase().includes(searchLower) ||
+        a.ContactNumber?.toLowerCase().includes(searchLower) ||
+        a.AgentID?.toString().includes(searchLower)
+    );
+  }, [agents, agents, search]);
+
+  // Table columns
+  const agentColumns: ColumnDef<AgentsItem>[] = [
+    {
+      accessorKey: "AgentID",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          ID
+          <ChevronsUpDown className="ml-1 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => (
+        <span className="text-xs">{row.getValue("AgentID")}</span>
+      ),
+    },
+    { accessorKey: "FirstName", header: "First Name" },
+    { accessorKey: "LastName", header: "Last Name" },
+    { accessorKey: "ContactNumber", header: "Contact Number" },
+    {
+      accessorKey: "Birthdate",
+      header: "Birthdate",
+      cell: ({ row }) =>
+        new Date(row.original.Birthdate).toLocaleDateString("en-US"),
+    },
+  ];
 
   return (
     <>
-      <div className="flex items-center">
+      <div className="flex items-center mb-4">
         <Link href="/agents-registration">
           <Button variant="ghost" size="icon" className="rounded-full">
             <ChevronLeft className="h-5 w-5" />
           </Button>
         </Link>
-        <h1 className="text-xl font-semibold">Agent Approval</h1>
+        <h1 className="text-xl font-semibold ml-2">Agent Approval</h1>
       </div>
 
       <div className="w-full mx-auto p-2 pt-0">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-          <Card className="col-span-2 rounded-md flex flex-col overflow-hidden border shadow-none">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <Card className="rounded-md flex flex-col overflow-hidden border shadow-none md:col-span-1">
             <CardContent className="flex flex-col items-center text-center overflow-y-auto scrollbar-hide flex-1 p-4">
-              {/* Profile Image */}
               <div className="w-40 h-40 bg-white rounded-md mb-3 flex items-center justify-center overflow-hidden border border-gray-200 shadow-sm">
                 <Image
                   src="/image.png"
@@ -37,7 +136,6 @@ export default function AgentApproval() {
                 />
               </div>
 
-              {/* Name */}
               <h2 className="text-lg font-semibold mb-5 truncate w-full">
                 John William Doe
               </h2>
@@ -45,7 +143,7 @@ export default function AgentApproval() {
               {/* Basic Info */}
               <div className="w-full space-y-3 mb-4 text-left">
                 <div className="flex items-center gap-2">
-                  <User className="h-4 w-4 text-primary flex-shrink-0" />
+                  <IdCard className="h-4 w-4 text-primary flex-shrink-0" />
                   <div className="flex-1 min-w-0">
                     <div className="text-xs text-gray-500">Agent Registration ID</div>
                     <div className="text-xs font-medium truncate">22</div>
@@ -61,7 +159,7 @@ export default function AgentApproval() {
                 </div>
               </div>
 
-              {/* Contact Information */}
+              {/* Contact Info */}
               <div className="w-full pt-4 border-t">
                 <h3 className="text-sm font-semibold mb-3 text-left">
                   Contact Information
@@ -69,7 +167,7 @@ export default function AgentApproval() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
                   <div className="flex items-start gap-2">
-                    <HouseIcon className="h-4 w-4 text-primary mt-2 flex-shrink-0" />
+                    <HouseIcon className="h-4 w-4 text-primary mt-1 flex-shrink-0" />
                     <div className="flex-1 min-w-0">
                       <label className="text-xs text-gray-500">Address</label>
                       <div className="text-xs font-medium break-words">
@@ -79,7 +177,7 @@ export default function AgentApproval() {
                   </div>
 
                   <div className="flex items-start gap-2">
-                    <Mail className="h-4 w-4 text-primary mt-2 flex-shrink-0" />
+                    <Mail className="h-4 w-4 text-primary mt-1 flex-shrink-0" />
                     <div className="flex-1 min-w-0">
                       <label className="text-xs text-gray-500">Email</label>
                       <div className="text-xs font-medium truncate">
@@ -89,122 +187,84 @@ export default function AgentApproval() {
                   </div>
 
                   <div className="flex items-start gap-2">
-                    <Phone className="h-4 w-4 text-primary mt-2 flex-shrink-0" />
+                    <Contact className="h-4 w-4 text-primary mt-1 flex-shrink-0" />
                     <div className="flex-1 min-w-0">
                       <label className="text-xs text-gray-500">Contact Number</label>
-                      <div className="text-xs font-medium truncate">0927 282 8282</div>
+                      <div className="text-xs font-medium truncate">
+                        0927 282 8282
+                      </div>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-2">
-                    <Phone className="h-4 w-4 text-primary mt-2 flex-shrink-0" />
+                    <Phone className="h-4 w-4 text-primary mt-1 flex-shrink-0" />
                     <div className="flex-1 min-w-0">
                       <label className="text-xs text-gray-500">Telephone Number</label>
-                      <div className="text-xs font-medium truncate">4528289</div>
+                      <div className="text-xs font-medium truncate">
+                        4528289
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Valid Documents */}
+              {/* Documents Section */}
               <div className="w-full mt-6 pt-4 border-t">
-                <h3 className="text-sm font-semibold mb-3 text-left">Valid Documents</h3>
+                <h3 className="text-sm font-semibold mb-3 text-left">
+                  Valid Documents
+                </h3>
 
                 <div className="space-y-5 text-left">
-                  <div>
-                    <h4 className="text-sm text-gray-600 mb-2">ID Attachment</h4>
+                  <DocumentPreview
+                    title="ID Attachment"
+                    imageSrc="/placeholder.png"
+                    isZoomed={isZoomedID}
+                    setIsZoomed={setIsZoomedID}
+                  />
 
-                    {/* Clickable preview box */}
-                    <div
-                      className="w-full h-50 rounded-md border border-gray-200 bg-gray-50 overflow-hidden cursor-pointer hover:opacity-90 transition"
-                      onClick={() => setIsZoomedID(true)}
-                    >
-                      <Image
-                        src="/placeholder.png"
-                        alt="ID Attachment"
-                        width={600}
-                        height={300}
-                        className="object-cover w-full h-full"
-                      />
-                    </div>
-
-                    {/* Zoom Modal */}
-                    {isZoomedID && (
-                      <div
-                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/70"
-                        onClick={() => setIsZoomedID(false)}
-                      >
-                        <div className="relative max-w-3xl w-full mx-4">
-                          <Image
-                            src="/placeholder.png"
-                            alt="Zoomed ID Attachment"
-                            width={1200}
-                            height={800}
-                            className="object-contain w-full h-auto rounded-lg shadow-lg"
-                          />
-                          <button
-                            onClick={() => setIsZoomedID(false)}
-                            className="absolute top-3 right-3 bg-white/80 hover:bg-white text-gray-800 rounded-full px-2 py-1 text-xs font-medium shadow"
-                          >
-                            ✕
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  <div>
-                    <h4 className="text-sm text-gray-600 mb-2">Selfie with ID</h4>
-
-                    {/* Clickable preview box */}
-                    <div
-                      className="w-full h-50 rounded-md border border-gray-200 bg-gray-50 overflow-hidden cursor-pointer hover:opacity-90 transition"
-                      onClick={() => setIsZoomedSelfie(true)}
-                    >
-                      <Image
-                        src="/placeholder.png"
-                        alt="ID Attachment"
-                        width={600}
-                        height={300}
-                        className="object-cover w-full h-full"
-                      />
-                    </div>
-
-                    {/* Zoom Modal */}
-                    {isZoomedSelfie && (
-                      <div
-                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/70"
-                        onClick={() => setIsZoomedSelfie(false)}
-                      >
-                        <div className="relative max-w-3xl w-full mx-4">
-                          <Image
-                            src="/placeholder.png"
-                            alt="Zoomed ID Attachment"
-                            width={1200}
-                            height={800}
-                            className="object-contain w-full h-auto rounded-lg shadow-lg"
-                          />
-                          <button
-                            onClick={() => setIsZoomedSelfie(false)}
-                            className="absolute top-3 right-3 bg-white/80 hover:bg-white text-gray-800 rounded-full px-2 py-1 text-xs font-medium shadow"
-                          >
-                            ✕
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
+                  <DocumentPreview
+                    title="Selfie with ID"
+                    imageSrc="/placeholder.png"
+                    isZoomed={isZoomedSelfie}
+                    setIsZoomed={setIsZoomedSelfie}
+                  />
                 </div>
               </div>
             </CardContent>
           </Card>
-          <div className="md:col-span-3 sm:col-span-3">
-            <Card className="flex flex-col shadow-none rounded-md border-none bg-transparent">
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold"></CardTitle>
-              </CardHeader>
-              <CardContent></CardContent>
-            </Card>
+
+          <div className="md:col-span-3 flex flex-col space-y-4">
+            <div className="flex items-start gap-3 rounded-md border border-primary/30 bg-primary/10 p-4">
+              <Info className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+              <div>
+                <p className="text-sm font-semibold text-primary">Note:</p>
+                <p className="text-sm text-primary">
+                  Select the existing agent for verification and validation.
+                </p>
+              </div>
+            </div>
+            <div>
+              <Input
+                type="text"
+                placeholder="Search all agents by name, contact, or ID..."
+                className="bg-white w-full"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+            <div className="w-full">
+              {filteredAgents.length > 0 ? (
+                <DataTable
+                  columns={agentColumns}
+                  data={filteredAgents}
+                  pageSize={10}
+                />
+              ) : (
+                <p className="text-gray-500 text-center py-6">
+                  No agents found matching your search.
+                </p>
+              )}
+            </div>
           </div>
         </div>
       </div>
