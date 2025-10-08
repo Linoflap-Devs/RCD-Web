@@ -22,6 +22,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Input } from "../ui/input";
 import { DocumentPreview } from "../ui/document-preview";
 import { Checkbox } from "../ui/checkbox";
+import { useAgentApproval } from "@/store/useAgentApproval";
 
 export default function AgentApproval() {
   const [isZoomedID, setIsZoomedID] = useState(false);
@@ -31,6 +32,9 @@ export default function AgentApproval() {
   const [agents, setAgents] = useState<AgentsItem[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [selectedAgentId, setSelectedAgentId] = useState("");
+  const { selectedAgent } = useAgentApproval();
+
+  console.log(selectedAgent);
 
   useEffect(() => {
     const fetchAgents = async () => {
@@ -168,6 +172,32 @@ export default function AgentApproval() {
     },
   ];
 
+  // Safely extract each image type from selectedAgent.Images
+  const profileImage = selectedAgent?.Images?.find(
+    (img) => img.ImageType?.toLowerCase() === "profile"
+  );
+
+  const govID = selectedAgent?.Images?.find(
+    (img) => img.ImageType?.toLowerCase() === "id" || img.ImageType?.toLowerCase() === "govid"
+  );
+
+  const selfieID = selectedAgent?.Images?.find(
+    (img) => img.ImageType?.toLowerCase() === "selfie"
+  );
+
+  // Convert to Base64 URLs with fallback
+  const profileSrc = profileImage
+    ? `data:${profileImage.ContentType};base64,${profileImage.FileContent}`
+    : "/image.png";
+
+  const govIDSrc = govID
+    ? `data:${govID.ContentType};base64,${govID.FileContent}`
+    : "/placeholder.png";
+
+  const selfieSrc = selfieID
+    ? `data:${selfieID.ContentType};base64,${selfieID.FileContent}`
+    : "/placeholder.png";
+
   return (
     <>
       <div className="flex items-center">
@@ -185,7 +215,7 @@ export default function AgentApproval() {
             <CardContent className="flex flex-col items-center text-center overflow-y-auto scrollbar-hide flex-1 p-4 pt-2">
               <div className="w-40 h-40 bg-white rounded-md mb-3 flex items-center justify-center overflow-hidden border border-gray-200 shadow-sm">
                 <Image
-                  src="/image.png"
+                  src={profileSrc}
                   alt="Profile Picture"
                   width={160}
                   height={140}
@@ -194,7 +224,7 @@ export default function AgentApproval() {
               </div>
 
               <h2 className="text-lg font-semibold mb-5 truncate w-full">
-                John William Doe
+                {selectedAgent?.FirstName ?? "N/A"} {selectedAgent?.MiddleName ?? "N/A"} {selectedAgent?.LastName ?? "N/A"}
               </h2>
 
               {/* Basic Info */}
@@ -203,7 +233,7 @@ export default function AgentApproval() {
                   <IdCard className="h-4 w-4 text-primary flex-shrink-0" />
                   <div className="flex-1 min-w-0 space-y-0.5">
                     <div className="text-xs text-gray-500">Agent Registration ID</div>
-                    <div className="text-xs font-medium truncate">22</div>
+                    <div className="text-xs font-medium truncate">{selectedAgent?.AgentRegistrationID ?? 0}</div>
                   </div>
                 </div>
 
@@ -211,7 +241,7 @@ export default function AgentApproval() {
                   <User className="h-4 w-4 text-primary flex-shrink-0" />
                   <div className="flex-1 min-w-0 space-y-0.5">
                     <div className="text-xs text-gray-500">Employee ID Number</div>
-                    <div className="text-xs font-medium truncate">27272</div>
+                    <div className="text-xs font-medium truncate">{selectedAgent?.EmployeeIdNumber ?? 0}</div>
                   </div>
                 </div>
               </div>
@@ -237,7 +267,7 @@ export default function AgentApproval() {
                     <Mail className="h-4 w-4 text-primary flex-shrink-0" />
                     <div className="flex-1 min-w-0 space-y-0.5">
                       <div className="text-xs text-gray-500">Email</div>
-                      <div className="text-xs font-medium truncate"> johndoe@gmail.com</div>
+                      <div className="text-xs font-medium truncate">{selectedAgent?.Email ?? 0}</div>
                     </div>
                   </div>
                   
@@ -245,7 +275,7 @@ export default function AgentApproval() {
                     <Contact className="h-4 w-4 text-primary flex-shrink-0" />
                     <div className="flex-1 min-w-0 space-y-0.5">
                       <div className="text-xs text-gray-500">Contact Number</div>
-                      <div className="text-xs font-medium truncate">0927 282 8282</div>
+                      <div className="text-xs font-medium truncate">{selectedAgent?.ContactNumber ?? 0}</div>
                     </div>
                   </div>
 
@@ -253,7 +283,7 @@ export default function AgentApproval() {
                     <Phone className="h-4 w-4 text-primary flex-shrink-0" />
                     <div className="flex-1 min-w-0 space-y-0.5">
                       <div className="text-xs text-gray-500">Telephone Number</div>
-                      <div className="text-xs font-medium truncate">45363738</div>
+                      <div className="text-xs font-medium truncate">{selectedAgent?.TelephoneNumber ?? "N/A"}</div>
                     </div>
                   </div>
                 </div>
@@ -268,14 +298,14 @@ export default function AgentApproval() {
                 <div className="space-y-5 text-left">
                   <DocumentPreview
                     title="ID Attachment"
-                    imageSrc="/placeholder.png"
+                    imageSrc={govIDSrc}
                     isZoomed={isZoomedID}
                     setIsZoomed={setIsZoomedID}
                   />
 
                   <DocumentPreview
                     title="Selfie with ID"
-                    imageSrc="/placeholder.png"
+                    imageSrc={selfieSrc}
                     isZoomed={isZoomedSelfie}
                     setIsZoomed={setIsZoomedSelfie}
                   />
@@ -295,7 +325,7 @@ export default function AgentApproval() {
               </div>
             </div> */}
             <div className="mt-2">
-              <div className="space-y-1 mb-5">
+              <div className="space-y-0.5 mb-5">
                 <h2 className="text-2xl font-semibold tracking-tight">Agents</h2>
                 <p className="text-sm text-muted-foreground">
                   Select the existing agent for account verification and validation

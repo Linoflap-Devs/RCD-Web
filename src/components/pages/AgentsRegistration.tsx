@@ -14,8 +14,11 @@ import { Input } from "../../components/ui/input";
 import { AgentsItem, AgentsRegisItem, getAgents, getAgentsRegistrations } from "@/services/agents/agents.api";
 import { useDebounce } from "@/hooks/use-debounce";
 import AgentApprovalDialog from "../dialogs/AgentApprovalDialog";
+import { useRouter } from "next/navigation";
+import { useAgentApproval } from "@/store/useAgentApproval";
 
 export default function AgentsRegistrations() {
+  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
   const [agentsRegis, setAgentsRegis] = useState<AgentsRegisItem[]>([]);
@@ -23,7 +26,8 @@ export default function AgentsRegistrations() {
   const debouncedSearch = useDebounce(searchTerm, 400);
   const [agents, setAgents] = useState<AgentsItem[]>([]); // to compare
   const [viewselectedAgents, setviewSelectedAgents] = useState(false);
-  const [selectedAgent, setSelectedAgent] = useState<any>(null);
+  const [selectedAgent, setSelectedAgentStore] = useState<any>(null);
+  const { setSelectedAgent } = useAgentApproval.getState();
 
   useEffect(() => {
     const fetchAgentsRegis = async () => {
@@ -123,15 +127,12 @@ export default function AgentsRegistrations() {
       id: "actions",
       header: () => <div className="text-center w-full"></div>,
       cell: ({ row }) => {
-        const agentsRegis = row.original;
+        const agentRegis = row.original;
         
         return (
           <div className="flex justify-center">
             <span className="inline-flex items-center px-2 py-0.5 text-xs font-semibold text-green-800 bg-green-200 rounded-full shadow-sm hover:bg-green-300 hover:scale-105 transition-all duration-200 cursor-pointer"
-              onClick={() => {
-                setSelectedAgent(row.original);
-                setviewSelectedAgents(true);
-              }}
+              onClick={() => handleApproval(agentRegis)} // passing agentRegis here
             >
               <CheckCircle2 className="h-3 w-3 mr-1" />
               Approve
@@ -141,6 +142,17 @@ export default function AgentsRegistrations() {
       }
     }
   ];
+  
+  const handleApproval = (agent: AgentsRegisItem) => {
+    if (!agent) {
+      console.warn("No agent selected for approval.");
+      return;
+    }
+
+    // Wrap the single agent in an array since your store expects AgentsRegisItem[]
+    useAgentApproval.getState().setSelectedAgent(agent);
+    router.push("/agents-registration/approval");
+  };
 
   if (error) return <p>Error: {error}</p>
 

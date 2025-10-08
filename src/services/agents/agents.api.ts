@@ -64,6 +64,15 @@ export interface ExperienceItem {
   StartDate: string;
 }
 
+export interface ImageItem {
+  ImageType?: string;
+  FileName: string;
+  ContentType: string;
+  FileExt: string;
+  FileSize: number;
+  FileContent: string; // base64 or binary as string
+}
+
 export interface AgentsRegisItem {
   AgentID: number;
   AgentRegistrationID: number;
@@ -89,6 +98,7 @@ export interface AgentsRegisItem {
   EmployeeIdNumber: string;
   ProfileImage: ProfileImage;
   Experience: ExperienceItem[];
+  Images?: ImageItem[];
 }
 
 export interface AgentsRegisResponse {
