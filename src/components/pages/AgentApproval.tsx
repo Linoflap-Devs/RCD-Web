@@ -21,6 +21,7 @@ import { DataTable } from "../ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { Input } from "../ui/input";
 import { DocumentPreview } from "../ui/document-preview";
+import { Checkbox } from "../ui/checkbox";
 
 export default function AgentApproval() {
   const [isZoomedID, setIsZoomedID] = useState(false);
@@ -29,6 +30,7 @@ export default function AgentApproval() {
   const [loading, setLoading] = useState(false);
   const [agents, setAgents] = useState<AgentsItem[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [selectedAgentId, setSelectedAgentId] = useState("");
 
   useEffect(() => {
     const fetchAgents = async () => {
@@ -86,6 +88,31 @@ export default function AgentApproval() {
   // Table columns
   const agentColumns: ColumnDef<AgentsItem>[] = [
     {
+      id: "select",
+      header: () => (
+        <span className="text-xs font-medium text-gray-600 flex justify-center">
+          Choose one
+        </span>
+      ),
+      cell: ({ row }) => {
+        const agent = row.original;
+        //const isSelected = selectedAgentId === agent.AgentID;
+
+        return (
+          <div className="flex items-center justify-center">
+            <Checkbox
+              className="border-gray-400 text-gray-700 dark:border-gray-400 dark:text-white"
+              //checked={isSelected}
+              // onCheckedChange={() =>
+              //   setSelectedAgentId(isSelected ? null : agent.AgentID)
+              // }
+              aria-label={`Select agent ${agent.AgentID}`}
+            />
+          </div>
+        );
+      },
+    },
+    {
       accessorKey: "AgentID",
       header: ({ column }) => (
         <Button
@@ -100,9 +127,21 @@ export default function AgentApproval() {
         <span className="text-xs">{row.getValue("AgentID")}</span>
       ),
     },
-    { accessorKey: "FirstName", header: "First Name" },
-    { accessorKey: "LastName", header: "Last Name" },
-    { accessorKey: "ContactNumber", header: "Contact Number" },
+    {
+      id: "fullName",
+      header: "Full Name",
+      cell: ({ row }) => {
+        const { FirstName, MiddleName, LastName } = row.original;
+        const fullName = [FirstName, MiddleName, LastName]
+          .filter(Boolean)
+          .join(" ");
+        return <span className="text-xs">{fullName}</span>;
+      },
+    },
+    {
+      accessorKey: "ContactNumber",
+      header: "Contact Number",
+    },
     {
       accessorKey: "Birthdate",
       header: "Birthdate",
@@ -113,7 +152,7 @@ export default function AgentApproval() {
 
   return (
     <>
-      <div className="flex items-center mb-4">
+      <div className="flex items-center">
         <Link href="/agents-registration">
           <Button variant="ghost" size="icon" className="rounded-full">
             <ChevronLeft className="h-5 w-5" />
@@ -122,8 +161,8 @@ export default function AgentApproval() {
         <h1 className="text-xl font-semibold ml-2">Agent Approval</h1>
       </div>
 
-      <div className="w-full mx-auto p-2 pt-0">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="w-full mx-auto px-2">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card className="rounded-md flex flex-col overflow-hidden border shadow-none md:col-span-1">
             <CardContent className="flex flex-col items-center text-center overflow-y-auto scrollbar-hide flex-1 p-4">
               <div className="w-40 h-40 bg-white rounded-md mb-3 flex items-center justify-center overflow-hidden border border-gray-200 shadow-sm">
@@ -165,7 +204,7 @@ export default function AgentApproval() {
                   Contact Information
                 </h3>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
+                <div className="grid grid-cols-1 sm:grid-cols-1 gap-3 text-left">
                   <div className="flex items-start gap-2">
                     <HouseIcon className="h-4 w-4 text-primary mt-1 flex-shrink-0" />
                     <div className="flex-1 min-w-0">
@@ -233,8 +272,8 @@ export default function AgentApproval() {
             </CardContent>
           </Card>
 
-          <div className="md:col-span-3 flex flex-col space-y-4">
-            <div className="flex items-start gap-3 rounded-md border border-primary/30 bg-primary/10 p-4">
+          <div className="md:col-span-3 flex flex-col space-y-5">
+            {/* <div className="flex items-start gap-3 rounded-md border border-primary/30 bg-primary/10 p-4">
               <Info className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
               <div>
                 <p className="text-sm font-semibold text-primary">Note:</p>
@@ -242,8 +281,14 @@ export default function AgentApproval() {
                   Select the existing agent for verification and validation.
                 </p>
               </div>
-            </div>
-            <div>
+            </div> */}
+            <div className="mt-2">
+              <div className="space-y-0.5 mb-5">
+                <h2 className="text-2xl font-semibold tracking-tight">Agents</h2>
+                <p className="text-sm text-muted-foreground">
+                  Select the existing agent for verification and validation.
+                </p>
+              </div>
               <Input
                 type="text"
                 placeholder="Search all agents by name, contact, or ID..."

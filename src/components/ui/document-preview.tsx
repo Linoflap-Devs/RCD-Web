@@ -19,7 +19,7 @@ export const DocumentPreview = ({
 
       {/* Clickable preview box */}
       <div
-        className="w-full h-50 rounded-md border border-gray-200 bg-gray-50 overflow-hidden cursor-pointer hover:opacity-90 transition"
+        className="w-full h-40 rounded-md border border-gray-200 bg-gray-50 overflow-hidden cursor-pointer hover:opacity-90 transition"
         onClick={() => setIsZoomed(true)}
       >
         <Image
