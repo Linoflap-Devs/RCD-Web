@@ -63,7 +63,6 @@ export default function Dashboard() {
       });
   }, []);
 
-  console.log(dashboardData);
 
   const currentMonth = dashboardData?.KPI.totalSalesCurrentMonth ?? 0;
   const lastYearMonth = dashboardData?.KPI?.totalSalesLastMonth ?? 0;

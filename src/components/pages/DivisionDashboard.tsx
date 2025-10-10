@@ -257,6 +257,8 @@ export function DivisionDashboard({
   const [selectGranularityDivisionSales, setSelectGranularityDivisionSales] = useState<"monthly" | "quarterly" | "yearly">("monthly");
   const [selectGranularityTargetSales, setSelectGranularityTargetSales] = useState<"monthly" | "quarterly" | "yearly">("monthly");
 
+  console.log(DivisionSales);
+
   useEffect(() => {
     if (!selectedTop10DivisionDate) return;
 
@@ -290,15 +292,15 @@ export function DivisionDashboard({
         : selectGranularityDivisionSales === "quarterly"
           ? d.CurrentQuarter
           : selectGranularityDivisionSales === "yearly"
-            ? d.CurrentYear
+            ? d.CurrentMonthLastYear
             : 0,
     Last:
       selectGranularityDivisionSales === "monthly"
-        ? d.CurrentMonthLastYear
+        ? d.LastMonth
         : selectGranularityDivisionSales === "quarterly"
           ? d.LastQuarter
           : selectGranularityDivisionSales === "yearly"
-            ? d.LastYear
+            ? d.LastMonth
             : 0,
   })) ?? [];
 
