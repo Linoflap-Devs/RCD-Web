@@ -10,15 +10,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { getCurrentUser, LoginResponse, loginUser } from "@/services/auth/auth.api";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { toast } from "../ui/use-toast";
-import { useAuth } from "@/store/useAuth";
 import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
 
@@ -53,7 +50,6 @@ export default function Login() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
-        credentials: "include"
       });
 
       const data = await res.json();
@@ -68,12 +64,6 @@ export default function Login() {
         variant: "success",
         description: `Welcome back, ${data.user}!`,
       });
-
-      const currentUser = await getCurrentUser();
-
-      if (currentUser) {
-        useAuth.getState().setUser(currentUser);
-      }
 
       router.push("/dashboard");
 
@@ -91,7 +81,6 @@ export default function Login() {
       });
     } finally {
       setLoading(false);
-      console.log("⏹Login process finished.");
     }
   }
 
