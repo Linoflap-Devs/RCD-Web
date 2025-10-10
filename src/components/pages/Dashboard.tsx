@@ -42,6 +42,8 @@ export default function Dashboard() {
   const [dashboardData, setDashboardData] = useState<DashboardItem | undefined>(undefined);
   const [error, setError] = useState<string | null>(null);
 
+  console.log(dashboardData);
+
   useEffect(() => {
     setLoading(true);
     setError(null);
@@ -307,7 +309,7 @@ export default function Dashboard() {
                           <span className="h-2 w-2 rounded-full bg-primary/30 mr-1"></span>
                           Sales Previous Year:
                           <span className="ml-2 font-medium">
-                            {lastYearMonth.toLocaleString()}
+                            {previousYear.toLocaleString()}
                           </span>
                         </div>
                       </div>
