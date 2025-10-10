@@ -334,9 +334,9 @@ export default function Dashboard() {
           onValueChange={handleTabChange}
           className="w-full border-none"
         >
-          {/* <div className="mt-5 flex items-center space-x-4 px-3 py-1">
+          <div className="mt-5 flex items-center space-x-4 px-3 py-3">
             <FolderKanban className="w-6 h-6 text-primary mt-1" />
-            <div>
+            <div className="inline-block leading-tight">
               <CardTitle className="text-lg font-semibold">
                 Data Analytics and Reports
               </CardTitle>
@@ -344,7 +344,7 @@ export default function Dashboard() {
                 Showing analytic reports on a variety of topics
               </CardDescription>
             </div>
-          </div> */}
+          </div>
 
           <div className="flex items-center justify-start mb-4 pt-3 border-b">
             <TabsList className="w-auto bg-transparent border-none p-0 flex justify-between space-x-4 text-sm">
