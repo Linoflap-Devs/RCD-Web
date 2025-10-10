@@ -49,66 +49,49 @@ export default function Login() {
     setErrorMessage("");
 
     try {
-      const response: LoginResponse = await loginUser(values);
-      //console.log("login response", response);
+      const res = await fetch("/api/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+        credentials: "include"
+      });
 
-      if (response.success) {
-        toast({
-          title: "Login Successful",
-          variant: "success",
-          description: `Welcome back, ${response.data.username}!`,
-        });
+      const data = await res.json();
 
-        //sessionStorage.setItem("username", response.data.username);
-
-        try {
-          const currentUser = await getCurrentUser();
-          //console.log("Fetched currentUser:", currentUser);
-
-          if (currentUser) {
-            useAuth.getState().setUser(currentUser);
-            //console.log("Zustand store user:", useAuth.getState().user);
-          }
-        } catch (err) {
-          console.error("Error fetching current user:", err);
-        }
-
-        router.push("/dashboard");
-      } else {
-        setErrorMessage(response.message || "Invalid Credentiials, please try again.");
+      if (!res.ok) {
+        console.error("Login failed:", data.message);
+        throw new Error(data.message || "Login failed");
       }
-    } catch (error: unknown) {
-      const axiosError = error as AxiosError;
-      if (axiosError?.response?.status === 401) {
-        setErrorMessage(
-          "Invalid credentials, please check your email and password."
-        );
-        toast({
-          title: "Error",
-          variant: "destructive",
-          description: `Invalid credentials, please check your email and password.`,
-        });
-      } else if (axiosError?.response?.status === 500) {
-        setErrorMessage(
-          "Internal server error. Please try again later or contact support."
-        );
-        toast({
-          title: "Error",
-          variant: "destructive",
-          description: `Internal server error. Please try again later or contact support.`,
-        });
-      } else {
-        setErrorMessage(
-          "An unexpected error occurred. Please try again later."
-        );
-        toast({
-          title: "Error",
-          variant: "destructive",
-          description: `An unexpected error occurred. Please try again later.`,
-        });
+
+      toast({
+        title: "Login Successful",
+        variant: "success",
+        description: `Welcome back, ${data.user}!`,
+      });
+
+      const currentUser = await getCurrentUser();
+
+      if (currentUser) {
+        useAuth.getState().setUser(currentUser);
       }
+
+      router.push("/dashboard");
+
+    } catch (error: any) {
+      console.error("Login error:", error);
+
+      const message =
+        error.message || "An unexpected error occurred. Please try again later.";
+
+      setErrorMessage(message);
+      toast({
+        title: "Error",
+        variant: "destructive",
+        description: message,
+      });
     } finally {
       setLoading(false);
+      console.log("⏹Login process finished.");
     }
   }
 

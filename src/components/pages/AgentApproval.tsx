@@ -342,6 +342,11 @@ export default function AgentApproval() {
       },
     },
     {
+      accessorKey: "DivisionID",
+      header: "Division ID",
+      cell: ({ row }) => row.getValue("DivisionID") ?? "N/A",
+    },
+    {
       accessorKey: "ContactNumber",
       header: "Contact Number",
       cell: ({ row }) => (

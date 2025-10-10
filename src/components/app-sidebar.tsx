@@ -34,11 +34,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   }
 
   const handleLogout = async () => {
-    //console.log("Logging out...");
     sessionStorage.setItem("loggingOut", "true");
 
     try {
-      await logoutUser();
+      // Call API to clear HTTP-only token cookie
+      await fetch("/api/auth/logout", { method: "POST" });
+
+      await logoutUser?.();
     } catch (error) {
       console.error("Logout failed:", error);
     }
@@ -49,12 +51,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       description: "Successfully logged out.",
     });
 
-    // Delay redirect slightly to ensure sessionStorage is updated
     setTimeout(() => {
       router.push("/");
     }, 100);
 
-    // Clear storage AFTER redirect
     setTimeout(() => {
       logout();
       sessionStorage.removeItem("auth-storage");

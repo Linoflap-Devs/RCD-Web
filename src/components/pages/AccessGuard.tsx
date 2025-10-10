@@ -3,86 +3,58 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader } from 'lucide-react';
-import { useAuth } from '@/store/useAuth';
 
 interface AccessGuardProps {
-  allowedTypes?: number[];
   children: React.ReactNode;
 }
 
-export default function AccessGuard({ allowedTypes = [], children }: AccessGuardProps) {
+export default function AccessGuard({ children }: AccessGuardProps) {
   const router = useRouter();
-  const { user, loading, initialized } = useAuth();
+  const [checking, setChecking] = useState(true);
   const [isAuthorized, setIsAuthorized] = useState(false);
-  const [checkingStorage, setCheckingStorage] = useState(true);
 
-  useEffect(() => {
-    const path = window.location.pathname;
-    const isLoggingOut = sessionStorage.getItem("loggingOut");
+  // useEffect(() => {
+  //   async function verifyToken() {
+  //     try {
+  //       console.log("Checking token via /api/auth/verify...");
 
-    //console.log("AccessGuard mounted");
-    //console.log("path:", path);
-    //console.log("loggingOut flag:", isLoggingOut);
-    //console.log("user:", user);
+  //       // Fetch from your verify route — cookies are automatically included
+  //       const res = await fetch("/api/auth/verify", {
+  //         method: "GET",
+  //         credentials: "include", // send HTTP-only cookies
+  //       });
 
-    if (isLoggingOut) {
-      //console.log("Skipping AccessGuard check (logging out...)");
-      setIsAuthorized(false);
-      setCheckingStorage(false);
-      return;
-    }
 
-    // Allow home/login/register without validation
-    const publicPaths = ["/", "/login", "/register"];
-    if (publicPaths.includes(path)) {
-      //console.log("Public path, skipping guard");
-      setIsAuthorized(true);
-      setCheckingStorage(false);
-      return;
-    }
+  //       const data = await res.json();
+  //       console.log("Verify response:", data);
 
-    const storedAuth = sessionStorage.getItem('auth-storage');
-    if (!storedAuth) {
-      //console.warn("No auth-storage found — redirecting to /not-found");
-      router.replace('/not-found');
-      return;
-    }
+  //       if (res.ok && data?.success) {
+  //         console.log("Token valid. Access granted.");
+  //         setIsAuthorized(true);
+  //       } else {
+  //         console.warn("Invalid or missing token. Redirecting...");
+  //         router.replace("/");
+  //       }
+  //     } catch (err) {
+  //       console.error("Error verifying token:", err);
+  //       router.replace("/");
+  //     } finally {
+  //       setChecking(false);
+  //     }
+  //   }
 
-    try {
-      const parsed = JSON.parse(storedAuth);
-      const storedUser = parsed?.state?.user;
+  //   verifyToken();
+  // }, [router]);
 
-      //console.log("storedUser:", storedUser);
+  // if (checking) {
+  //   return (
+  //     <div className="min-h-screen flex justify-center items-center">
+  //       <Loader className="animate-spin h-8 w-8 text-primary" />
+  //     </div>
+  //   );
+  // }
 
-      if (!storedUser) {
-        //console.warn("storedUser empty — redirecting");
-        router.replace('/not-found');
-        return;
-      }
+  //return isAuthorized ? <>{children}</> : null;
+  return <>{children}</>
 
-      if (storedUser.userName && storedUser.branch && storedUser.position) {
-        setIsAuthorized(true);
-      } else if (storedUser.UserType && allowedTypes.includes(storedUser.UserType ?? 2)) {
-        setIsAuthorized(true);
-      } else {
-        console.warn("User not allowed — redirecting");
-        router.replace('/not-found');
-      }
-    } catch (error) {
-      console.error('Invalid auth-storage format:', error);
-      router.replace('/not-found');
-    } finally {
-      setCheckingStorage(false);
-    }
-  }, [router, allowedTypes]);
-
-  if (checkingStorage) {
-    return (
-      <div className="min-h-screen flex justify-center items-center">
-        <Loader className="animate-spin h-8 w-8 text-primary" />
-      </div>
-    );
-  }
-
-  return isAuthorized ? <>{children}</> : null;
 }
