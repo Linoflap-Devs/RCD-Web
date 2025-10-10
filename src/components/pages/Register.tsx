@@ -53,7 +53,7 @@ export default function RegistrationForm() {
         setLoading(true);
         const res = await getBranches();
         setBranches(res.data);
-        console.log("Branches fetched:", res.data);
+        //console.log("Branches fetched:", res.data);
       } catch (err: any) {
         console.error("Failed to fetch branches:", err);
         setErrorBranches(err.message || "Failed to fetch branches");

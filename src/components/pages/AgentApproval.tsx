@@ -184,7 +184,7 @@ export default function AgentApproval() {
     fetchAgents();
   }, []);
 
-  console.log(agents);
+  //console.log(agents);
 
   // Approve handler
   const handleApprove = async (
