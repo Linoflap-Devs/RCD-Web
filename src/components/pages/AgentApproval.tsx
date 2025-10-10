@@ -36,6 +36,12 @@ import { useAgentApproval } from "@/store/useAgentApproval";
 import { AgentsItem, AgentsRegisItem, approveAgent, getAgents } from "@/services/agents/agents.api";
 import { toast } from "../ui/use-toast";
 import { useRouter } from "next/navigation";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 function RejectConfirmationDialog({
   open,
@@ -432,8 +438,8 @@ export default function AgentApproval() {
 
               <h2 className="text-lg font-semibold mb-5 truncate w-full">
                 {selectedAgent
-                  ? `${selectedAgent.FirstName ?? ""} ${selectedAgent.MiddleName ?? ""
-                  } ${selectedAgent.LastName ?? ""}`
+                  ? `${selectedAgent.FirstName.toUpperCase() ?? ""} ${selectedAgent.MiddleName.toUpperCase() ?? ""
+                  } ${selectedAgent.LastName.toUpperCase() ?? ""}`
                   : "N/A"}
               </h2>
 
@@ -504,21 +510,41 @@ export default function AgentApproval() {
                 <h3 className="text-sm font-semibold mb-3 text-left">
                   Valid Documents
                 </h3>
+                <TooltipProvider>
+                  <div className="space-y-5 text-left">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div>
+                          <DocumentPreview
+                            title="ID Attachment"
+                            imageSrc={govIDSrc}
+                            isZoomed={isZoomedID}
+                            setIsZoomed={setIsZoomedID}
+                          />
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent side="top" className="text-sm">
+                        View and verify the uploaded government ID
+                      </TooltipContent>
+                    </Tooltip>
 
-                <div className="space-y-5 text-left">
-                  <DocumentPreview
-                    title="ID Attachment"
-                    imageSrc={govIDSrc}
-                    isZoomed={isZoomedID}
-                    setIsZoomed={setIsZoomedID}
-                  />
-                  <DocumentPreview
-                    title="Selfie with ID"
-                    imageSrc={selfieSrc}
-                    isZoomed={isZoomedSelfie}
-                    setIsZoomed={setIsZoomedSelfie}
-                  />
-                </div>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div>
+                          <DocumentPreview
+                            title="Selfie with ID"
+                            imageSrc={selfieSrc}
+                            isZoomed={isZoomedSelfie}
+                            setIsZoomed={setIsZoomedSelfie}
+                          />
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent side="top" className="text-sm">
+                        View the selfie photo for identity verification
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
+                </TooltipProvider>
               </div>
             </CardContent>
           </Card>
