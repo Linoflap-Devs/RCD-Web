@@ -1,6 +1,7 @@
 "use client"
 
 import { AppSidebar } from "@/components/app-sidebar"
+import IdleLogout from "@/components/pages/IdleLogout"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -37,15 +38,16 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     {getHomeBreadcrumb(pathname)}
                   </BreadcrumbLink>
                 </BreadcrumbItem>
-                {/* <BreadcrumbSeparator className="hidden md:block" />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                </BreadcrumbItem> */}
               </BreadcrumbList>
             </Breadcrumb>
           </div>
         </header>
+
         <div className="flex flex-1 flex-col gap-4 p-2 pt-6">
+          {/* Idle timer runs in background here */}
+          <IdleLogout />
+
+          {/* Your main content */}
           {children}
         </div>
       </SidebarInset>
