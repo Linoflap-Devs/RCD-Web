@@ -16,6 +16,54 @@ import { useDebounce } from "@/hooks/use-debounce";
 import AgentApprovalDialog from "../dialogs/AgentApprovalDialog";
 import { useRouter } from "next/navigation";
 import { useAgentApproval } from "@/store/useAgentApproval";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+
+function ApproveAgentDialog({
+  open,
+  onOpenChange,
+  selectedAgent,
+  onApprove,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  selectedAgent: AgentsRegisItem | null;
+  onApprove: (agent: AgentsRegisItem) => Promise<void> | void;
+}) {
+  if (!selectedAgent) return null;
+
+  return (
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Confirm Approval</AlertDialogTitle>
+          <AlertDialogDescription>
+            Are you sure you want to approve this agent registration{" "}
+            <span className="font-semibold">{selectedAgent?.FirstName ?? ""} {selectedAgent?.LastName ?? ""}</span>{" "}
+            This action cannot be undone.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction
+            className="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded-md transition-colors duration-200"
+            onClick={() => onApprove(selectedAgent)}
+          >
+            Approve
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
 
 export default function AgentsRegistrations() {
   const router = useRouter();
@@ -27,13 +75,14 @@ export default function AgentsRegistrations() {
   const [agents, setAgents] = useState<AgentsItem[]>([]); // to compare
   const [viewselectedAgents, setviewSelectedAgents] = useState(false);
   const [selectedAgent, setSelectedAgentStore] = useState<any>(null);
+  const [open, setOpen] = useState(false);
   const { setSelectedAgent } = useAgentApproval.getState();
 
   useEffect(() => {
     const fetchAgentsRegis = async () => {
       try {
         setLoading(true);
-        
+
         const [agentsRes, agentsRegisRes] = await Promise.all([
           getAgents(),
           getAgentsRegistrations(),
@@ -126,21 +175,24 @@ export default function AgentsRegistrations() {
       header: () => <div className="text-center w-full"></div>,
       cell: ({ row }) => {
         const agentRegis = row.original;
-        
         return (
           <div className="flex justify-center">
-            <span className="inline-flex items-center px-2 py-0.5 text-xs font-semibold text-green-800 bg-green-200 rounded-full shadow-sm hover:bg-green-300 hover:scale-105 transition-all duration-200 cursor-pointer"
-              onClick={() => handleApproval(agentRegis)} // passing agentRegis here
+            <span
+              className="inline-flex items-center px-2 py-0.5 text-xs font-semibold text-green-800 bg-green-200 rounded-full shadow-sm hover:bg-green-300 hover:scale-105 transition-all duration-200 cursor-pointer"
+              onClick={() => {
+                setSelectedAgentStore(agentRegis);
+                setOpen(true);
+              }}
             >
               <CheckCircle2 className="h-3 w-3 mr-1" />
               Approve
             </span>
           </div>
-        )
-      }
+        );
+      },
     }
   ];
-  
+
   const handleApproval = (agent: AgentsRegisItem) => {
     if (!agent) {
       console.warn("No agent selected for approval.");
@@ -192,26 +244,26 @@ export default function AgentsRegistrations() {
                   List of agents awaiting approval
                 </p>
               </div>
-                <div className="flex flex-col md:flex-row items-center gap-3 w-full">
-                  <div className="bg-white relative rounded-lg w-full">
-                    <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      placeholder="Search..."
-                      className="pl-10 text-sm sm:text-base h-9 w-full"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                  </div>
+              <div className="flex flex-col md:flex-row items-center gap-3 w-full">
+                <div className="bg-white relative rounded-lg w-full">
+                  <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search..."
+                    className="pl-10 text-sm sm:text-base h-9 w-full"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
                 </div>
+              </div>
               {loading ? (
                 <div className="flex justify-center items-center h-40 gap-2 text-muted-foreground">
                   <Loader className="h-5 w-5 animate-spin" />
                   <p className="text-sm">Loading agents data...</p>
                 </div>
-              // ) : filteredAgents.length === 0 ? (
-              //   <div className="flex justify-center items-center h-40">
-              //     <p className="text-muted-foreground">No results found.</p>
-              //   </div>
+                // ) : filteredAgents.length === 0 ? (
+                //   <div className="flex justify-center items-center h-40">
+                //     <p className="text-muted-foreground">No results found.</p>
+                //   </div>
               ) : (
                 <div className="rounded-md pb-3">
                   <DataTable columns={agentColumns} pageSize={10} data={filteredAgents} />
@@ -221,15 +273,21 @@ export default function AgentsRegistrations() {
           </div>
         </div>
       </div>
-
       {selectedAgent && viewselectedAgents && (
         <AgentApprovalDialog
           open={viewselectedAgents}
           selectedAgent={selectedAgent}
           agents={agents}
           onOpenChange={setviewSelectedAgents}
-        />        
+        />
       )}
+
+      <ApproveAgentDialog
+        open={open}
+        onOpenChange={setOpen}
+        selectedAgent={selectedAgent}
+        onApprove={handleApproval}
+      />
     </>
   );
 }

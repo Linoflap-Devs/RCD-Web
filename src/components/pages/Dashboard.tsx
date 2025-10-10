@@ -19,9 +19,6 @@ import {
   FolderClosed,
   Users,
   UsersRound,
-  BanknoteArrowUp,
-  CirclePercent,
-  Coins,
   FolderKanban,
 } from "lucide-react";
 import { useEffect, useState } from "react";
