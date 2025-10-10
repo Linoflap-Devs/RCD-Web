@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
-export default function IdleLogout({ timeout = 10000, warningTime = 5000 }) {
+export default function IdleLogout({ timeout = 300000, warningTime = 5000 }) {
   const router = useRouter();
   const warningRef = useRef<NodeJS.Timeout | null>(null);
   const countdownRef = useRef<NodeJS.Timeout | null>(null);
