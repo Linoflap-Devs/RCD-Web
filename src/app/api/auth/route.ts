@@ -32,7 +32,7 @@ export async function POST(req: Request) {
     if (!data?.data?.token) {
       console.warn("[LOGIN] No token found in backend response!");
       return NextResponse.json(
-        { success: false, message: "Invalid login or missing token." },
+        { success: false, message: "Invalid Credentials." },
         { status: 401 }
       );
     }
