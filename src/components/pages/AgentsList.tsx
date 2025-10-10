@@ -139,8 +139,6 @@ export default function AgentsList() {
   const [error, setError] = useState<string | null>(null);
   const debouncedSearch = useDebounce(searchTerm, 400);
 
-  console.log(agents);
-
   useEffect(() => {
     const fetchAgents = async () => {
       try {

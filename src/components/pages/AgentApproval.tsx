@@ -102,6 +102,8 @@ export default function AgentApproval() {
   const [error, setError] = useState<string | null>(null);
   const [selectedAgentId, setSelectedAgentId] = useState<number | null>(null);
   const { selectedAgent } = useAgentApproval();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isApprovalAgent, setIsApprovalAgent] = useState(false);
 
   useEffect(() => {
     const fetchAgents = async () => {
@@ -294,6 +296,27 @@ export default function AgentApproval() {
     ? `data:${selfieID.ContentType};base64,${selfieID.FileContent}`
     : "/placeholder.png";
 
+  useEffect(() => {
+    if (selectedAgent === null) {
+      setIsApprovalAgent(false);
+      toast({
+        title: "Action Required in appproving an agent",
+        description: "Select an Agent first.",
+        variant: "destructive",
+      });
+      
+      setTimeout(() => {
+        router.push("/agents-registration");
+        // href={`/home/crew-movement/crew-list?id=${vessel.vesselId}&vesselName=${vessel.vesselName}`}>
+      }, 1500);
+    } else {
+      setIsLoading(false); // only stop loading if vessel is valid
+       setIsApprovalAgent(true);
+    }
+  }, [selectedAgent, router]);
+
+  if (isLoading && loading) return <p>Loading...</p>
+
   return (
     <>
       <div className="flex items-center mb-0">
@@ -443,7 +466,7 @@ export default function AgentApproval() {
             />
 
             <div className="w-full">
-              {filteredAgents.length > 0 ? (
+              {isApprovalAgent && filteredAgents.length > 0 ? (
                 <DataTable columns={agentColumns} data={filteredAgents} pageSize={10} />
               ) : (
                 <p className="text-gray-500 text-center py-6">
