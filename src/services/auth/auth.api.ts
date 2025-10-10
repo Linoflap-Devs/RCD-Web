@@ -41,7 +41,7 @@ export interface UserItem {
     position?: string;
 }
 
-export const getCurrentUser = async (): Promise<UserItem> => {
+export const getCurrentUser = async (p0: { signal: AbortSignal; }): Promise<UserItem> => {
   const response = await axiosInstance.get<CurrentUserResponse>("/auth/web/current-user", {
   });
   //console.log("Axios current-user response:", response.data);
