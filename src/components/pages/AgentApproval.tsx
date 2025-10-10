@@ -33,9 +33,72 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useAgentApproval } from "@/store/useAgentApproval";
-import { AgentsItem, approveAgent, getAgents } from "@/services/agents/agents.api";
+import { AgentsItem, AgentsRegisItem, approveAgent, getAgents } from "@/services/agents/agents.api";
 import { toast } from "../ui/use-toast";
 import { useRouter } from "next/navigation";
+
+function RejectConfirmationDialog({
+  open,
+  onOpenChange,
+  selectedAgent,
+  onCancel,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  selectedAgent: AgentsRegisItem | null;
+  onCancel: (agent: AgentsRegisItem) => Promise<void> | void;
+}) {
+  if (!selectedAgent) return null;
+
+  const handleReject = async () => {
+    try {
+      await onCancel(selectedAgent);
+      toast({
+        title: "Agent Rejected",
+        description: `${selectedAgent.FirstName} ${selectedAgent.LastName} has been rejected.`,
+        variant: "success",
+      });
+      onOpenChange(false);
+    } catch (err) {
+      console.error(err);
+      toast({
+        title: "Error rejecting agent",
+        description: "Something went wrong while rejecting this agent.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  return (
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Confirm Rejection</AlertDialogTitle>
+          <AlertDialogDescription>
+            Are you sure you want to{" "}
+            <span className="font-semibold text-red-600">reject</span> the
+            registration of{" "}
+            <span className="font-semibold">
+              {selectedAgent.FirstName ?? ""} {selectedAgent.LastName ?? ""}
+            </span>
+            ? <br />
+            This action cannot be undone.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={handleReject}
+            className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-md transition-colors duration-200"
+          >
+            Reject
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
 
 /** Confirmation dialog for approval */
 function ApproveAgentDialog({
@@ -104,6 +167,7 @@ export default function AgentApproval() {
   const { selectedAgent } = useAgentApproval();
   const [isLoading, setIsLoading] = useState(false);
   const [isApprovalAgent, setIsApprovalAgent] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const fetchAgents = async () => {
@@ -142,6 +206,29 @@ export default function AgentApproval() {
         title: "Error!",
         variant: "destructive",
         description: "There was an error approving the agent.",
+      });
+    }
+  };
+
+  const handleReject = async (agent: AgentsRegisItem) => {
+    try {
+      // Perform rejection API call here
+      // Example:
+      // await rejectAgent(agent.AgentRegistrationID);
+
+      toast({
+        title: "Rejected!",
+        description: "The agent registration has been successfully rejected.",
+        variant: "success",
+      });
+
+      router.push("/agents-registration");
+    } catch (error) {
+      console.error("Error rejecting agent:", error);
+      toast({
+        title: "Error!",
+        description: "There was an error rejecting the agent.",
+        variant: "destructive",
       });
     }
   };
@@ -477,13 +564,13 @@ export default function AgentApproval() {
 
             {/* Approval Buttons */}
             <div className="flex justify-end gap-2 mt-4">
-              <Button
-                variant="outline"
-                className="border-gray-300 hover:bg-gray-100"
-                onClick={() => router.push("/agents-registration")}
-              >
-                Reject
-              </Button>
+            <Button
+              variant="outline"
+              onClick={() => setOpen(true)}
+              className="bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 hover:text-red-700 font-medium px-5 py-2 rounded-md transition-all duration-200 shadow-sm hover:shadow-md"
+            >
+              Reject
+            </Button>
 
               <ApproveAgentDialog
                 AgentRegistrationID={selectedAgent?.AgentRegistrationID!} // assuming this always exists
@@ -504,6 +591,13 @@ export default function AgentApproval() {
           </div>
         </div>
       </div>
+
+      <RejectConfirmationDialog
+        open={open}
+        onOpenChange={setOpen}
+        selectedAgent={selectedAgent}
+        onCancel={handleReject}
+      />
     </>
   );
 }
