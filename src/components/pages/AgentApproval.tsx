@@ -553,13 +553,21 @@ export default function AgentApproval() {
             />
 
             <div className="w-full">
-              {isApprovalAgent && filteredAgents.length > 0 ? (
-                <DataTable columns={agentColumns} data={filteredAgents} pageSize={10} />
-              ) : (
-                <p className="text-gray-500 text-center py-6">
-                  No agents found matching your search.
-                </p>
-              )}
+              <div className="w-full">
+                {isApprovalAgent ? (
+                  filteredAgents.length > 0 ? (
+                    <DataTable columns={agentColumns} data={filteredAgents} pageSize={10} />
+                  ) : (
+                    <p className="text-gray-500 text-center py-6">
+                      No agents found.
+                    </p>
+                  )
+                ) : (
+                  <p className="text-gray-500 text-center py-6">
+                    Please select an agent first to view approval options.
+                  </p>
+                )}
+              </div>
             </div>
 
             {/* Approval Buttons */}

@@ -13,7 +13,6 @@ import { useEffect, useState } from "react";
 import { Input } from "../../components/ui/input";
 import { AgentsItem, AgentsRegisItem, getAgents, getAgentsRegistrations } from "@/services/agents/agents.api";
 import { useDebounce } from "@/hooks/use-debounce";
-import AgentApprovalDialog from "../dialogs/AgentApprovalDialog";
 import { useRouter } from "next/navigation";
 import { useAgentApproval } from "@/store/useAgentApproval";
 import {
@@ -273,15 +272,6 @@ export default function AgentsRegistrations() {
           </div>
         </div>
       </div>
-      {selectedAgent && viewselectedAgents && (
-        <AgentApprovalDialog
-          open={viewselectedAgents}
-          selectedAgent={selectedAgent}
-          agents={agents}
-          onOpenChange={setviewSelectedAgents}
-        />
-      )}
-
       <ApproveAgentDialog
         open={open}
         onOpenChange={setOpen}

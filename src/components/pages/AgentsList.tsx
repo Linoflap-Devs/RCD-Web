@@ -100,36 +100,36 @@ const agentColumns: ColumnDef<AgentsItem>[] = [
       const value = row.getValue("AgentTaxRate") as number | string | null;
       return value != null ? `${value}% ` : "N/A";
   }},
-  {
-    id: "actions",
-    header: "",
-    cell: ({ row }) => {
-      const agent = row.original;
+  // {
+  //   id: "actions",
+  //   header: "",
+  //   cell: ({ row }) => {
+  //     const agent = row.original;
 
-      return (
-        <div className="text-center">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-4 w-4 p-0 sm:h-4 sm:w-4">
-                <span className="sr-only">Open menu</span>
-                {/* Smaller icon */}
-                <MoreHorizontal className="h-1.5 w-1.5 sm:h-2 sm:w-2" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="text-xs sm:text-sm">
-              <DropdownMenuItem asChild className="text-xs sm:text-sm">
-                {/* <Link href={`/home/crew/details?id=${crew.CrewCode}`}>
-                  <IdCard className="mr-1.5 sm:mr-2 h-3.5 sm:h-4 w-3.5 sm:w-4" />
-                  View Crew Details
-                </Link> */}
-              </DropdownMenuItem>
-              {/* <DropdownMenuSeparator /> */}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      );
-    },
-  },
+  //     return (
+  //       <div className="text-center">
+  //         <DropdownMenu>
+  //           <DropdownMenuTrigger asChild>
+  //             <Button variant="ghost" className="h-4 w-4 p-0 sm:h-4 sm:w-4">
+  //               <span className="sr-only">Open menu</span>
+  //               {/* Smaller icon */}
+  //               <MoreHorizontal className="h-1.5 w-1.5 sm:h-2 sm:w-2" />
+  //             </Button>
+  //           </DropdownMenuTrigger>
+  //           <DropdownMenuContent align="end" className="text-xs sm:text-sm">
+  //             <DropdownMenuItem asChild className="text-xs sm:text-sm">
+  //               {/* <Link href={`/home/crew/details?id=${crew.CrewCode}`}>
+  //                 <IdCard className="mr-1.5 sm:mr-2 h-3.5 sm:h-4 w-3.5 sm:w-4" />
+  //                 View Crew Details
+  //               </Link> */}
+  //             </DropdownMenuItem>
+  //             {/* <DropdownMenuSeparator /> */}
+  //           </DropdownMenuContent>
+  //         </DropdownMenu>
+  //       </div>
+  //     );
+  //   },
+  // },
 ];
 
 export default function AgentsList() {
