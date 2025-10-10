@@ -45,7 +45,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
         <div className="flex flex-1 flex-col gap-4 p-2 pt-6">
           {/* Idle timer runs in background here */}
-          <IdleLogout />
+          <IdleLogout timeout={10000} warningTime={5000} />
 
           {/* Your main content */}
           {children}
