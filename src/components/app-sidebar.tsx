@@ -70,7 +70,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             {
               name: "RCD",
               logo: GalleryVerticalEnd,
-              plan: "Reality Marketing Corp",
+              plan: "Realty Marketing Corp.",
             },
           ]}
         />
@@ -85,7 +85,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           user={{
             name: displayUser.userName ?? "No Name",
             email: displayUser.position?.toLowerCase() ?? "No Position",
-            avatar: "/avatars/shadcn.jpg",
+            //avatar: "/avatars/shadcn.jpg",
           }}
           onLogout={handleLogout} />
       </SidebarFooter>
