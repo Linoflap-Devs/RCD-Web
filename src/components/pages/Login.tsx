@@ -18,6 +18,7 @@ import * as z from "zod";
 import { toast } from "../ui/use-toast";
 import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
+import { loginUser } from "@/services/auth/auth.api";
 
 const formSchema = z.object({
   username: z.string().min(1, "Please enter username"),
@@ -46,23 +47,33 @@ export default function Login() {
     setErrorMessage("");
 
     try {
+      // Step 1: Hit your own Next.js API route — this sets the HTTP-only cookie
       const res = await fetch("/api/auth", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
+        credentials: "include",
       });
 
-      const data = await res.json();
+      const apiData = await res.json();
+      //console.log("/api/auth response:", apiData);
 
-      if (!res.ok) {
-        console.error("Login failed:", data.message);
-        throw new Error(data.message || "Login failed");
+      // Step 2: (Optional) Also call backend directly — e.g., to get more data
+      const directData = await loginUser(values);
+      //console.log("Direct backend login response:", directData);
+
+      // Step 3: If backend gave you a token, set it as a client cookie (optional)
+      const token = directData?.data?.token;
+      if (token) {
+        document.cookie = `token=${token}; path=/;`;
+        //console.log("Token also set via client (for redundancy)");
       }
 
+      // Step 4: Handle success UI
       toast({
         title: "Login Successful",
         variant: "success",
-        description: `Welcome back, ${data.user}!`,
+        description: `Welcome back, ${directData?.data?.username || apiData?.user || "User"}!`,
       });
 
       router.push("/dashboard");
@@ -82,6 +93,7 @@ export default function Login() {
     } finally {
       setLoading(false);
     }
+
   }
 
   return (
@@ -149,7 +161,7 @@ export default function Login() {
                         className={`pr-10 ${fieldState.error
                           ? "border-red-500 ring-red-500 focus-visible:ring-red-200 focus-visible:border-red-500"
                           : ""
-                        }`}
+                          }`}
                       />
                       <button
                         type="button"

@@ -61,8 +61,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const handleLogout = async () => {
     sessionStorage.setItem("loggingOut", "true")
     try {
+      await logoutUser()
       await fetch("/api/auth/logout", { method: "POST" })
-      await logoutUser?.()
       toast({
         title: "Logout Successful",
         description: "Successfully logged out.",

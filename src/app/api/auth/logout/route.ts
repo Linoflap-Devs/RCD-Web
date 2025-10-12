@@ -15,6 +15,6 @@ export async function POST() {
     expires: new Date(0), // immediately expire
   });
 
-  console.log("🍪 [LOGOUT] Token cookie cleared");
+  console.log("[LOGOUT] Token cookie cleared");
   return response;
 }
