@@ -18,7 +18,7 @@ import * as z from "zod";
 import { toast } from "../ui/use-toast";
 import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
-import { loginUser } from "@/services/auth/auth.api";
+import { LoginResponse, loginUser } from "@/services/auth/auth.api";
 
 const formSchema = z.object({
   username: z.string().min(1, "Please enter username"),
@@ -47,42 +47,40 @@ export default function Login() {
     setErrorMessage("");
 
     try {
-      // Step 1: Hit your own Next.js API route — this sets the HTTP-only cookie
       const res = await fetch("/api/auth", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
-        credentials: "include",
+        credentials: "include", // important for cookies
       });
 
-      const apiData = await res.json();
-      //console.log("/api/auth response:", apiData);
+      const cookieResponse = await res.json();
 
-      // Step 2: (Optional) Also call backend directly — e.g., to get more data
-      const directData = await loginUser(values);
-      //console.log("Direct backend login response:", directData);
-
-      // Step 3: If backend gave you a token, set it as a client cookie (optional)
-      const token = directData?.data?.token;
-      if (token) {
-        document.cookie = `token=${token}; path=/;`;
-        //console.log("Token also set via client (for redundancy)");
+      if (!res.ok) {
+        if (res.status === 401) {
+          throw new Error("Invalid credentials, please check your email and password.");
+        } else if (res.status === 500) {
+          throw new Error("Internal server error. Please try again later or contact support.");
+        } else {
+          throw new Error(cookieResponse?.message || "An unexpected error occurred.");
+        }
       }
 
-      // Step 4: Handle success UI
+      const response: LoginResponse = await loginUser(values);
+
       toast({
         title: "Login Successful",
         variant: "success",
-        description: `Welcome back, ${directData?.data?.username || apiData?.user || "User"}!`,
+        description: `Welcome back, ${response.data.username || "User"}!`,
       });
 
       router.push("/dashboard");
 
-    } catch (error: any) {
-      console.error("Login error:", error);
-
+    } catch (error: unknown) {
       const message =
-        error.message || "An unexpected error occurred. Please try again later.";
+        error instanceof Error
+          ? error.message
+          : "An unexpected error occurred. Please try again later.";
 
       setErrorMessage(message);
       toast({
@@ -93,7 +91,6 @@ export default function Login() {
     } finally {
       setLoading(false);
     }
-
   }
 
   return (
